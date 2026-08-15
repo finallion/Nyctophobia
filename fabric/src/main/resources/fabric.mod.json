@@ -33,7 +33,6 @@
     "nyctophobia-common.mixins.json",
     "nyctophobia-fabric.mixins.json"
   ],
-  "accessWidener": "nyctophobia.accesswidener",
 
   "depends": {
     "fabricloader": ">=0.14.21",

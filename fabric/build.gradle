@@ -64,6 +64,9 @@ shadowJar {
 }
 
 remapJar {
+	// The access widener lives in common, so it is not on the fabric mod root that the loader
+	// searches in a dev run - declaring it in fabric.mod.json would abort the run. Loom applies it
+	// to the dev jar anyway and injects both the file and the manifest entry here for the release.
 	injectAccessWidener = true
 	input.set shadowJar.archiveFile
 	dependsOn shadowJar

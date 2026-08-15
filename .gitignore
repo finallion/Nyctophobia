@@ -33,6 +33,10 @@ bin/
 run/
 logs/
 
+# datagen writes a hash cache next to the generated resources; the resources are committed, this is not
+
+**/src/generated/resources/.cache/
+
 # java
 
 hs_err_*.log
