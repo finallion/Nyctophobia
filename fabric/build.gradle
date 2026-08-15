@@ -45,6 +45,14 @@ loom {
 			vmArg "-Dfabric-api.datagen.modid=${datagenModId}"
 			runDir "build/datagen"
 		}
+
+		// Automated checks get their own directory. Sharing run/ with a live session means sharing its
+		// world, its config and its log file, and rotating the log out from under whoever is playing.
+		testServer {
+			inherit server
+			name "Test Server"
+			runDir "build/testserver"
+		}
 	}
 }
 

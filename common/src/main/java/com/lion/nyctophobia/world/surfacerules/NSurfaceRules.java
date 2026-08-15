@@ -165,14 +165,15 @@ public class NSurfaceRules {
         // Standing water uses the trick the haunted lakes use, but across a three block band instead
         // of one: at a single height only terrain that happens to end exactly there turns to water,
         // which left the marsh nearly dry. Wet ground rings the pools where the noise falls short.
+        // The band has to stop below 63: sea level is 63, so the topmost water block sits at 62 and
+        // anything written at 63 stands a block proud of every other water surface in the world.
         MaterialRules.MaterialCondition above60 = MaterialRules.aboveY(YOffset.fixed(60), 0);
-        MaterialRules.MaterialCondition above64 = MaterialRules.aboveY(YOffset.fixed(64), 0);
 
         MaterialRules.MaterialRule marshlandsRule =
                 MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
                         MaterialRules.sequence(
                                 MaterialRules.condition(above60,
-                                        MaterialRules.condition(MaterialRules.not(above64),
+                                        MaterialRules.condition(MaterialRules.not(above63_0),
                                                 MaterialRules.sequence(
                                                         MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.45D), WATER),
                                                         MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.7D, -0.45D), MUD)))),

@@ -41,8 +41,8 @@ public class BurntForest {
                 .effects((new BiomeEffects.Builder())
                         // Oak leaves take this colour, which is what makes the canopy read as dead
                         // rather than green - see the note on the burnt tree features.
-                        .grassColor(0x5F5A4A)
-                        .foliageColor(0x4A4438)
+                        .grassColor(0x737068)
+                        .foliageColor(0x5E5A52)
                         .waterColor(0x63615A)
                         .waterFogColor(0x4A4842)
                         .fogColor(0x585858)
