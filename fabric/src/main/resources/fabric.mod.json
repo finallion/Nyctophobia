@@ -27,7 +27,9 @@
     "terrablender": [
       "com.lion.nyctophobia.fabric.NyctophobiaFabric"
     ],
-    "client": []
+    "client": [
+      "com.lion.nyctophobia.fabric.NyctophobiaFabricClient"
+    ]
   },
   "mixins": [
     "nyctophobia-common.mixins.json",

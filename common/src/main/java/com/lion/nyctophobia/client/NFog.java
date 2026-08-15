@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -43,12 +44,40 @@ public final class NFog {
 
     private static float fogFactor = CLEAR;
 
+    /// Switched from the client command. Purely visual and never sent anywhere, so it can differ from
+    /// player to player on the same server.
+    private static boolean enabled = true;
+
     private NFog() {}
+
+    public static boolean isEnabled() {
+        return enabled;
+    }
+
+    /// Returns the state it ended up in, so a caller can report it without asking again.
+    public static boolean setEnabled(boolean value) {
+        enabled = value;
+        if (!enabled) {
+            // Drop straight to clear rather than easing out, or the fog would linger for a second
+            // after someone explicitly turned it off.
+            fogFactor = CLEAR;
+        }
+        return enabled;
+    }
+
+    public static boolean toggle() {
+        return setEnabled(!enabled);
+    }
+
+    /// The message both loaders show, so the wording cannot drift apart.
+    public static Text feedback() {
+        return Text.translatable(enabled ? "commands.nyctophobia.fog.on" : "commands.nyctophobia.fog.off");
+    }
 
     /// Near and far plane distance for this frame, or null to leave vanilla fog untouched. Both
     /// loaders call this with the view distance their hook gives them.
     public static FogPlanes compute(MinecraftClient client, Camera camera, float viewDistance) {
-        if (client.world == null) {
+        if (!enabled || client.world == null) {
             return null;
         }
 

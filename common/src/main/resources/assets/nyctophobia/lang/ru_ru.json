@@ -5,5 +5,7 @@
   "biome.nyctophobia.ancient_dead_coral_reef": "Мёртвый коралловый риф",
   "biome.nyctophobia.deep_dark_forest": "Дремучий тёмный лес",
   "biome.nyctophobia.marshlands": "Топи",
-  "biome.nyctophobia.burnt_forest": "Выжженный лес"
+  "biome.nyctophobia.burnt_forest": "Выжженный лес",
+  "commands.nyctophobia.fog.on": "Туман Nyctophobia включён.",
+  "commands.nyctophobia.fog.off": "Туман Nyctophobia отключён."
 }

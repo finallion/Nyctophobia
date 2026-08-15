@@ -5,5 +5,7 @@
   "biome.nyctophobia.ancient_dead_coral_reef": "Dead Coral Reef",
   "biome.nyctophobia.deep_dark_forest": "Deep Dark Forest",
   "biome.nyctophobia.marshlands": "Marshlands",
-  "biome.nyctophobia.burnt_forest": "Burnt Forest"
+  "biome.nyctophobia.burnt_forest": "Burnt Forest",
+  "commands.nyctophobia.fog.on": "Nyctophobia fog enabled.",
+  "commands.nyctophobia.fog.off": "Nyctophobia fog disabled."
 }
