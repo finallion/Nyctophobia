@@ -133,8 +133,8 @@ public class NConfiguredFeatures {
 
         entries.add(DEEP_DARK_OAK, configureFeature(Feature.TREE, (new TreeFeatureConfig.Builder(BlockStateProvider.of(Blocks.DARK_OAK_LOG), new DeepDarkOakTrunkPlacer(13, 4, 2), BlockStateProvider.of(Blocks.DARK_OAK_LEAVES), new DarkOakFoliagePlacer(ConstantIntProvider.create(0), ConstantIntProvider.create(0)), new ThreeLayersFeatureSize(1, 1, 0, 1, 2, OptionalInt.empty()))).ignoreVines().build()));
         // Charred trees. Stripped spruce reads as bare, not burnt, so the trunk is polished basalt -
-        // its vertical grain sells a charred log and its default axis already points up. The fallen
-        // one uses blockstone instead, which has no axis to point the wrong way when it lies down.
+        // its vertical grain sells a charred log, and the fallen variant needs the axis property to
+        // turn it on its side.
         //
         // Leaves are oak, not spruce: spruce leaves carry a fixed colour and ignore the biome, so they
         // would stay green in a burnt wood. Oak leaves take the biome foliage colour.
@@ -143,7 +143,7 @@ public class NConfiguredFeatures {
         entries.add(BURNT_TREE_BENT, configureFeature(NFeatures.SMALL_BENT_SPRUCE_TREE_01, burntTree()));
         entries.add(BURNT_TREE_LARGE_BENT, configureFeature(NFeatures.LARGE_BENT_SPRUCE_TREE_01, burntTree()));
         entries.add(BURNT_TREE_LARGE, configureFeature(NFeatures.LARGE_SPRUCE_TREE_01, burntTree()));
-        entries.add(BURNT_TREE_FALLEN, configureFeature(NFeatures.FALLEN_SPRUCE_TREE, new NTreeFeatureConfig(Blocks.BLACKSTONE.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState())));
+        entries.add(BURNT_TREE_FALLEN, configureFeature(NFeatures.FALLEN_SPRUCE_TREE, burntTree()));
 
         entries.add(BURNT_LICHEN_FEATURE, configureFeature(Feature.MULTIFACE_GROWTH, new MultifaceGrowthFeatureConfig(
                 (MultifaceGrowthBlock) Blocks.GLOW_LICHEN, 20, false, true, true, 0.5F,

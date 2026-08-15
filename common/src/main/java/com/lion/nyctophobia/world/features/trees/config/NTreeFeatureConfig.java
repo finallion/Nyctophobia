@@ -16,6 +16,13 @@ public class NTreeFeatureConfig implements FeatureConfig {
     public final BlockState leafState;
 
     public NTreeFeatureConfig(BlockState woodState, BlockState leafState) {
+        // The fallen tree lays its logs on their side and needs the axis property to do it. Catching a
+        // wood block without one here fails datagen with a readable message; left alone it surfaces as
+        // an IllegalArgumentException inside feature placement, once per chunk, in a finished world.
+        if (!woodState.getProperties().contains(Properties.AXIS)) {
+            throw new IllegalArgumentException("Tree wood state " + woodState + " has no axis property");
+        }
+
         this.woodState = woodState;
 
         if (leafState.getProperties().contains(Properties.DISTANCE_1_7)) {

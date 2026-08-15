@@ -10,7 +10,10 @@
       }
     },
     "wood_state": {
-      "Name": "minecraft:blackstone"
+      "Name": "minecraft:polished_basalt",
+      "Properties": {
+        "axis": "y"
+      }
     }
   }
 }
