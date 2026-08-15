@@ -18,11 +18,11 @@
         }
       },
       {
-        "chance": 0.8666667,
+        "chance": 0.45,
         "feature": "nyctophobia:deep_dark_oak"
       },
       {
-        "chance": 0.1,
+        "chance": 0.4,
         "feature": "minecraft:dark_oak_checked"
       }
     ]

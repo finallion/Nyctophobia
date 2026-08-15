@@ -166,11 +166,14 @@ public class NPlacedFeatures {
                 PlacedFeatures.createEntry(NFeatures.DEAD_CORAL_MUSHROOM_FEATURE.get(), FeatureConfig.DEFAULT, new PlacementModifier[0])))));
 
 
+        // Entries are drawn in order and the first hit wins, so these are conditional chances, not
+        // shares: the giant oak at 0.45 ends up on roughly 43 percent of the attempts and the
+        // vanilla dark oak on the rest. At the previous 0.8667 the biome grew only one kind of tree.
         entries.add(DEEP_DARK_FOREST_VEGETATION, NConfiguredFeatures.configureFeature(Feature.RANDOM_SELECTOR, new RandomFeatureConfig(List.of(
                 new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(TreeConfiguredFeatures.HUGE_BROWN_MUSHROOM), new PlacementModifier[0]), 0.025F),
                 new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(TreeConfiguredFeatures.HUGE_RED_MUSHROOM), new PlacementModifier[0]), 0.025F),
-                new RandomFeatureEntry(entries.ref(NPlacedFeatures.DEEP_DARK_OAK), 0.8666667F),
-                new RandomFeatureEntry(entries.ref(TreePlacedFeatures.DARK_OAK_CHECKED), 0.1F)),
+                new RandomFeatureEntry(entries.ref(NPlacedFeatures.DEEP_DARK_OAK), 0.45F),
+                new RandomFeatureEntry(entries.ref(TreePlacedFeatures.DARK_OAK_CHECKED), 0.4F)),
                 entries.ref(TreePlacedFeatures.DARK_OAK_CHECKED))));
 
 
@@ -178,7 +181,10 @@ public class NPlacedFeatures {
         entries.add(HAUNTED_FOREST_TREES_PLACED, placeFeature(entries, HAUNTED_FOREST_TREES, PlacedFeatures.createCountExtraModifier(15, 0.1F, 1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
         entries.add(ANCIENT_DEAD_REEF_VEGETATION_PLACED, placeFeature(entries, ANCIENT_DEAD_REEF_VEGETATION, NoiseBasedCountPlacementModifier.of(20, 400.0D, 0.0D), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_WG_HEIGHTMAP, BiomePlacementModifier.of()));
         entries.add(ANCIENT_DEAD_REEF_WATER_VEGETATION_PLACED, placeFeature(entries, ANCIENT_DEAD_REEF_VEGETATION, NoiseBasedCountPlacementModifier.of(20, 200.0D, 0.0D), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
-        entries.add(DEEP_DARK_FOREST_VEGETATION_PLACED, placeFeature(entries, DEEP_DARK_FOREST_VEGETATION, CountPlacementModifier.of(35), SquarePlacementModifier.of(), SurfaceWaterDepthFilterPlacementModifier.of(0), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Vanilla dark_forest_vegetation tries 16 times per chunk for a small dark oak. The deep dark
+        // oak carries buttress roots and twelve branches, so it needs fewer attempts than vanilla,
+        // not more; the extra count keeps the density uneven enough to leave clearings.
+        entries.add(DEEP_DARK_FOREST_VEGETATION_PLACED, placeFeature(entries, DEEP_DARK_FOREST_VEGETATION, PlacedFeatures.createCountExtraModifier(10, 0.1F, 1), SquarePlacementModifier.of(), SurfaceWaterDepthFilterPlacementModifier.of(0), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
     }
 
     /*

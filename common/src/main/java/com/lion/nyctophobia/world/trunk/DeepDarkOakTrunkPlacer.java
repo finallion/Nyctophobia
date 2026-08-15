@@ -23,8 +23,35 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         return fillTrunkPlacerFields(instance).apply(instance, DeepDarkOakTrunkPlacer::new);
     });
 
-    public DeepDarkOakTrunkPlacer(int i, int j, int k) {
-        super(i, j, k);
+    /// The trunk fills (0,0) to (1,1). Roots ring it without the diagonals, which keeps the base
+    /// square instead of octagonal.
+    private static final int[][] ROOT_OFFSETS = {
+            {-1, 0}, {-1, 1}, {0, -1}, {1, -1}, {2, 0}, {2, 1}, {0, 2}, {1, 2}
+    };
+
+    /// Trunk corner a branch leaves from, paired with the two directions it may drift in. Index order
+    /// matters only in that each corner drifts away from the trunk rather than back across it.
+    private static final int[][] BRANCH_CORNERS = {{1, 0}, {0, 1}, {1, 1}, {0, 0}};
+    private static final Direction[][] BRANCH_DRIFTS = {
+            {Direction.NORTH, Direction.EAST},
+            {Direction.SOUTH, Direction.WEST},
+            {Direction.EAST, Direction.SOUTH},
+            {Direction.WEST, Direction.NORTH}
+    };
+
+    /// How far below the trunk base a root keeps looking for ground before it settles.
+    private static final int MAX_ROOT_DROP = 4;
+
+    private static final int LOWER_BRANCHES = 8;
+    private static final int UPPER_BRANCHES = 4;
+    private static final int LOWER_BRANCH_LENGTH = 5;
+    private static final int UPPER_BRANCH_LENGTH = 6;
+
+    private static final int ROOT_MIN_HEIGHT = 5;
+    private static final int ROOT_EXTRA_HEIGHT = 6;
+
+    public DeepDarkOakTrunkPlacer(int baseHeight, int firstRandomHeight, int secondRandomHeight) {
+        super(baseHeight, firstRandomHeight, secondRandomHeight);
     }
 
     protected TrunkPlacerType<?> getType() {
@@ -32,185 +59,110 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
     }
 
     public List<FoliagePlacer.TreeNode> generate(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, int height, BlockPos startPos, TreeFeatureConfig config) {
-        List<FoliagePlacer.TreeNode> list = Lists.newArrayList();
-        BlockPos blockPos = startPos.down();
-        setToDirt(world, replacer, random, blockPos, config);
-        setToDirt(world, replacer, random, blockPos.east(), config);
-        setToDirt(world, replacer, random, blockPos.south(), config);
-        setToDirt(world, replacer, random, blockPos.south().east(), config);
-        setToDirt(world, replacer, random, blockPos.east().east(), config);
-        setToDirt(world, replacer, random, blockPos.north().east(), config);
-        setToDirt(world, replacer, random, blockPos.north(), config);
-        setToDirt(world, replacer, random, blockPos.south().south().east(), config);
-        setToDirt(world, replacer, random, blockPos.south().east().east(), config);
-        setToDirt(world, replacer, random, blockPos.south().south(), config);
-        setToDirt(world, replacer, random, blockPos.west(), config);
-        setToDirt(world, replacer, random, blockPos.south().west(), config);
+        List<FoliagePlacer.TreeNode> nodes = Lists.newArrayList();
+        int x = startPos.getX();
+        int y = startPos.getY();
+        int z = startPos.getZ();
 
-        int startPosX = startPos.getX();
-        int startPosY = startPos.getY();
-        int startPosZ = startPos.getZ();
+        for (int dx = 0; dx <= 1; ++dx) {
+            for (int dz = 0; dz <= 1; ++dz) {
+                setToDirt(world, replacer, random, new BlockPos(x + dx, y - 1, z + dz), config);
+            }
+        }
+        placeRoots(world, replacer, random, config, x, y, z);
 
-        // lower extra trunk
-        for (int i = -1; i <= 2; ++i) {
-            for (int ii = -1; ii <= 2; ++ii) {
-                // corner cases
-                if ((i == -1 && ii == -1) || (i == -1 && ii == 2) || (i == 2 && ii == -1) || (i == 2 && ii == 2)) {
-                    continue;
-                }
+        int reached = placeTrunk(world, replacer, random, config, height, x, y, z);
+        if (reached == 0) {
+            return nodes;
+        }
 
-                if ((i < 0 || i > 1 || ii < 0 || ii > 1)) {
-                    int extraTrunkLength = random.nextInt(6) + 5;
+        // Branches hang off the height the trunk actually reached rather than the height it was asked
+        // for, so an obstructed trunk does not leave its crown floating over the gap.
+        int crownY = y + reached - 1;
+        for (int i = 0; i < LOWER_BRANCHES; ++i) {
+            growBranch(world, replacer, random, config, nodes, x, crownY, z, i / 2, LOWER_BRANCH_LENGTH, true, i % 2 == 1);
+        }
+        for (int i = 0; i < UPPER_BRANCHES; ++i) {
+            growBranch(world, replacer, random, config, nodes, x, crownY, z, i, UPPER_BRANCH_LENGTH, false, false);
+        }
 
-                    for(int trunkCounter = 0; trunkCounter < extraTrunkLength; ++trunkCounter) {
-                        this.getAndSetState(world, replacer, random, new BlockPos(startPosX + i, startPosY + trunkCounter, startPosZ + ii), config);
-                    }
-                }
+        return nodes;
+    }
 
+    /// Roots start at the ground under their own column instead of at the trunk base, so a tree on a
+    /// slope neither floats on the downhill side nor sinks into the hill on the uphill side.
+    private void placeRoots(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random,
+                            TreeFeatureConfig config, int x, int y, int z) {
+        for (int[] offset : ROOT_OFFSETS) {
+            int rootX = x + offset[0];
+            int rootZ = z + offset[1];
+            int top = y + ROOT_MIN_HEIGHT + random.nextInt(ROOT_EXTRA_HEIGHT);
+            int base = groundLevel(world, rootX, y, rootZ);
+
+            setToDirt(world, replacer, random, new BlockPos(rootX, base - 1, rootZ), config);
+            for (int rootY = base; rootY < top; ++rootY) {
+                this.getAndSetState(world, replacer, random, new BlockPos(rootX, rootY, rootZ), config);
+            }
+        }
+    }
+
+    private static int groundLevel(TestableWorld world, int x, int baseY, int z) {
+        for (int y = baseY; y >= baseY - MAX_ROOT_DROP; --y) {
+            if (!TreeFeature.canReplace(world, new BlockPos(x, y - 1, z))) {
+                return y;
+            }
+        }
+        return baseY - MAX_ROOT_DROP;
+    }
+
+    /// Returns how many trunk layers were placed. Stops at the first blocked layer instead of skipping
+    /// it, so the trunk never resumes above an obstruction with a gap underneath.
+    private int placeTrunk(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random,
+                           TreeFeatureConfig config, int height, int x, int y, int z) {
+        int placed = 0;
+        for (int dy = 0; dy < height; ++dy) {
+            BlockPos pos = new BlockPos(x, y + dy, z);
+            if (!TreeFeature.isAirOrLeaves(world, pos)) {
+                break;
+            }
+
+            this.getAndSetState(world, replacer, random, pos, config);
+            this.getAndSetState(world, replacer, random, pos.east(), config);
+            this.getAndSetState(world, replacer, random, pos.south(), config);
+            this.getAndSetState(world, replacer, random, pos.east().south(), config);
+            placed = dy + 1;
+        }
+        return placed;
+    }
+
+    /// One branch of the crown: it climbs a block per step and drifts sideways, and its tip becomes a
+    /// foliage node. The lower ring drifts on every step so it reaches outwards; the upper ring drifts
+    /// only sometimes and so stays tight around the trunk.
+    ///
+    /// The corner offset has to be applied when the position is built. BlockPos.Mutable inherits
+    /// east()/south() from BlockPos, which return a new instance rather than moving in place - only
+    /// move() mutates.
+    private void growBranch(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random,
+                            TreeFeatureConfig config, List<FoliagePlacer.TreeNode> nodes,
+                            int x, int crownY, int z, int corner, int length,
+                            boolean driftEveryStep, boolean driftFixed) {
+        int[] start = BRANCH_CORNERS[corner];
+        Direction[] drifts = BRANCH_DRIFTS[corner];
+        BlockPos.Mutable pos = new BlockPos.Mutable(x + start[0], crownY, z + start[1]);
+
+        for (int step = 0; step < length; ++step) {
+            pos.move(Direction.UP);
+            if (driftEveryStep) {
+                pos.move(driftFixed ? drifts[0] : drifts[random.nextInt(2)]);
+            } else if (random.nextInt(2) == 0) {
+                pos.move(drifts[random.nextInt(2)]);
+            }
+
+            if (TreeFeature.canReplace(world, pos)) {
+                this.getAndSetState(world, replacer, random, pos, config);
             }
         }
 
-        // main trunk
-        for(int heightCounter = 0; heightCounter < height; ++heightCounter) {
-            BlockPos blockPos2 = new BlockPos(startPosX, startPosY + heightCounter, startPosZ);
-            if (TreeFeature.isAirOrLeaves(world, blockPos2)) {
-                this.getAndSetState(world, replacer, random, blockPos2, config);
-                this.getAndSetState(world, replacer, random, blockPos2.east(), config);
-                this.getAndSetState(world, replacer, random, blockPos2.south(), config);
-                this.getAndSetState(world, replacer, random, blockPos2.east().south(), config);
-            }
-        }
-
-        // outwards reaching branches
-        for (int i = 1; i <= 8; i++) {
-            BlockPos.Mutable blockPos3 = new BlockPos.Mutable(startPosX, startPosY + height - 1, startPosZ);
-            Direction[] branchDir = new Direction[2];
-            if (i <= 2) {
-                blockPos3.east();
-                branchDir[0] = Direction.NORTH;
-                branchDir[1] = Direction.EAST;
-            } else if (i <= 4) {
-                blockPos3.south();
-                branchDir[0] = Direction.SOUTH;
-                branchDir[1] = Direction.WEST;
-            } else if (i <= 6) {
-                blockPos3.east().south();
-                branchDir[0] = Direction.EAST;
-                branchDir[1] = Direction.SOUTH;
-            } else {
-                branchDir[0] = Direction.WEST;
-                branchDir[1] = Direction.NORTH;
-            }
-
-            int branchLength = 5;
-            for (int ii = 0; ii < branchLength; ii++) {
-                blockPos3.move(Direction.UP);
-
-                if (i % 2 == 0) {
-                    blockPos3.move(branchDir[0]);
-                } else {
-                    blockPos3.move(branchDir[random.nextInt(2)]);
-                }
-
-                if (TreeFeature.canReplace(world, blockPos3)) {
-                    this.getAndSetState(world, replacer, random, blockPos3, config);
-                }
-
-            }
-            list.add(new FoliagePlacer.TreeNode(blockPos3.up(), 0, true));
-        }
-
-        // straight up branches
-        for (int i = 1; i <= 4; i++) {
-            BlockPos.Mutable blockPos3 = new BlockPos.Mutable(startPosX, startPosY + height - 1, startPosZ);
-            Direction[] branchDir = new Direction[2];
-
-            if (i <= 1) {
-                blockPos3.east();
-                branchDir[0] = Direction.EAST;
-                branchDir[1] = Direction.NORTH;
-            } else if (i <= 2) {
-                blockPos3.south();
-                branchDir[0] = Direction.SOUTH;
-                branchDir[1] = Direction.WEST;
-            } else if (i <= 3) {
-                blockPos3.east().south();
-                branchDir[0] = Direction.EAST;
-                branchDir[1] = Direction.SOUTH;
-            } else {
-                branchDir[0] = Direction.WEST;
-                branchDir[1] = Direction.NORTH;
-            }
-
-            int branchLength = 6;
-            for (int ii = 0; ii < branchLength; ii++) {
-                blockPos3.move(Direction.UP);
-                if (random.nextInt(2) == 0) {
-                    blockPos3.move(branchDir[random.nextInt(2)]);
-                }
-
-                if (TreeFeature.canReplace(world, blockPos3)) {
-                    this.getAndSetState(world, replacer, random, blockPos3, config);
-                }
-
-            }
-            list.add(new FoliagePlacer.TreeNode(blockPos3.up(), 0, true));
-        }
-        /*
-        int numberOfBranches = 11;
-        for (int i = 0; i < numberOfBranches; i++) {
-            BlockPos.Mutable blockPos3 = new BlockPos.Mutable(startPosX, startPosY + height - 1, startPosZ);
-            Direction[] branchDir = new Direction[2];
-
-            int branchLength;
-            if (i % 3 == 0) {
-                branchLength = random.nextInt(4) + 5;
-            } else {
-                branchLength = random.nextInt(4) + 8;
-            }
-
-            int minHeightForLeaves = 4;
-
-            // generate branches only outwards facing from trunk
-            if (i < 3) {
-                blockPos3.east();
-                branchDir[0] = Direction.EAST;
-                branchDir[1] = Direction.NORTH;
-            } else if (i < 6) {
-                blockPos3.south();
-                branchDir[0] = Direction.SOUTH;
-                branchDir[1] = Direction.WEST;
-            } else if (i < 9) {
-                blockPos3.east().south();
-                branchDir[0] = Direction.EAST;
-                branchDir[1] = Direction.SOUTH;
-            } else {
-                branchDir[0] = Direction.WEST;
-                branchDir[1] = Direction.NORTH;
-            }
-
-            for (int ii = 0; ii < branchLength; ii++) {
-                if (random.nextInt(3) == 0 || i % 3 == 0) {
-                    blockPos3.move(Direction.UP);
-                }
-                if (random.nextInt(2) == 0) {
-                    blockPos3.move(branchDir[random.nextInt(2)]);
-                }
-
-                if (TreeFeature.canReplace(world, blockPos3)) {
-                    this.getAndSetState(world, replacer, random, blockPos3, config);
-                }
-
-                if (ii > minHeightForLeaves + random.nextInt(6)) {
-                    //list.add(new FoliagePlacer.TreeNode(blockPos3.up(), 0, true));
-                }
-            }
-            //list.add(new FoliagePlacer.TreeNode(blockPos3.up(), 0, true));
-        }
-
-         */
-
-
-        return list;
+        nodes.add(new FoliagePlacer.TreeNode(pos.up(), 0, true));
     }
 }
