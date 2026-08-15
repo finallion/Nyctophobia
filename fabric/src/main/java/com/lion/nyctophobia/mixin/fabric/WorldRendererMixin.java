@@ -8,7 +8,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,19 +37,12 @@ public class WorldRendererMixin {
     public void nyctophobia$applyBiomeFog(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline,
                                           Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
                                           Matrix4f positionMatrix, CallbackInfo ci) {
-        if (this.client.world == null) {
+        NFog.FogPlanes planes = NFog.compute(this.client, camera, gameRenderer.getViewDistance());
+        if (planes == null) {
             return;
         }
 
-        BlockPos pos = camera.getBlockPos();
-        String biomePath = this.client.world.getBiome(pos).getKey()
-                .map(key -> key.getValue().getPath())
-                .orElse("");
-
-        float[] planes = NFog.compute(camera, gameRenderer.getViewDistance(), pos, biomePath);
-        if (planes != null) {
-            RenderSystem.setShaderFogStart(planes[0]);
-            RenderSystem.setShaderFogEnd(planes[1]);
-        }
+        RenderSystem.setShaderFogStart(planes.near());
+        RenderSystem.setShaderFogEnd(planes.far());
     }
 }
