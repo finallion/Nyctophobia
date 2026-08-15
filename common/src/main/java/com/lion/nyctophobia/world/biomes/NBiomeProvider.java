@@ -1,6 +1,7 @@
 package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.Nyctophobia;
+import com.lion.nyctophobia.config.BiomeConfigEntry;
 import com.lion.nyctophobia.init.NBiomes;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.registry.*;
@@ -10,12 +11,9 @@ import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
 
 
 public class NBiomeProvider extends Region {
@@ -26,59 +24,36 @@ public class NBiomeProvider extends Region {
 
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> mapper) {
+        Map<String, RegistryKey<Biome>> vanillaByPath = keysByPath(registry);
+
         this.addModifiedVanillaOverworldBiomes(mapper, builder -> {
-
-            if (Nyctophobia.config.getBiome(new Identifier(Nyctophobia.MOD_ID,"haunted_forest")).canGenerate) {
-                List<String> configBiomes = Nyctophobia.config.biomeConfigEntries.get("haunted_forest").replaceableBiomes;
-                for (String configBiome : configBiomes) {
-                    builder.replaceBiome(parseBiomeKeys(configBiome, registry.getEntrySet()), NBiomes.HAUNTED_FOREST_KEY);
+            NBiomes.byPath().forEach((path, biome) -> {
+                BiomeConfigEntry entry = Nyctophobia.config.biomeConfigEntries.get(path);
+                if (entry == null || !entry.canGenerate) {
+                    return;
                 }
-            }
 
-            if (Nyctophobia.config.getBiome(new Identifier(Nyctophobia.MOD_ID, "eroded_haunted_forest")).canGenerate) {
-                List<String> configBiomes = Nyctophobia.config.biomeConfigEntries.get("eroded_haunted_forest").replaceableBiomes;
-                for (String configBiome : configBiomes) {
-                    builder.replaceBiome(parseBiomeKeys(configBiome, registry.getEntrySet()), NBiomes.ERODED_HAUNTED_FOREST_KEY);
+                for (String host : entry.replaceableBiomes) {
+                    RegistryKey<Biome> hostKey = vanillaByPath.get(host);
+                    if (hostKey == null) {
+                        // Skipping keeps one typo from taking the whole region down inside TerraBlender,
+                        // far away from the config line that caused it.
+                        Nyctophobia.LOGGER.error("Unknown biome \"" + host + "\" configured for " + path + ", skipping it.");
+                        continue;
+                    }
+                    builder.replaceBiome(hostKey, biome);
                 }
-            }
-
-            if (Nyctophobia.config.getBiome(new Identifier(Nyctophobia.MOD_ID,"haunted_lakes")).canGenerate) {
-                List<String> configBiomes = Nyctophobia.config.biomeConfigEntries.get("haunted_lakes").replaceableBiomes;
-                for (String configBiome : configBiomes) {
-                    builder.replaceBiome(parseBiomeKeys(configBiome, registry.getEntrySet()), NBiomes.HAUNTED_LAKES_KEY);
-                }
-            }
-
-            if (Nyctophobia.config.getBiome(new Identifier(Nyctophobia.MOD_ID,"ancient_dead_coral_reef")).canGenerate) {
-                List<String> configBiomes = Nyctophobia.config.biomeConfigEntries.get("ancient_dead_coral_reef").replaceableBiomes;
-                for (String configBiome : configBiomes) {
-                    builder.replaceBiome(parseBiomeKeys(configBiome, registry.getEntrySet()), NBiomes.ANCIENT_DEAD_CORAL_REEF_KEY);
-                }
-            }
-
-            if (Nyctophobia.config.getBiome(new Identifier(Nyctophobia.MOD_ID,"deep_dark_forest")).canGenerate) {
-                List<String> configBiomes = Nyctophobia.config.biomeConfigEntries.get("deep_dark_forest").replaceableBiomes;
-                for (String configBiome : configBiomes) {
-                    builder.replaceBiome(parseBiomeKeys(configBiome, registry.getEntrySet()), NBiomes.DEEP_DARK_FOREST);
-                }
-            }
-
+            });
         });
     }
 
-    private RegistryKey<Biome> parseBiomeKeys(String configBiome, Set<Map.Entry<RegistryKey<Biome>, Biome>> entrySet) {
-        List<RegistryKey<Biome>> biomeKeys = entrySet.stream().map(Map.Entry::getKey).collect(Collectors.toList());
-        for (RegistryKey<Biome> key : biomeKeys) {
-            String biomeName = key.getValue().getPath();
-
-            if (biomeName.equals(configBiome)) {
-                return key;
-            }
+    /// Resolved once per region build. The previous lookup walked the whole biome registry for every
+    /// single config entry.
+    private static Map<String, RegistryKey<Biome>> keysByPath(Registry<Biome> registry) {
+        Map<String, RegistryKey<Biome>> byPath = new HashMap<>();
+        for (Map.Entry<RegistryKey<Biome>, Biome> entry : registry.getEntrySet()) {
+            byPath.put(entry.getKey().getValue().getPath(), entry.getKey());
         }
-
-        Nyctophobia.LOGGER.error("Wrong biome key \"" + configBiome + "\" in config!");
-        return null;
+        return byPath;
     }
 }
-
-

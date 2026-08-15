@@ -67,8 +67,11 @@ public class NyctophobiaConfig implements Config {
         biomeGeneration.putIfAbsent("nyctophobiaBiomeWeight", 1);
         miscConfigEntries.putIfAbsent("useSoulLanternsInHauntedLakes", false);
 
-        biomeConfigEntries.putIfAbsent("haunted_forest", BiomeConfigEntry.of(Arrays.asList("windswept_forest")));
-        biomeConfigEntries.putIfAbsent("haunted_lakes", BiomeConfigEntry.of(Arrays.asList("swamp")));
+        // A biome is only as common as the vanilla biomes it replaces. windswept_forest alone is rare
+        // enough that the haunted forest could sit outside /locate range; taiga hosts it just as well,
+        // since the biome is built entirely from spruce.
+        biomeConfigEntries.putIfAbsent("haunted_forest", BiomeConfigEntry.of(Arrays.asList("windswept_forest", "taiga", "old_growth_spruce_taiga")));
+        biomeConfigEntries.putIfAbsent("haunted_lakes", BiomeConfigEntry.of(Arrays.asList("swamp", "mangrove_swamp")));
         biomeConfigEntries.putIfAbsent("eroded_haunted_forest", BiomeConfigEntry.of(Arrays.asList("meadow")));
         biomeConfigEntries.putIfAbsent("ancient_dead_coral_reef", BiomeConfigEntry.of(Arrays.asList("beach")));
         biomeConfigEntries.putIfAbsent("deep_dark_forest", BiomeConfigEntry.of(Arrays.asList("dark_forest")));
