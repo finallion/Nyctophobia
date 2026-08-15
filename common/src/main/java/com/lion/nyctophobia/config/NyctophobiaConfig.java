@@ -72,12 +72,16 @@ public class NyctophobiaConfig implements Config {
         // since the biome is built entirely from spruce.
         // Two biomes must not claim the same host: replaceBiome maps one vanilla biome to one
         // replacement, so the second call would simply overwrite the first.
-        biomeConfigEntries.putIfAbsent("haunted_forest", BiomeConfigEntry.of(Arrays.asList("windswept_forest", "taiga", "old_growth_spruce_taiga")));
+        biomeConfigEntries.putIfAbsent("haunted_forest", BiomeConfigEntry.of(Arrays.asList("windswept_forest", "taiga")));
         biomeConfigEntries.putIfAbsent("haunted_lakes", BiomeConfigEntry.of(Arrays.asList("swamp")));
         biomeConfigEntries.putIfAbsent("eroded_haunted_forest", BiomeConfigEntry.of(Arrays.asList("meadow")));
         biomeConfigEntries.putIfAbsent("ancient_dead_coral_reef", BiomeConfigEntry.of(Arrays.asList("beach")));
         biomeConfigEntries.putIfAbsent("deep_dark_forest", BiomeConfigEntry.of(Arrays.asList("dark_forest")));
         biomeConfigEntries.putIfAbsent("marshlands", BiomeConfigEntry.of(Arrays.asList("mangrove_swamp")));
+        // The two old growth taigas alone are too rare to be found; windswept_hills carries the biome
+        // often enough, and a fire on an exposed hillside is no stretch. old_growth_spruce_taiga moves
+        // here from the haunted forest, which keeps taiga and stays common enough on its own.
+        biomeConfigEntries.putIfAbsent("burnt_forest", BiomeConfigEntry.of(Arrays.asList("old_growth_pine_taiga", "old_growth_spruce_taiga", "windswept_hills")));
 
         biomeFogConfigEntries.putIfAbsent("haunted_forest_fog", BiomeFogConfigEntry.of(0.35F, 63, 148));
         biomeFogConfigEntries.putIfAbsent("haunted_lakes_fog", BiomeFogConfigEntry.of(0.3F, 63, 128));

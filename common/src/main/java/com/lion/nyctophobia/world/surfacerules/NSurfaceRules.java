@@ -17,6 +17,8 @@ public class NSurfaceRules {
     private static final MaterialRules.MaterialRule ROOTED_DIRT = block(Blocks.ROOTED_DIRT);
     private static final MaterialRules.MaterialRule COARSE_DIRT = block(Blocks.COARSE_DIRT);
     private static final MaterialRules.MaterialRule MUD = block(Blocks.MUD);
+    private static final MaterialRules.MaterialRule GRAVEL = block(Blocks.GRAVEL);
+    private static final MaterialRules.MaterialRule BASALT = block(Blocks.BASALT);
     private static final MaterialRules.MaterialRule SOUL_SAND = block(Blocks.SOUL_SAND);
     private static final MaterialRules.MaterialRule SOUL_SOIL = block(Blocks.SOUL_SOIL);
     private static final MaterialRules.MaterialRule GRASS_BLOCK = block(Blocks.GRASS_BLOCK);
@@ -176,7 +178,22 @@ public class NSurfaceRules {
                                                 GRASS_BLOCK)),
                                 MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), DIRT)));
 
+        // Burnt ground: coarse dirt with ash-coloured patches, and bare basalt where the slope is too
+        // steep for anything to have settled.
+        MaterialRules.MaterialRule burntForestRule =
+                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.condition(above62,
+                                        MaterialRules.sequence(
+                                                MaterialRules.condition(MaterialRules.steepSlope(), BASALT),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.4D, 0.8D), SOUL_SOIL),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.3D, 0.7D), GRAVEL),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.8D, -0.3D), SOUL_SAND),
+                                                COARSE_DIRT)),
+                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), DIRT)));
+
         return MaterialRules.sequence(
+                MaterialRules.condition(MaterialRules.biome(NBiomes.BURNT_FOREST_KEY), burntForestRule),
                 MaterialRules.condition(MaterialRules.biome(NBiomes.MARSHLANDS_KEY), marshlandsRule),
                 MaterialRules.condition(MaterialRules.biome(NBiomes.ERODED_HAUNTED_FOREST_KEY), erodedHauntedForestRule),
                 MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_LAKES_KEY), hauntedForestRule),

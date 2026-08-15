@@ -3,6 +3,7 @@ package com.lion.nyctophobia.init;
 
 import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.world.biomes.AncientDeadCoralReef;
+import com.lion.nyctophobia.world.biomes.BurntForest;
 import com.lion.nyctophobia.world.biomes.DeepDarkForest;
 import com.lion.nyctophobia.world.biomes.HauntedForestBiomes;
 import com.lion.nyctophobia.world.biomes.Marshlands;
@@ -26,6 +27,7 @@ public class NBiomes {
     public static final RegistryKey<Biome> ANCIENT_DEAD_CORAL_REEF_KEY = registerBiomeKeys("ancient_dead_coral_reef");
     public static final RegistryKey<Biome> DEEP_DARK_FOREST = registerBiomeKeys("deep_dark_forest");
     public static final RegistryKey<Biome> MARSHLANDS_KEY = registerBiomeKeys("marshlands");
+    public static final RegistryKey<Biome> BURNT_FOREST_KEY = registerBiomeKeys("burnt_forest");
 
     private static RegistryKey<Biome> registerBiomeKeys(String name) {
         RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, new Identifier(Nyctophobia.MOD_ID, name));
@@ -48,6 +50,7 @@ public class NBiomes {
         entries.add(ANCIENT_DEAD_CORAL_REEF_KEY, AncientDeadCoralReef.createAncientDeadCoralReef(entries));
         entries.add(DEEP_DARK_FOREST, DeepDarkForest.createDeepDarkForest(entries));
         entries.add(MARSHLANDS_KEY, Marshlands.createMarshlands(entries));
+        entries.add(BURNT_FOREST_KEY, BurntForest.createBurntForest(entries));
 
     }
 }
