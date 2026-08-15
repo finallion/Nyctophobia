@@ -1,0 +1,16 @@
+{
+  "type": "nyctophobia:fallen_spruce_tree",
+  "config": {
+    "leaf_state": {
+      "Name": "minecraft:oak_leaves",
+      "Properties": {
+        "distance": "1",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    },
+    "wood_state": {
+      "Name": "minecraft:blackstone"
+    }
+  }
+}

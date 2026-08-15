@@ -43,6 +43,7 @@ public class NFeatures {
     public static final Supplier<Feature<DefaultFeatureConfig>> BUSH_FEATURE = registerFeature("bush_feature", () -> new BushFeature(DefaultFeatureConfig.CODEC, (LeavesBlock) Blocks.SPRUCE_LEAVES));
     public static final Supplier<Feature<DefaultFeatureConfig>> DEEP_DARK_FOREST_BUSH_FEATURE = registerFeature("deep_dark_forest_bush_feature", () -> new BushFeature(DefaultFeatureConfig.CODEC, (LeavesBlock) Blocks.DARK_OAK_LEAVES));
     public static final Supplier<Feature<DefaultFeatureConfig>> SOUL_LIGHT_FEATURE = registerFeature("soul_light_feature", () -> new SoulLightFeature(DefaultFeatureConfig.CODEC));
+    public static final Supplier<Feature<DefaultFeatureConfig>> FLOATING_CANDLE_FEATURE = registerFeature("floating_candle_feature", () -> new FloatingCandleFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> FALLEN_TREE_FEATURE = registerFeature("fallen_tree_feature", () -> new FallenTreeFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> DEAD_CORAL_TREE_FEATURE = registerFeature("dead_coral_tree_feature", () -> new DeadCoralTreeFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> DEAD_CORAL_CLAW_FEATURE = registerFeature("dead_coral_claw_feature", () -> new DeadCoralClawFeature(DefaultFeatureConfig.CODEC));

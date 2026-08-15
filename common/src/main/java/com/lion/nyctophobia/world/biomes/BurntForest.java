@@ -7,9 +7,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeAdditionsSound;
 import net.minecraft.sound.BiomeMoodSound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
+import net.minecraft.world.biome.BiomeParticleConfig;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
@@ -37,12 +39,15 @@ public class BurntForest {
                 .temperature(0.5F)
                 .downfall(0.2F)
                 .effects((new BiomeEffects.Builder())
-                        .grassColor(0x6B6350)
-                        .foliageColor(0x5C5647)
+                        // Oak leaves take this colour, which is what makes the canopy read as dead
+                        // rather than green - see the note on the burnt tree features.
+                        .grassColor(0x5F5A4A)
+                        .foliageColor(0x4A4438)
                         .waterColor(0x63615A)
                         .waterFogColor(0x4A4842)
                         .fogColor(0x585858)
                         .skyColor(0x585858)
+                        .particleConfig(new BiomeParticleConfig(ParticleTypes.ASH, 0.09F))
                         .music(MusicType.GAME)
                         .loopSound(SoundEvents.AMBIENT_BASALT_DELTAS_LOOP)
                         .moodSound(new BiomeMoodSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D))
@@ -68,9 +73,11 @@ public class BurntForest {
     /// stays ahead of this mod's own features, and those keep the order the haunted forests set.
     /// Deliberately no grass, ferns or mushrooms - nothing here has grown back yet.
     private static void addBurntFeatures(GenerationSettings.LookupBackedBuilder generationSettings, FabricDynamicRegistryProvider.Entries entries) {
+        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_LARGE_FERN);
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_DEAD_BUSH);
 
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BURNT_FOREST_TREES_PLACED));
+        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BURNT_LICHEN_FEATURE));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.FALLEN_TREE_FEATURE));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));

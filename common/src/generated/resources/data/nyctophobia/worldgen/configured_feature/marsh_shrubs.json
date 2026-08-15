@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "default": {
+      "feature": "nyctophobia:small_spruce_tree_04",
+      "placement": []
+    },
+    "features": [
+      {
+        "chance": 0.3,
+        "feature": {
+          "feature": "nyctophobia:small_spruce_tree_05",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.3,
+        "feature": {
+          "feature": "nyctophobia:small_spruce_tree_06",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.3,
+        "feature": {
+          "feature": "nyctophobia:small_bent_spruce_tree_01",
+          "placement": []
+        }
+      }
+    ]
+  }
+}

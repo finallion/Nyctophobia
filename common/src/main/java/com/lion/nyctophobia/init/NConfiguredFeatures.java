@@ -7,9 +7,9 @@ import com.lion.nyctophobia.world.trunk.DeepDarkOakTrunkPlacer;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.block.*;
 import net.minecraft.registry.*;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.dynamic.Range;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
@@ -18,7 +18,6 @@ import net.minecraft.world.gen.feature.size.ThreeLayersFeatureSize;
 import net.minecraft.world.gen.foliage.*;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.DualNoiseBlockStateProvider;
-import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -70,12 +69,20 @@ public class NConfiguredFeatures {
 
     public static final RegistryKey<ConfiguredFeature<?, ?>> DEEP_DARK_OAK = of("deep_dark_oak");
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_CANDLE_FEATURE = of("marsh_candle_feature");
+
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_SMALL_01 = of("burnt_tree_small_01");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_SMALL_02 = of("burnt_tree_small_02");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_BENT = of("burnt_tree_bent");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_LARGE_BENT = of("burnt_tree_large_bent");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_LARGE = of("burnt_tree_large");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_FALLEN = of("burnt_tree_fallen");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_LICHEN_FEATURE = of("burnt_lichen_feature");
     public static final RegistryKey<ConfiguredFeature<?, ?>> TG_PATCH_LARGE_FERN = of("tg_patch_large_fern_config");
     public static final RegistryKey<ConfiguredFeature<?, ?>> TG_PATCH_LEAVES = of("tg_patch_leaves_config");
     public static final RegistryKey<ConfiguredFeature<?, ?>> TG_PATCH_MEADOW_FLOWER = of("tg_patch_meadow_flower_config");
 
-    private static BlockState litCandles(int count) {
-        return Blocks.CANDLE.getDefaultState().with(CandleBlock.CANDLES, count).with(CandleBlock.LIT, true);
+    private static NTreeFeatureConfig burntTree() {
+        return new NTreeFeatureConfig(Blocks.POLISHED_BASALT.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState());
     }
 
     public static <FC extends FeatureConfig, F extends Feature<FC>> ConfiguredFeature<FC, ?> configureFeature(F feature, FC config) {
@@ -125,14 +132,24 @@ public class NConfiguredFeatures {
         entries.add(LARGE_BENT_SPRUCE_TREE_02, configureFeature(NFeatures.LARGE_BENT_SPRUCE_TREE_02, new NTreeFeatureConfig(Blocks.SPRUCE_LOG.getDefaultState(), Blocks.SPRUCE_LEAVES.getDefaultState())));
 
         entries.add(DEEP_DARK_OAK, configureFeature(Feature.TREE, (new TreeFeatureConfig.Builder(BlockStateProvider.of(Blocks.DARK_OAK_LOG), new DeepDarkOakTrunkPlacer(13, 4, 2), BlockStateProvider.of(Blocks.DARK_OAK_LEAVES), new DarkOakFoliagePlacer(ConstantIntProvider.create(0), ConstantIntProvider.create(0)), new ThreeLayersFeatureSize(1, 1, 0, 1, 2, OptionalInt.empty()))).ignoreVines().build()));
-        // Lit candles standing in the marsh. SimpleBlockFeature checks canPlaceAt itself, so no extra
-        // survival filter is needed; the taller clusters are rarer so most of them read as single flames.
-        entries.add(MARSH_CANDLE_FEATURE, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(24, 5, 2,
-                PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(new WeightedBlockStateProvider(DataPool.<BlockState>builder()
-                        .add(litCandles(1), 8)
-                        .add(litCandles(2), 4)
-                        .add(litCandles(3), 2)
-                        .add(litCandles(4), 1)))))));
+        // Charred trees. Stripped spruce reads as bare, not burnt, so the trunk is polished basalt -
+        // its vertical grain sells a charred log and its default axis already points up. The fallen
+        // one uses blockstone instead, which has no axis to point the wrong way when it lies down.
+        //
+        // Leaves are oak, not spruce: spruce leaves carry a fixed colour and ignore the biome, so they
+        // would stay green in a burnt wood. Oak leaves take the biome foliage colour.
+        entries.add(BURNT_TREE_SMALL_01, configureFeature(NFeatures.SMALL_SPRUCE_TREE_01, burntTree()));
+        entries.add(BURNT_TREE_SMALL_02, configureFeature(NFeatures.SMALL_SPRUCE_TREE_03, burntTree()));
+        entries.add(BURNT_TREE_BENT, configureFeature(NFeatures.SMALL_BENT_SPRUCE_TREE_01, burntTree()));
+        entries.add(BURNT_TREE_LARGE_BENT, configureFeature(NFeatures.LARGE_BENT_SPRUCE_TREE_01, burntTree()));
+        entries.add(BURNT_TREE_LARGE, configureFeature(NFeatures.LARGE_SPRUCE_TREE_01, burntTree()));
+        entries.add(BURNT_TREE_FALLEN, configureFeature(NFeatures.FALLEN_SPRUCE_TREE, new NTreeFeatureConfig(Blocks.BLACKSTONE.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState())));
+
+        entries.add(BURNT_LICHEN_FEATURE, configureFeature(Feature.MULTIFACE_GROWTH, new MultifaceGrowthFeatureConfig(
+                (MultifaceGrowthBlock) Blocks.GLOW_LICHEN, 20, false, true, true, 0.5F,
+                RegistryEntryList.of(Blocks.POLISHED_BASALT.getRegistryEntry(), Blocks.BLACKSTONE.getRegistryEntry(), Blocks.BASALT.getRegistryEntry()))));
+
+        entries.add(MARSH_CANDLE_FEATURE, configureFeature(NFeatures.FLOATING_CANDLE_FEATURE, FeatureConfig.DEFAULT));
 
         entries.add(TG_PATCH_LARGE_FERN, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 7, 3, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.LARGE_FERN))))));
         entries.add(TG_PATCH_LEAVES, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(64, 6, 0, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.OAK_LEAVES.getDefaultState().with(Properties.PERSISTENT, true)))))));

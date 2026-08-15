@@ -29,6 +29,7 @@ public class NPlacedFeatures {
     public static final RegistryKey<PlacedFeature> DEAD_CORAL_PATCH_FEATURE = of("dead_coral_patch_feature");
     public static final RegistryKey<PlacedFeature> DEEP_DARK_OAK = of("deep_dark_oak");
     public static final RegistryKey<PlacedFeature> MARSH_CANDLE_FEATURE = of("marsh_candle_feature");
+    public static final RegistryKey<PlacedFeature> MARSH_SHRUBS_PLACED = of("marsh_shrubs");
     public static final RegistryKey<PlacedFeature> TG_PATCH_LARGE_FERN = of("tg_patch_large_fern_config");
     public static final RegistryKey<PlacedFeature> TG_PATCH_LEAVES = of("tg_patch_leaves_config");
     public static final RegistryKey<PlacedFeature> TG_PATCH_MEADOW_FLOWER = of("tg_patch_meadow_flower_config");
@@ -36,6 +37,7 @@ public class NPlacedFeatures {
     public static final RegistryKey<PlacedFeature> HAUNTED_FOREST_TREES_PLACED = of("haunted_forest_trees");
     public static final RegistryKey<PlacedFeature> ERODED_HAUNTED_FOREST_TREES_PLACED = of("eroded_haunted_forest_trees");
     public static final RegistryKey<PlacedFeature> BURNT_FOREST_TREES_PLACED = of("burnt_forest_trees");
+    public static final RegistryKey<PlacedFeature> BURNT_LICHEN_FEATURE = of("burnt_lichen_feature");
     public static final RegistryKey<PlacedFeature> ANCIENT_DEAD_REEF_VEGETATION_PLACED = of("ancient_dead_reef_vegetation");
     public static final RegistryKey<PlacedFeature> ANCIENT_DEAD_REEF_WATER_VEGETATION_PLACED = of("ancient_dead_reef_water_vegetation");
     public static final RegistryKey<PlacedFeature> DEEP_DARK_FOREST_VEGETATION_PLACED = of("deep_dark_forest_vegetation");
@@ -43,6 +45,7 @@ public class NPlacedFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> HAUNTED_FOREST_TREES = NConfiguredFeatures.of("haunted_forest_trees");
     public static final RegistryKey<ConfiguredFeature<?, ?>> ERODED_HAUNTED_FOREST_TREES = NConfiguredFeatures.of("eroded_haunted_forest_trees");
     public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_FOREST_TREES = NConfiguredFeatures.of("burnt_forest_trees");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_SHRUBS = NConfiguredFeatures.of("marsh_shrubs");
     public static final RegistryKey<ConfiguredFeature<?, ?>> ANCIENT_DEAD_REEF_VEGETATION = NConfiguredFeatures.of("ancient_dead_reef_vegetation");
     public static final RegistryKey<ConfiguredFeature<?, ?>> DEEP_DARK_FOREST_VEGETATION = NConfiguredFeatures.of("deep_dark_forest_vegetation");
 
@@ -117,6 +120,7 @@ public class NPlacedFeatures {
         // Rare on purpose: a handful of flames across a marsh reads as something left behind, a
         // candle in every chunk reads as decoration.
         entries.add(MARSH_CANDLE_FEATURE, placeFeature(entries, NConfiguredFeatures.MARSH_CANDLE_FEATURE, RarityFilterPlacementModifier.of(6), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
+        entries.add(MARSH_SHRUBS_PLACED, placeFeature(entries, MARSH_SHRUBS, PlacedFeatures.createCountExtraModifier(3, 0.1F, 1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
 
         entries.add(DEEP_DARK_OAK, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_OAK, PlacedFeatures.wouldSurvive(Blocks.DARK_OAK_SAPLING)));
         entries.add(TG_PATCH_LARGE_FERN, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LARGE_FERN, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
@@ -166,17 +170,21 @@ public class NPlacedFeatures {
                 new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.LARGE_SPRUCE_TREE_03_STRIPPED), new PlacementModifier[0]), 0.1F)),
                 entries.ref(TreePlacedFeatures.SPRUCE_CHECKED))));
 
-        // Only the stripped variants: bare spruce logs read as charred without the mod having to add
-        // a single block. The default is stripped too, otherwise a green tree turns up in a burnt wood.
         entries.add(BURNT_FOREST_TREES, NConfiguredFeatures.configureFeature(Feature.RANDOM_SELECTOR, new RandomFeatureConfig(List.of(
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_01_STRIPPED), new PlacementModifier[0]), 0.2F),
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_03_STRIPPED), new PlacementModifier[0]), 0.2F),
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_BENT_SPRUCE_TREE_01_STRIPPED), new PlacementModifier[0]), 0.2F),
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.FALLEN_SPRUCE_TREE_STRIPPED), new PlacementModifier[0]), 0.15F),
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_01_STRIPPED), new PlacementModifier[0]), 0.2F),
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_02_STRIPPED), new PlacementModifier[0]), 0.2F),
-                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.LARGE_SPRUCE_TREE_01_STRIPPED), new PlacementModifier[0]), 0.3F)),
-                PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_02_STRIPPED), new PlacementModifier[0]))));
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.BURNT_TREE_SMALL_02), new PlacementModifier[0]), 0.2F),
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.BURNT_TREE_BENT), new PlacementModifier[0]), 0.2F),
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.BURNT_TREE_FALLEN), new PlacementModifier[0]), 0.2F),
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.BURNT_TREE_LARGE_BENT), new PlacementModifier[0]), 0.2F),
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.BURNT_TREE_LARGE), new PlacementModifier[0]), 0.3F)),
+                PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.BURNT_TREE_SMALL_01), new PlacementModifier[0]))));
+
+        // The smallest spruce variants only, so they read as waist-high scrub rather than a wood -
+        // the marsh is meant to stay open.
+        entries.add(MARSH_SHRUBS, NConfiguredFeatures.configureFeature(Feature.RANDOM_SELECTOR, new RandomFeatureConfig(List.of(
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_05), new PlacementModifier[0]), 0.3F),
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_06), new PlacementModifier[0]), 0.3F),
+                new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_BENT_SPRUCE_TREE_01), new PlacementModifier[0]), 0.3F)),
+                PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_04), new PlacementModifier[0]))));
 
         entries.add(ANCIENT_DEAD_REEF_VEGETATION, NConfiguredFeatures.configureFeature(Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfig(RegistryEntryList.of(
                 PlacedFeatures.createEntry(NFeatures.DEAD_CORAL_TREE_FEATURE.get(), FeatureConfig.DEFAULT, new PlacementModifier[0]),
@@ -199,12 +207,13 @@ public class NPlacedFeatures {
         entries.add(HAUNTED_FOREST_TREES_PLACED, placeFeature(entries, HAUNTED_FOREST_TREES, PlacedFeatures.createCountExtraModifier(15, 0.1F, 1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
         // Far thinner than the living woods on purpose - a burnt forest is mostly the gaps.
         entries.add(BURNT_FOREST_TREES_PLACED, placeFeature(entries, BURNT_FOREST_TREES, PlacedFeatures.createCountExtraModifier(4, 0.1F, 1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Runs after the trees so the trunks it is meant to grow on already stand.
+        entries.add(BURNT_LICHEN_FEATURE, placeFeature(entries, NConfiguredFeatures.BURNT_LICHEN_FEATURE, CountPlacementModifier.of(24), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
         entries.add(ANCIENT_DEAD_REEF_VEGETATION_PLACED, placeFeature(entries, ANCIENT_DEAD_REEF_VEGETATION, NoiseBasedCountPlacementModifier.of(20, 400.0D, 0.0D), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_WG_HEIGHTMAP, BiomePlacementModifier.of()));
         entries.add(ANCIENT_DEAD_REEF_WATER_VEGETATION_PLACED, placeFeature(entries, ANCIENT_DEAD_REEF_VEGETATION, NoiseBasedCountPlacementModifier.of(20, 200.0D, 0.0D), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
-        // Vanilla dark_forest_vegetation tries 16 times per chunk for a small dark oak. The deep dark
-        // oak carries buttress roots and twelve branches, so it needs fewer attempts than vanilla,
-        // not more; the extra count keeps the density uneven enough to leave clearings.
-        entries.add(DEEP_DARK_FOREST_VEGETATION_PLACED, placeFeature(entries, DEEP_DARK_FOREST_VEGETATION, PlacedFeatures.createCountExtraModifier(10, 0.1F, 1), SquarePlacementModifier.of(), SurfaceWaterDepthFilterPlacementModifier.of(0), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Level with vanilla dark_forest_vegetation, which also tries 16 times per chunk. The extra
+        // count keeps the density uneven enough to leave clearings between the giants.
+        entries.add(DEEP_DARK_FOREST_VEGETATION_PLACED, placeFeature(entries, DEEP_DARK_FOREST_VEGETATION, PlacedFeatures.createCountExtraModifier(16, 0.1F, 1), SquarePlacementModifier.of(), SurfaceWaterDepthFilterPlacementModifier.of(0), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
     }
 
     /*

@@ -19,6 +19,7 @@ public class NSurfaceRules {
     private static final MaterialRules.MaterialRule MUD = block(Blocks.MUD);
     private static final MaterialRules.MaterialRule GRAVEL = block(Blocks.GRAVEL);
     private static final MaterialRules.MaterialRule BASALT = block(Blocks.BASALT);
+    private static final MaterialRules.MaterialRule BLACKSTONE = block(Blocks.BLACKSTONE);
     private static final MaterialRules.MaterialRule SOUL_SAND = block(Blocks.SOUL_SAND);
     private static final MaterialRules.MaterialRule SOUL_SOIL = block(Blocks.SOUL_SOIL);
     private static final MaterialRules.MaterialRule GRASS_BLOCK = block(Blocks.GRASS_BLOCK);
@@ -161,15 +162,20 @@ public class NSurfaceRules {
                                         ))));
 
 
-        // Standing water sits in the band just below sea level, the same trick the haunted lakes use.
-        // Above it the ground alternates between mud, moss and grass so the shore never reads as a
-        // single flat colour.
+        // Standing water uses the trick the haunted lakes use, but across a three block band instead
+        // of one: at a single height only terrain that happens to end exactly there turns to water,
+        // which left the marsh nearly dry. Wet ground rings the pools where the noise falls short.
+        MaterialRules.MaterialCondition above60 = MaterialRules.aboveY(YOffset.fixed(60), 0);
+        MaterialRules.MaterialCondition above64 = MaterialRules.aboveY(YOffset.fixed(64), 0);
+
         MaterialRules.MaterialRule marshlandsRule =
                 MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
                         MaterialRules.sequence(
-                                MaterialRules.condition(above62,
-                                        MaterialRules.condition(MaterialRules.not(above63_0),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.2D), WATER))),
+                                MaterialRules.condition(above60,
+                                        MaterialRules.condition(MaterialRules.not(above64),
+                                                MaterialRules.sequence(
+                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.45D), WATER),
+                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.7D, -0.45D), MUD)))),
                                 MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(61), 0),
                                         MaterialRules.sequence(
                                                 MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.6D, -0.2D), MUD),
@@ -186,8 +192,10 @@ public class NSurfaceRules {
                                 MaterialRules.condition(above62,
                                         MaterialRules.sequence(
                                                 MaterialRules.condition(MaterialRules.steepSlope(), BASALT),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.4D, 0.8D), SOUL_SOIL),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.3D, 0.7D), GRAVEL),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.1D, 0.6D), BLACKSTONE),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.6D, 1.0D), SOUL_SOIL),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.2D, 0.6D), BASALT),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, -0.6D, -0.2D), GRAVEL),
                                                 MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.8D, -0.3D), SOUL_SAND),
                                                 COARSE_DIRT)),
                                 MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), DIRT)));
