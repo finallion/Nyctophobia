@@ -14,8 +14,11 @@ import terrablender.api.SurfaceRuleManager;
 
 public class Nyctophobia {
     public static final String MOD_ID = "nyctophobia";
-    public static final NyctophobiaConfig config = OmegaConfig.register(NyctophobiaConfig.class);
+
+    /// Declared before the config: OmegaConfig logs through this field while recovering from an
+    /// unreadable file, and a null logger there turns a handled fault into ExceptionInInitializerError.
     public static final Logger LOGGER = LogManager.getLogger();
+    public static final NyctophobiaConfig config = OmegaConfig.register(NyctophobiaConfig.class);
 
     public static void init() {
         NTrunkPlacer.init();

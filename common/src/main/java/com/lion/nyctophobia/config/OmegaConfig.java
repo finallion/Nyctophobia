@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OmegaConfig {
 
@@ -39,6 +40,11 @@ public class OmegaConfig {
                     Nyctophobia.LOGGER.error(e.toString());
                     Nyctophobia.LOGGER.info(String.format("Encountered an error while reading %s config, falling back to default values.", config.getName()));
                     Nyctophobia.LOGGER.info(String.format("If this problem persists, delete the config file %s and try again.", config.getName() + "." + config.getExtension()));
+
+                    // The fresh instance carries empty maps until save() fills them. Returning it as
+                    // is makes every later getBiome/getFog throw and takes the mod down long after
+                    // the actual fault, so rewrite the unreadable file with the defaults.
+                    config.save();
                 }
             }
 
@@ -75,7 +81,7 @@ public class OmegaConfig {
                 String comment = entry.getValue();
 
                 if (at.trim().startsWith(String.format("\"%s\"", key))) {
-                    insertions.put(i + insertions.size(), String.format("%s//%s", getStartingWhitespace(at), comment));
+                    insertions.put(i + insertions.size(), commentBlock(comment, getStartingWhitespace(at)));
                     break;
                 }
             }
@@ -98,6 +104,15 @@ public class OmegaConfig {
             Nyctophobia.LOGGER.error(ioException.toString());
             Nyctophobia.LOGGER.info(String.format("Write error, using default values for config %s.", configClass));
         }
+    }
+
+    /// Every line needs its own `//`. The reader drops comment lines by that prefix, so a multi-line
+    /// description behind a single marker leaves bare prose in the file and the next start fails to
+    /// parse its own config.
+    private static String commentBlock(String comment, String indent) {
+        return Arrays.stream(comment.split("\n"))
+                .map(line -> String.format("%s//%s", indent, line))
+                .collect(Collectors.joining(System.lineSeparator()));
     }
 
     private static void addFieldComments(Field field, Map<String, String> keyToComments) {
