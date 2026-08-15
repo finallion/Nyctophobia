@@ -5,6 +5,7 @@ import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.world.biomes.AncientDeadCoralReef;
 import com.lion.nyctophobia.world.biomes.DeepDarkForest;
 import com.lion.nyctophobia.world.biomes.HauntedForestBiomes;
+import com.lion.nyctophobia.world.biomes.Marshlands;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.registry.*;
 import net.minecraft.util.Identifier;
@@ -24,6 +25,7 @@ public class NBiomes {
     public static final RegistryKey<Biome> HAUNTED_FOREST_KEY = registerBiomeKeys("haunted_forest");
     public static final RegistryKey<Biome> ANCIENT_DEAD_CORAL_REEF_KEY = registerBiomeKeys("ancient_dead_coral_reef");
     public static final RegistryKey<Biome> DEEP_DARK_FOREST = registerBiomeKeys("deep_dark_forest");
+    public static final RegistryKey<Biome> MARSHLANDS_KEY = registerBiomeKeys("marshlands");
 
     private static RegistryKey<Biome> registerBiomeKeys(String name) {
         RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, new Identifier(Nyctophobia.MOD_ID, name));
@@ -45,6 +47,7 @@ public class NBiomes {
         entries.add(HAUNTED_LAKES_KEY, HauntedForestBiomes.createHauntedLakes(entries));
         entries.add(ANCIENT_DEAD_CORAL_REEF_KEY, AncientDeadCoralReef.createAncientDeadCoralReef(entries));
         entries.add(DEEP_DARK_FOREST, DeepDarkForest.createDeepDarkForest(entries));
+        entries.add(MARSHLANDS_KEY, Marshlands.createMarshlands(entries));
 
     }
 }

@@ -16,6 +16,7 @@ public class NSurfaceRules {
     private static final MaterialRules.MaterialRule MOSS_BLOCK = block(Blocks.MOSS_BLOCK);
     private static final MaterialRules.MaterialRule ROOTED_DIRT = block(Blocks.ROOTED_DIRT);
     private static final MaterialRules.MaterialRule COARSE_DIRT = block(Blocks.COARSE_DIRT);
+    private static final MaterialRules.MaterialRule MUD = block(Blocks.MUD);
     private static final MaterialRules.MaterialRule SOUL_SAND = block(Blocks.SOUL_SAND);
     private static final MaterialRules.MaterialRule SOUL_SOIL = block(Blocks.SOUL_SOIL);
     private static final MaterialRules.MaterialRule GRASS_BLOCK = block(Blocks.GRASS_BLOCK);
@@ -158,7 +159,25 @@ public class NSurfaceRules {
                                         ))));
 
 
+        // Standing water sits in the band just below sea level, the same trick the haunted lakes use.
+        // Above it the ground alternates between mud, moss and grass so the shore never reads as a
+        // single flat colour.
+        MaterialRules.MaterialRule marshlandsRule =
+                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.condition(above62,
+                                        MaterialRules.condition(MaterialRules.not(above63_0),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.2D), WATER))),
+                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(61), 0),
+                                        MaterialRules.sequence(
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.6D, -0.2D), MUD),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.3D, 0.7D), MOSS_BLOCK),
+                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.4D, 0.8D), COARSE_DIRT),
+                                                GRASS_BLOCK)),
+                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), DIRT)));
+
         return MaterialRules.sequence(
+                MaterialRules.condition(MaterialRules.biome(NBiomes.MARSHLANDS_KEY), marshlandsRule),
                 MaterialRules.condition(MaterialRules.biome(NBiomes.ERODED_HAUNTED_FOREST_KEY), erodedHauntedForestRule),
                 MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_LAKES_KEY), hauntedForestRule),
                 MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_FOREST_KEY), hauntedForestRule),

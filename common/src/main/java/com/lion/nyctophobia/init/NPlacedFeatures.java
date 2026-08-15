@@ -28,6 +28,7 @@ public class NPlacedFeatures {
     public static final RegistryKey<PlacedFeature> FALLEN_TREE_FEATURE = of("fallen_tree_feature");
     public static final RegistryKey<PlacedFeature> DEAD_CORAL_PATCH_FEATURE = of("dead_coral_patch_feature");
     public static final RegistryKey<PlacedFeature> DEEP_DARK_OAK = of("deep_dark_oak");
+    public static final RegistryKey<PlacedFeature> MARSH_CANDLE_FEATURE = of("marsh_candle_feature");
     public static final RegistryKey<PlacedFeature> TG_PATCH_LARGE_FERN = of("tg_patch_large_fern_config");
     public static final RegistryKey<PlacedFeature> TG_PATCH_LEAVES = of("tg_patch_leaves_config");
     public static final RegistryKey<PlacedFeature> TG_PATCH_MEADOW_FLOWER = of("tg_patch_meadow_flower_config");
@@ -111,6 +112,9 @@ public class NPlacedFeatures {
         entries.add(SOUL_LIGHT_FEATURE, placeFeature(entries, NConfiguredFeatures.SOUL_LIGHT_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(100)));
         entries.add(FALLEN_TREE_FEATURE, placeFeature(entries, NConfiguredFeatures.FALLEN_TREE_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(20)));
         entries.add(DEAD_CORAL_PATCH_FEATURE, placeFeature(entries, NConfiguredFeatures.DEAD_CORAL_PATCH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
+        // Rare on purpose: a handful of flames across a marsh reads as something left behind, a
+        // candle in every chunk reads as decoration.
+        entries.add(MARSH_CANDLE_FEATURE, placeFeature(entries, NConfiguredFeatures.MARSH_CANDLE_FEATURE, RarityFilterPlacementModifier.of(6), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
 
         entries.add(DEEP_DARK_OAK, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_OAK, PlacedFeatures.wouldSurvive(Blocks.DARK_OAK_SAPLING)));
         entries.add(TG_PATCH_LARGE_FERN, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LARGE_FERN, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));

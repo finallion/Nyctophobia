@@ -70,15 +70,19 @@ public class NyctophobiaConfig implements Config {
         // A biome is only as common as the vanilla biomes it replaces. windswept_forest alone is rare
         // enough that the haunted forest could sit outside /locate range; taiga hosts it just as well,
         // since the biome is built entirely from spruce.
+        // Two biomes must not claim the same host: replaceBiome maps one vanilla biome to one
+        // replacement, so the second call would simply overwrite the first.
         biomeConfigEntries.putIfAbsent("haunted_forest", BiomeConfigEntry.of(Arrays.asList("windswept_forest", "taiga", "old_growth_spruce_taiga")));
-        biomeConfigEntries.putIfAbsent("haunted_lakes", BiomeConfigEntry.of(Arrays.asList("swamp", "mangrove_swamp")));
+        biomeConfigEntries.putIfAbsent("haunted_lakes", BiomeConfigEntry.of(Arrays.asList("swamp")));
         biomeConfigEntries.putIfAbsent("eroded_haunted_forest", BiomeConfigEntry.of(Arrays.asList("meadow")));
         biomeConfigEntries.putIfAbsent("ancient_dead_coral_reef", BiomeConfigEntry.of(Arrays.asList("beach")));
         biomeConfigEntries.putIfAbsent("deep_dark_forest", BiomeConfigEntry.of(Arrays.asList("dark_forest")));
+        biomeConfigEntries.putIfAbsent("marshlands", BiomeConfigEntry.of(Arrays.asList("mangrove_swamp")));
 
         biomeFogConfigEntries.putIfAbsent("haunted_forest_fog", BiomeFogConfigEntry.of(0.35F, 63, 148));
         biomeFogConfigEntries.putIfAbsent("haunted_lakes_fog", BiomeFogConfigEntry.of(0.3F, 63, 128));
         biomeFogConfigEntries.putIfAbsent("eroded_haunted_forest_fog", BiomeFogConfigEntry.of(0.35F, 93, 160));
+        biomeFogConfigEntries.putIfAbsent("marshlands_fog", BiomeFogConfigEntry.of(0.25F, 55, 110));
 
         Config.super.save();
     }
