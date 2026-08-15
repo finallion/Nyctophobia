@@ -1,0 +1,25 @@
+dependencies {
+	modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+	modApi "dev.architectury:architectury:${rootProject.architectury_version}"
+
+	// terrablender.api is identical in the fabric and forge artifacts, so common compiles against
+	// one of them and each loader module ships its own at runtime.
+	modCompileOnly "com.github.glitchfiend:TerraBlender-fabric:${rootProject.minecraft_version}-${rootProject.terrablender_version}"
+	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+}
+
+architectury {
+	common(rootProject.enabled_platforms.split(","))
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/nyctophobia.accesswidener")
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDirs += ["src/generated/resources"]
+		}
+	}
+}

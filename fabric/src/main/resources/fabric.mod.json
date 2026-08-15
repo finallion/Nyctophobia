@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "nyctophobia",
+  "version": "${version}",
+
+  "name": "Nyctophobia",
+  "description": "Spooky, foggy, creepy and dark biomes for your Minecraft world",
+  "authors": [
+    "Finallion"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/nyctophobia/nyctophobia.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.lion.nyctophobia.fabric.NyctophobiaFabric"
+    ],
+    "fabric-datagen": [
+      "com.lion.nyctophobia.data.NDataGen"
+    ],
+    "terrablender": [
+      "com.lion.nyctophobia.fabric.NyctophobiaFabric"
+    ],
+    "client": []
+  },
+  "mixins": [
+    "nyctophobia-common.mixins.json",
+    "nyctophobia-fabric.mixins.json"
+  ],
+  "accessWidener": "nyctophobia.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "fabric-api": "*",
+    "minecraft": "~1.20",
+    "java": ">=17",
+    "terrablender": ">=3.0.1.10"
+  }
+}

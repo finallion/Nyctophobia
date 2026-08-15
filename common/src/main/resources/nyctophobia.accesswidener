@@ -1,0 +1,6 @@
+accessWidener	v2	named
+
+# TrunkPlacerType only exposes a private constructor plus a private static register that hardcodes
+# the minecraft namespace. Widening the constructor lets both loaders register through their own
+# mechanism (Registry.register on Fabric, DeferredRegister on Forge) under the mod namespace.
+accessible	method	net/minecraft/world/gen/trunk/TrunkPlacerType	<init>	(Lcom/mojang/serialization/Codec;)V

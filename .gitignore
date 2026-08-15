@@ -31,3 +31,20 @@ bin/
 # fabric
 
 run/
+logs/
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+
+curseforge-upload/
+
+# claude and local docs: stays on disk, never in the repo
+
+CLAUDE.md
+.claude/
+docs/
+*.md
+!README.md
