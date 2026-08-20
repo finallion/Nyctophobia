@@ -8,12 +8,25 @@ import net.minecraft.util.Identifier;
 import java.util.*;
 
 public class NyctophobiaConfig implements Config {
+
+    /// Raise this together with a new step in migrate() whenever a changed default has to reach a
+    /// file that already exists on disk.
+    private static final int CONFIG_VERSION = 1;
+
+    @Description("""
+             Bookkeeping, not a setting. It records which defaults this file has already been brought
+             up to date with. A file written before this existed reads back as 0.
+            
+            """)
+    public int configVersion = 0;
+
     @Description("""
              Welcome to the Nyctophobia Config!
              
              Configure the weight of the biomes by changing "nyctophobiaBiomeWeight".
              Configure which minecraft biomes can be replaced by Nyctophobia Biomes.
              A full list of all the biomes can be found here https:minecraft.fandom.com/wiki/Biome#Biome_IDs.
+             A biome from another mod needs its full id, for example "biomesoplenty:bayou".
              Configure fog density and fog height.
              
             """)
@@ -88,9 +101,32 @@ public class NyctophobiaConfig implements Config {
         biomeFogConfigEntries.putIfAbsent("eroded_haunted_forest_fog", BiomeFogConfigEntry.of(0.35F, 93, 160));
         biomeFogConfigEntries.putIfAbsent("marshlands_fog", BiomeFogConfigEntry.of(0.25F, 55, 110));
 
+        migrate();
+
         Config.super.save();
     }
 
+    /// putIfAbsent only ever fills a gap, so an entry the file already carries keeps whatever it
+    /// holds and a changed default never arrives. Each step below closes one such gap once. They add
+    /// rather than replace, so the rest of a list someone has edited survives.
+    private void migrate() {
+        if (configVersion < 1) {
+            addHost("haunted_forest", "taiga");
+        }
+
+        configVersion = CONFIG_VERSION;
+    }
+
+    private void addHost(String biome, String host) {
+        BiomeConfigEntry entry = biomeConfigEntries.get(biome);
+        if (entry == null || entry.replaceableBiomes.contains(host)) {
+            return;
+        }
+
+        // A fresh default is a fixed size list, so it is rebuilt instead of appended to.
+        List<String> hosts = new ArrayList<>(entry.replaceableBiomes);
+        hosts.add(host);
+        biomeConfigEntries.put(biome, BiomeConfigEntry.of(entry.canGenerate, hosts));
+    }
+
 }
-
-

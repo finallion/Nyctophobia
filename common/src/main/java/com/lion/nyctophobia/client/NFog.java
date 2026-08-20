@@ -32,8 +32,17 @@ public final class NFog {
     /// it doubles as the resting state. Fog eases towards the configured density instead of snapping,
     /// which is what makes leaving a foggy biome fade rather than pop.
     private static final float CLEAR = 32.0F;
+
+    /// Rates per reference frame of real time, not per call. Each loader hooks a different point and
+    /// the hook may fire several times per frame, so a rate stepped once per call would fade at
+    /// whatever speed the loader and the frame rate happen to produce.
     private static final float FADE_IN = 0.975F;
     private static final float FADE_OUT = 1.05F;
+    private static final float REFERENCE_FRAME_TIME = 1.0F / 60.0F;
+
+    /// A gap long enough to carry the fade to its end in one step (window minimised, world still
+    /// loading) is capped, so returning to the window does not snap the fog on.
+    private static final float MAX_STEP = 6.0F;
 
     /// Returned by densityFor when this position has no fog at all.
     private static final float NO_DENSITY = -1.0F;
@@ -43,6 +52,10 @@ public final class NFog {
     private static final Map<RegistryKey<Biome>, BiomeFogConfigEntry> FOG_BY_BIOME = resolveFogBiomes();
 
     private static float fogFactor = CLEAR;
+
+    /// Real time of the previous step, so the fade rates above act as a speed. Zero means no step has
+    /// been taken yet.
+    private static long lastStepNanos;
 
     /// Switched from the client command. Purely visual and never sent anywhere, so it can differ from
     /// player to player on the same server.
@@ -61,6 +74,7 @@ public final class NFog {
             // Drop straight to clear rather than easing out, or the fog would linger for a second
             // after someone explicitly turned it off.
             fogFactor = CLEAR;
+            lastStepNanos = 0L;
         }
         return enabled;
     }
@@ -75,12 +89,14 @@ public final class NFog {
     }
 
     /// Near and far plane distance for this frame, or null to leave vanilla fog untouched. Both
-    /// loaders call this with the view distance their hook gives them.
+    /// loaders pass the game renderer's view distance, and both call this once per frame, so the fog
+    /// comes out the same on either.
     public static FogPlanes compute(MinecraftClient client, Camera camera, float viewDistance) {
         if (!enabled || client.world == null) {
             return null;
         }
 
+        float steps = elapsedSteps();
         BlockPos pos = camera.getBlockPos();
         RegistryKey<Biome> biome = client.world.getBiome(pos).getKey().orElse(null);
         float density = densityFor(biome, pos.getY());
@@ -90,7 +106,7 @@ public final class NFog {
                 fogFactor = CLEAR;
                 return null;
             }
-            fogFactor *= FADE_OUT;
+            fogFactor = Math.min(fogFactor * fade(FADE_OUT, steps), CLEAR);
         }
 
         if (camera.getSubmersionType() != CameraSubmersionType.NONE) {
@@ -103,11 +119,30 @@ public final class NFog {
         }
 
         if (density >= 0.0F && fogFactor > density) {
-            fogFactor *= FADE_IN;
+            // Clamped, or a capped step could carry the factor past its target into thicker fog than
+            // the biome is configured for.
+            fogFactor = Math.max(fogFactor * fade(FADE_IN, steps), density);
         }
 
         float clamped = Math.max(viewDistance - 16.0F, CLEAR);
         return new FogPlanes(clamped * 0.05F * fogFactor, Math.min(clamped, 192.0F) * 0.5F * fogFactor);
+    }
+
+    /// Reference frames of real time since the previous step. The first step after a pause counts as
+    /// one frame, so the fog picks up where it left off instead of jumping.
+    private static float elapsedSteps() {
+        long now = System.nanoTime();
+        long previous = lastStepNanos;
+        lastStepNanos = now;
+
+        if (previous == 0L) {
+            return 1.0F;
+        }
+        return Math.min((now - previous) / 1.0E9F / REFERENCE_FRAME_TIME, MAX_STEP);
+    }
+
+    private static float fade(float rate, float steps) {
+        return (float) Math.pow(rate, steps);
     }
 
     /// Negative means no fog is configured here. A Y outside the configured band counts as no fog, so

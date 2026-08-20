@@ -3,6 +3,7 @@ package com.lion.nyctophobia.forge.client;
 import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.client.NFog;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +43,17 @@ public class NyctophobiaForgeClient {
 
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {
-        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getFarPlaneDistance());
+        // The hook sits inside applyFog itself, so it fires for every fog pass of a frame: the sky
+        // twice and the terrain once. The terrain pass is the one the Fabric mixin sits on, and
+        // taking the sky passes as well would repaint the horizon on this loader alone.
+        if (event.getMode() != BackgroundRenderer.FogType.FOG_TERRAIN) {
+            return;
+        }
+
+        // The view distance, not the plane the event carries: by this point vanilla has already
+        // turned that into a fog end, and NFog derives the planes from the raw distance the same way
+        // vanilla does.
+        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getRenderer().getViewDistance());
         if (planes == null) {
             return;
         }

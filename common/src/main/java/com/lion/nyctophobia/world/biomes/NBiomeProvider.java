@@ -11,8 +11,6 @@ import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 
@@ -24,8 +22,6 @@ public class NBiomeProvider extends Region {
 
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> mapper) {
-        Map<String, RegistryKey<Biome>> vanillaByPath = keysByPath(registry);
-
         this.addModifiedVanillaOverworldBiomes(mapper, builder -> {
             NBiomes.byPath().forEach((path, biome) -> {
                 BiomeConfigEntry entry = Nyctophobia.config.biomeConfigEntries.get(path);
@@ -34,11 +30,17 @@ public class NBiomeProvider extends Region {
                 }
 
                 for (String host : entry.replaceableBiomes) {
-                    RegistryKey<Biome> hostKey = vanillaByPath.get(host);
-                    if (hostKey == null) {
+                    Identifier hostId = hostId(host);
+                    if (hostId == null) {
                         // Skipping keeps one typo from taking the whole region down inside TerraBlender,
                         // far away from the config line that caused it.
-                        Nyctophobia.LOGGER.error("Unknown biome \"" + host + "\" configured for " + path + ", skipping it.");
+                        Nyctophobia.LOGGER.error("Malformed biome id \"" + host + "\" configured for " + path + ", skipping it.");
+                        continue;
+                    }
+
+                    RegistryKey<Biome> hostKey = RegistryKey.of(RegistryKeys.BIOME, hostId);
+                    if (!registry.contains(hostKey)) {
+                        Nyctophobia.LOGGER.error("Unknown biome \"" + hostId + "\" configured for " + path + ", skipping it.");
                         continue;
                     }
                     builder.replaceBiome(hostKey, biome);
@@ -47,13 +49,10 @@ public class NBiomeProvider extends Region {
         });
     }
 
-    /// Resolved once per region build. The previous lookup walked the whole biome registry for every
-    /// single config entry.
-    private static Map<String, RegistryKey<Biome>> keysByPath(Registry<Biome> registry) {
-        Map<String, RegistryKey<Biome>> byPath = new HashMap<>();
-        for (Map.Entry<RegistryKey<Biome>, Biome> entry : registry.getEntrySet()) {
-            byPath.put(entry.getKey().getValue().getPath(), entry.getKey());
-        }
-        return byPath;
+    /// A bare path still means a vanilla biome, so files written before this stay valid, while a full
+    /// id reaches a biome from another mod. Matching on the path alone cannot do that: two mods are
+    /// free to ship the same path, and one would silently stand in for the other.
+    private static Identifier hostId(String host) {
+        return Identifier.tryParse(host.indexOf(':') < 0 ? Identifier.DEFAULT_NAMESPACE + ":" + host : host);
     }
 }
