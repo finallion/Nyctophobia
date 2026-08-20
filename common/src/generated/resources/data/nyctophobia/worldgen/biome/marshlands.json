@@ -36,7 +36,8 @@
     [],
     [
       "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface"
+      "minecraft:lake_lava_surface",
+      "nyctophobia:marsh_pool"
     ],
     [],
     [
@@ -89,6 +90,8 @@
       "minecraft:brown_mushroom_swamp",
       "minecraft:red_mushroom_swamp",
       "minecraft:seagrass_swamp",
+      "nyctophobia:marsh_tree",
+      "nyctophobia:marsh_thicket",
       "nyctophobia:marsh_roots",
       "nyctophobia:moss_carpet_feature",
       "nyctophobia:bush_feature",

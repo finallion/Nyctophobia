@@ -30,12 +30,14 @@ public class NFeatures {
     public static final Supplier<Feature<NTreeFeatureConfig>> SMALL_SPRUCE_TREE_05 = registerFeature("small_spruce_tree_05", () -> new SmallSpruceTree05(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> SMALL_SPRUCE_TREE_06 = registerFeature("small_spruce_tree_06", () -> new SmallSpruceTree06(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> SMALL_BENT_SPRUCE_TREE_01 = registerFeature("small_bent_spruce_tree_01", () -> new SmallBentSpruceTree01(NTreeFeatureConfig.CODEC));
-    public static final Supplier<Feature<NTreeFeatureConfig>> FALLEN_SPRUCE_TREE = registerFeature("fallen_spruce_tree", () -> new FallenSpruceTree(NTreeFeatureConfig.CODEC));
+    public static final Supplier<Feature<NTreeFeatureConfig>> FALLEN_SPRUCE_TREE = registerFeature("fallen_spruce_tree", () -> new FallenSpruceTree(NTreeFeatureConfig.CODEC, true));
+    public static final Supplier<Feature<NTreeFeatureConfig>> FALLEN_BURNT_TREE = registerFeature("fallen_burnt_tree", () -> new FallenSpruceTree(NTreeFeatureConfig.CODEC, false));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_BENT_SPRUCE_TREE_01 = registerFeature("large_bent_spruce_tree_01", () -> new LargeBentSpruceTree01(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_BENT_SPRUCE_TREE_02 = registerFeature("large_bent_spruce_tree_02", () -> new LargeBentSpruceTree02(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_01 = registerFeature("large_spruce_tree_01", () -> new LargeSpruceTree01(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_02 = registerFeature("large_spruce_tree_02", () -> new LargeSpruceTree02(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_03 = registerFeature("large_spruce_tree_03", () -> new LargeSpruceTree03(NTreeFeatureConfig.CODEC));
+    public static final Supplier<Feature<NTreeFeatureConfig>> CROOKED_MARSH_TREE = registerFeature("crooked_marsh_tree", () -> new CrookedMarshTree(NTreeFeatureConfig.CODEC));
 
     // other features
     public static final Supplier<Feature<DefaultFeatureConfig>> MOSS_CARPET_FEATURE = registerFeature("moss_carpet_feature", () -> new MossCarpetFeature(DefaultFeatureConfig.CODEC));
@@ -45,6 +47,8 @@ public class NFeatures {
     public static final Supplier<Feature<DefaultFeatureConfig>> SOUL_LIGHT_FEATURE = registerFeature("soul_light_feature", () -> new SoulLightFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> FLOATING_CANDLE_FEATURE = registerFeature("floating_candle_feature", () -> new FloatingCandleFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> MARSH_ROOTS_FEATURE = registerFeature("marsh_roots_feature", () -> new MarshRootsFeature(DefaultFeatureConfig.CODEC));
+    public static final Supplier<Feature<DefaultFeatureConfig>> MARSH_POOL_FEATURE = registerFeature("marsh_pool_feature", () -> new MarshPoolFeature(DefaultFeatureConfig.CODEC));
+    public static final Supplier<Feature<DefaultFeatureConfig>> MARSH_THICKET_FEATURE = registerFeature("marsh_thicket_feature", () -> new MarshThicketFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> FALLEN_TREE_FEATURE = registerFeature("fallen_tree_feature", () -> new FallenTreeFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> DEAD_CORAL_TREE_FEATURE = registerFeature("dead_coral_tree_feature", () -> new DeadCoralTreeFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> DEAD_CORAL_CLAW_FEATURE = registerFeature("dead_coral_claw_feature", () -> new DeadCoralClawFeature(DefaultFeatureConfig.CODEC));

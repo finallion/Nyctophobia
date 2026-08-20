@@ -71,6 +71,10 @@ public class Marshlands {
     /// world, or chunk generation dies with "Feature order cycle found". These follow vanilla swamp
     /// first, then this mod's own features in the order the haunted lakes already established.
     private static void addWetlandFeatures(GenerationSettings.LookupBackedBuilder generationSettings, FabricDynamicRegistryProvider.Entries entries) {
+        // Dug before anything grows, so the vegetation steps see the pools and the waterlilies and
+        // seagrass below have water to sit on.
+        generationSettings.feature(GenerationStep.Feature.LAKES, entries.ref(NPlacedFeatures.MARSH_POOL_PLACED));
+
         // Vanilla puts large ferns and tall grass ahead of flowers and grass; keeping that order here
         // is what stops a cycle once another biome uses the same features.
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_LARGE_FERN);
@@ -83,6 +87,8 @@ public class Marshlands {
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.RED_MUSHROOM_SWAMP);
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_SWAMP);
 
+        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MARSH_TREE_PLACED));
+        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MARSH_THICKET_PLACED));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MARSH_ROOTS_PLACED));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MOSS_CARPET_FEATURE));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));

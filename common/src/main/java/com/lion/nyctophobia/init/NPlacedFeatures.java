@@ -30,6 +30,9 @@ public class NPlacedFeatures {
     public static final RegistryKey<PlacedFeature> DEEP_DARK_OAK = of("deep_dark_oak");
     public static final RegistryKey<PlacedFeature> MARSH_CANDLE_FEATURE = of("marsh_candle_feature");
     public static final RegistryKey<PlacedFeature> MARSH_ROOTS_PLACED = of("marsh_roots");
+    public static final RegistryKey<PlacedFeature> MARSH_POOL_PLACED = of("marsh_pool");
+    public static final RegistryKey<PlacedFeature> MARSH_TREE_PLACED = of("marsh_tree");
+    public static final RegistryKey<PlacedFeature> MARSH_THICKET_PLACED = of("marsh_thicket");
     public static final RegistryKey<PlacedFeature> TG_PATCH_LARGE_FERN = of("tg_patch_large_fern_config");
     public static final RegistryKey<PlacedFeature> TG_PATCH_LEAVES = of("tg_patch_leaves_config");
     public static final RegistryKey<PlacedFeature> TG_PATCH_MEADOW_FLOWER = of("tg_patch_meadow_flower_config");
@@ -120,7 +123,18 @@ public class NPlacedFeatures {
         // Rare on purpose: a handful of flames across a marsh reads as something left behind, a
         // candle in every chunk reads as decoration.
         entries.add(MARSH_CANDLE_FEATURE, placeFeature(entries, NConfiguredFeatures.MARSH_CANDLE_FEATURE, RarityFilterPlacementModifier.of(6), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
-        entries.add(MARSH_ROOTS_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_ROOTS_FEATURE, CountPlacementModifier.of(8), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
+        // One tangle per chunk on average. Eight attempts used to bury the marsh in root stubs; a
+        // tangle is a structure now, not a stub, and wants room around it.
+        entries.add(MARSH_ROOTS_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_ROOTS_FEATURE, RarityFilterPlacementModifier.of(2), CountPlacementModifier.of(2), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Many small patches rather than a few large ones is what makes a marsh read as wet, so this
+        // count is the knob for the whole biome: each attempt covers six to eighteen columns.
+        entries.add(MARSH_POOL_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_POOL_FEATURE, CountPlacementModifier.of(8), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Roughly one tree per twelve chunks. The marsh lives off its open horizon, so a tree has to
+        // be an event; a rarity filter is the only way to get below one attempt per chunk.
+        entries.add(MARSH_TREE_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_TREE_FEATURE, RarityFilterPlacementModifier.of(12), CountPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Five clumps of six to fourteen columns each. Together with the puddles this is what makes
+        // crossing the marsh a detour rather than a walk.
+        entries.add(MARSH_THICKET_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_THICKET_FEATURE, CountPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
 
         entries.add(DEEP_DARK_OAK, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_OAK, PlacedFeatures.wouldSurvive(Blocks.DARK_OAK_SAPLING)));
         entries.add(TG_PATCH_LARGE_FERN, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LARGE_FERN, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));

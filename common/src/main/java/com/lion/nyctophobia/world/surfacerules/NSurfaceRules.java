@@ -163,20 +163,29 @@ public class NSurfaceRules {
 
 
         // Standing water uses the trick the haunted lakes use, but across a three block band instead
-        // of one: at a single height only terrain that happens to end exactly there turns to water,
-        // which left the marsh nearly dry. Wet ground rings the pools where the noise falls short.
+        // of one: at a single height only terrain that happens to end exactly there turns to water.
+        // It reaches no further than that either way - a rule can only exchange the block that is
+        // already the top of the terrain, never open water over ground that lies higher, which is
+        // what MarshPoolFeature is for. Wet ground rings the pools where the noise falls short.
         // The band has to stop below 63: sea level is 63, so the topmost water block sits at 62 and
         // anything written at 63 stands a block proud of every other water surface in the world.
         MaterialRules.MaterialCondition above60 = MaterialRules.aboveY(YOffset.fixed(60), 0);
+        MaterialRules.MaterialCondition dryAbove = MaterialRules.water(-1, 0);
 
         MaterialRules.MaterialRule marshlandsRule =
                 MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
                         MaterialRules.sequence(
-                                MaterialRules.condition(above60,
-                                        MaterialRules.condition(MaterialRules.not(above63_0),
-                                                MaterialRules.sequence(
-                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.45D), WATER),
-                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.7D, -0.45D), MUD)))),
+                                // Only where nothing stands over the column: under water this would
+                                // swallow the floor and leave the bare stone beneath it exposed.
+                                MaterialRules.condition(dryAbove,
+                                        MaterialRules.condition(above60,
+                                                MaterialRules.condition(MaterialRules.not(above63_0),
+                                                        MaterialRules.sequence(
+                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.45D), WATER),
+                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.7D, -0.45D), MUD))))),
+                                // Anything still submerged is a pool floor and gets mud, not the
+                                // grass of the banks.
+                                MaterialRules.condition(MaterialRules.not(dryAbove), MUD),
                                 MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(61), 0),
                                         MaterialRules.sequence(
                                                 MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.6D, -0.2D), MUD),

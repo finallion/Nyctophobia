@@ -15,8 +15,14 @@ import net.minecraft.world.gen.feature.util.FeatureContext;
 
 public class FallenSpruceTree extends BaseSpruceTree {
 
-    public FallenSpruceTree(Codec<NTreeFeatureConfig> configCodec) {
+    /// A trunk in a living wood grows moss where it lies; a burnt one does not. The burnt forest gets
+    /// its own registered instance rather than a check on the wood or the biome, because the same
+    /// feature serves both and only the caller knows which wood it is dressing.
+    private final boolean mossy;
+
+    public FallenSpruceTree(Codec<NTreeFeatureConfig> configCodec, boolean mossy) {
         super(configCodec);
+        this.mossy = mossy;
     }
 
     @Override
@@ -38,7 +44,7 @@ public class FallenSpruceTree extends BaseSpruceTree {
             if ((world.getBlockState(blockPos.offset(direction, i).down()).isSolidBlock(world, blockPos.offset(direction, i).down()) || (world.getBlockState(blockPos.offset(direction, i).down()).getBlock() == Blocks.SOUL_SAND))
                     && canBeReplaced(world.getBlockState(blockPos.offset(direction, i)))) {
                 world.setBlockState(blockPos.offset(direction, i), wood.with(Properties.AXIS, axis), 2);
-                if (random.nextBoolean() && world.getBlockState(blockPos.offset(direction, i).up()).isAir()) {
+                if (mossy && random.nextBoolean() && world.getBlockState(blockPos.offset(direction, i).up()).isAir()) {
                     world.setBlockState(blockPos.offset(direction, i).up(), Blocks.MOSS_CARPET.getDefaultState(), 2);
                 }
             } else {
