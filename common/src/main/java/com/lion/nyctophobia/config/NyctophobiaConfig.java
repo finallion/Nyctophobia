@@ -11,7 +11,7 @@ public class NyctophobiaConfig implements Config {
 
     /// Raise this together with a new step in migrate() whenever a changed default has to reach a
     /// file that already exists on disk.
-    private static final int CONFIG_VERSION = 1;
+    private static final int CONFIG_VERSION = 2;
 
     @Description("""
              Bookkeeping, not a setting. It records which defaults this file has already been brought
@@ -90,7 +90,12 @@ public class NyctophobiaConfig implements Config {
         biomeConfigEntries.putIfAbsent("eroded_haunted_forest", BiomeConfigEntry.of(Arrays.asList("meadow")));
         biomeConfigEntries.putIfAbsent("ancient_dead_coral_reef", BiomeConfigEntry.of(Arrays.asList("beach")));
         biomeConfigEntries.putIfAbsent("deep_dark_forest", BiomeConfigEntry.of(Arrays.asList("dark_forest")));
-        biomeConfigEntries.putIfAbsent("marshlands", BiomeConfigEntry.of(Arrays.asList("mangrove_swamp")));
+        // mangrove_swamp alone is rare enough that the marsh is hard to come across at all, and swamp
+        // is not available: haunted_lakes holds it, and a host maps to exactly one replacement.
+        // birch_forest is temperate, damp and far more common, and birch is the wood that actually
+        // stands in a bog. Its terrain sits higher than a swamp, so the open water of the surface rule
+        // gives way there to the pools MarshPoolFeature raises for itself.
+        biomeConfigEntries.putIfAbsent("marshlands", BiomeConfigEntry.of(Arrays.asList("mangrove_swamp", "birch_forest")));
         // The two old growth taigas alone are too rare to be found; windswept_hills carries the biome
         // often enough, and a fire on an exposed hillside is no stretch. old_growth_spruce_taiga moves
         // here from the haunted forest, which keeps taiga and stays common enough on its own.
@@ -112,6 +117,9 @@ public class NyctophobiaConfig implements Config {
     private void migrate() {
         if (configVersion < 1) {
             addHost("haunted_forest", "taiga");
+        }
+        if (configVersion < 2) {
+            addHost("marshlands", "birch_forest");
         }
 
         configVersion = CONFIG_VERSION;
