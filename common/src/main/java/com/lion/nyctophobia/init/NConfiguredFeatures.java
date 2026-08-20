@@ -24,7 +24,7 @@ import java.util.OptionalInt;
 
 public class NConfiguredFeatures {
     public static RegistryKey<ConfiguredFeature<?, ?>> of(String id) {
-        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, new Identifier(Nyctophobia.MOD_ID, id));
+        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Identifier.of(Nyctophobia.MOD_ID, id));
     }
 
     public static void init() {}
@@ -164,7 +164,7 @@ public class NConfiguredFeatures {
 
         entries.add(TG_PATCH_LARGE_FERN, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 7, 3, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.LARGE_FERN))))));
         entries.add(TG_PATCH_LEAVES, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(64, 6, 0, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.OAK_LEAVES.getDefaultState().with(Properties.PERSISTENT, true)))))));
-        entries.add(TG_PATCH_MEADOW_FLOWER, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 6, 2, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(new DualNoiseBlockStateProvider(new Range(1, 3), new DoublePerlinNoiseSampler.NoiseParameters(-10, 1.0D), 1.0F, 2345L, new DoublePerlinNoiseSampler.NoiseParameters(-3, 1.0D, new double[0]), 1.0F, List.of(Blocks.TALL_GRASS.getDefaultState(), Blocks.ALLIUM.getDefaultState(), Blocks.POPPY.getDefaultState(), Blocks.AZURE_BLUET.getDefaultState(), Blocks.DANDELION.getDefaultState(), Blocks.CORNFLOWER.getDefaultState(), Blocks.OXEYE_DAISY.getDefaultState(), Blocks.GRASS.getDefaultState())))))));
+        entries.add(TG_PATCH_MEADOW_FLOWER, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 6, 2, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(new DualNoiseBlockStateProvider(new Range(1, 3), new DoublePerlinNoiseSampler.NoiseParameters(-10, 1.0D), 1.0F, 2345L, new DoublePerlinNoiseSampler.NoiseParameters(-3, 1.0D, new double[0]), 1.0F, List.of(Blocks.TALL_GRASS.getDefaultState(), Blocks.ALLIUM.getDefaultState(), Blocks.POPPY.getDefaultState(), Blocks.AZURE_BLUET.getDefaultState(), Blocks.DANDELION.getDefaultState(), Blocks.CORNFLOWER.getDefaultState(), Blocks.OXEYE_DAISY.getDefaultState(), Blocks.SHORT_GRASS.getDefaultState())))))));
     }
 
 
@@ -209,7 +209,7 @@ public class NConfiguredFeatures {
         ConfiguredFeatures.register(featureRegisterable, DEEP_DARK_OAK, Feature.TREE, (new TreeFeatureConfig.Builder(BlockStateProvider.of(Blocks.DARK_OAK_LOG), new DeepDarkOakTrunkPlacer(13, 4, 2), BlockStateProvider.of(Blocks.DARK_OAK_LEAVES), new DarkOakFoliagePlacer(ConstantIntProvider.create(0), ConstantIntProvider.create(0)), new ThreeLayersFeatureSize(1, 1, 0, 1, 2, OptionalInt.empty()))).ignoreVines().build());
         ConfiguredFeatures.register(featureRegisterable, TG_PATCH_LARGE_FERN, Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 7, 3, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.LARGE_FERN)))));
         ConfiguredFeatures.register(featureRegisterable, TG_PATCH_LEAVES, Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(64, 6, 0, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.OAK_LEAVES.getDefaultState().with(Properties.PERSISTENT, true))))));
-        ConfiguredFeatures.register(featureRegisterable, TG_PATCH_MEADOW_FLOWER, Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 6, 2, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(new DualNoiseBlockStateProvider(new Range(1, 3), new DoublePerlinNoiseSampler.NoiseParameters(-10, 1.0D), 1.0F, 2345L, new DoublePerlinNoiseSampler.NoiseParameters(-3, 1.0D, new double[0]), 1.0F, List.of(Blocks.TALL_GRASS.getDefaultState(), Blocks.ALLIUM.getDefaultState(), Blocks.POPPY.getDefaultState(), Blocks.AZURE_BLUET.getDefaultState(), Blocks.DANDELION.getDefaultState(), Blocks.CORNFLOWER.getDefaultState(), Blocks.OXEYE_DAISY.getDefaultState(), Blocks.GRASS.getDefaultState()))))));
+        ConfiguredFeatures.register(featureRegisterable, TG_PATCH_MEADOW_FLOWER, Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 6, 2, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(new DualNoiseBlockStateProvider(new Range(1, 3), new DoublePerlinNoiseSampler.NoiseParameters(-10, 1.0D), 1.0F, 2345L, new DoublePerlinNoiseSampler.NoiseParameters(-3, 1.0D, new double[0]), 1.0F, List.of(Blocks.TALL_GRASS.getDefaultState(), Blocks.ALLIUM.getDefaultState(), Blocks.POPPY.getDefaultState(), Blocks.AZURE_BLUET.getDefaultState(), Blocks.DANDELION.getDefaultState(), Blocks.CORNFLOWER.getDefaultState(), Blocks.OXEYE_DAISY.getDefaultState(), Blocks.SHORT_GRASS.getDefaultState()))))));
 
         RegistryEntryLookup<PlacedFeature> registryEntryLookup = featureRegisterable.getRegistryLookup(RegistryKeys.PLACED_FEATURE);
         RegistryEntryLookup<ConfiguredFeature<?, ?>> registryEntryLookup2 = featureRegisterable.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);

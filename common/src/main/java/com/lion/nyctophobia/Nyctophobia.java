@@ -33,7 +33,7 @@ public class Nyctophobia {
     /// Called from each loader once TerraBlender is ready: through the terrablender entrypoint on
     /// Fabric, from FMLCommonSetupEvent on Forge.
     public static void onTerraBlenderInit() {
-        Regions.register(new NBiomeProvider(new Identifier(MOD_ID, "biome_provider"),
+        Regions.register(new NBiomeProvider(Identifier.of(MOD_ID, "biome_provider"),
                 config.biomeGeneration.get("nyctophobiaBiomeWeight")));
         SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, MOD_ID, NSurfaceRules.makeRules());
     }

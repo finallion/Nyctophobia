@@ -3,6 +3,7 @@ package com.lion.nyctophobia.world.trunk;
 import com.lion.nyctophobia.init.NTrunkPlacer;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
-    public static final Codec<DeepDarkOakTrunkPlacer> CODEC = RecordCodecBuilder.create((instance) -> {
+    public static final MapCodec<DeepDarkOakTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
         return fillTrunkPlacerFields(instance).apply(instance, DeepDarkOakTrunkPlacer::new);
     });
 

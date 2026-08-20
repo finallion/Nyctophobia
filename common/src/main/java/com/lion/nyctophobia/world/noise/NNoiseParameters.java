@@ -30,6 +30,6 @@ public class NNoiseParameters {
 
 
     private static RegistryKey<DoublePerlinNoiseSampler.NoiseParameters> registerNoiseParameter(String id) {
-        return RegistryKey.of(RegistryKeys.NOISE_PARAMETERS, new Identifier(Nyctophobia.MOD_ID, id));
+        return RegistryKey.of(RegistryKeys.NOISE_PARAMETERS, Identifier.of(Nyctophobia.MOD_ID, id));
     }
 }

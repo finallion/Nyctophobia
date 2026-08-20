@@ -2,7 +2,7 @@ package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.init.NPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.client.sound.MusicType;
+import net.minecraft.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeAdditionsSound;

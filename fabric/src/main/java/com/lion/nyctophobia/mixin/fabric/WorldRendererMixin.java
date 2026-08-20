@@ -6,8 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /// Runs right after vanilla has set the terrain fog so the overrides in NFog win. The injection
 /// point is the part that moves between MC versions; the behaviour itself lives in NFog.
+///
+/// Ordinal 0 is the terrain pass: vanilla calls applyFog once inside render, and the sky pass lives
+/// in the lambda handed to renderSky, which is a method of its own and not counted here.
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
 
@@ -34,9 +37,9 @@ public class WorldRendererMixin {
                     shift = At.Shift.AFTER
             )
     )
-    public void nyctophobia$applyBiomeFog(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline,
-                                          Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
-                                          Matrix4f positionMatrix, CallbackInfo ci) {
+    public void nyctophobia$applyBiomeFog(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera,
+                                          GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
+                                          Matrix4f positionMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
         NFog.FogPlanes planes = NFog.compute(this.client, camera, gameRenderer.getViewDistance());
         if (planes == null) {
             return;

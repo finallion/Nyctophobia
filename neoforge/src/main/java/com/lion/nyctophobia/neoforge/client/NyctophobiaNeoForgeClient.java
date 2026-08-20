@@ -1,4 +1,4 @@
-package com.lion.nyctophobia.forge.client;
+package com.lion.nyctophobia.neoforge.client;
 
 import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.client.NFog;
@@ -6,16 +6,16 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
 
-/// Forge counterpart to the Fabric WorldRendererMixin. The event has to be cancelled, otherwise
-/// Forge discards the plane distances set here.
-@Mod.EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class NyctophobiaForgeClient {
+/// NeoForge counterpart to the Fabric WorldRendererMixin. The event has to be cancelled, otherwise
+/// NeoForge discards the plane distances set here.
+@EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
+public class NyctophobiaNeoForgeClient {
 
     /// Registered as a client command for the same reason as on Fabric: the fog never leaves the
     /// client, so a server side command could not reach it in multiplayer.
@@ -43,9 +43,9 @@ public class NyctophobiaForgeClient {
 
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {
-        // The hook sits inside applyFog itself, so it fires for every fog pass of a frame: the sky
-        // twice and the terrain once. The terrain pass is the one the Fabric mixin sits on, and
-        // taking the sky passes as well would repaint the horizon on this loader alone.
+        // The hook sits inside applyFog itself, so it fires for every fog pass of a frame, sky
+        // included. The terrain pass is the one the Fabric mixin sits on, and taking the sky passes
+        // as well would repaint the horizon on this loader alone.
         if (event.getMode() != BackgroundRenderer.FogType.FOG_TERRAIN) {
             return;
         }

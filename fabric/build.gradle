@@ -3,7 +3,7 @@ plugins {
 }
 
 allprojects {
-	archivesBaseName = "${rootProject.mod_id}-fabric-mc${rootProject.minecraft_version}"
+	base.archivesName = "${rootProject.mod_id}-fabric-mc${rootProject.minecraft_version}"
 }
 
 architectury {
@@ -34,8 +34,6 @@ def datagenOutputDir = project(":common").file("src/generated/resources")
 def datagenModId = rootProject.mod_id
 
 loom {
-	accessWidenerPath = project(":common").loom.accessWidenerPath
-
 	runs {
 		datagenClient {
 			inherit client
@@ -72,18 +70,14 @@ shadowJar {
 }
 
 remapJar {
-	// The access widener lives in common, so it is not on the fabric mod root that the loader
-	// searches in a dev run - declaring it in fabric.mod.json would abort the run. Loom applies it
-	// to the dev jar anyway and injects both the file and the manifest entry here for the release.
-	injectAccessWidener = true
 	input.set shadowJar.archiveFile
 	dependsOn shadowJar
-	classifier null
+	archiveClassifier.set(null)
 	archiveFileName = "${rootProject.mod_id}-${project.name}-mc${rootProject.minecraft_version}-${rootProject.mod_version}.jar"
 }
 
 jar {
-	classifier "dev"
+	archiveClassifier.set("dev")
 }
 
 sourcesJar {

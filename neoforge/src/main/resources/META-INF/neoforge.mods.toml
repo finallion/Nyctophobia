@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[4,)"
 license = "CC0-1.0"
 
 [[mods]]
@@ -13,22 +13,22 @@ Spooky, foggy, creepy and dark biomes for your Minecraft world
 '''
 
 [[dependencies.nyctophobia]]
-    modId = "forge"
-    mandatory = true
-    versionRange = "[47,)"
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1.0,)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.nyctophobia]]
     modId = "minecraft"
-    mandatory = true
-    versionRange = "[1.20.1,1.21)"
+    type = "required"
+    versionRange = "[1.21.1,1.21.2)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.nyctophobia]]
     modId = "terrablender"
-    mandatory = true
-    versionRange = "[3.0.1.10,)"
+    type = "required"
+    versionRange = "[4.1.0.8,)"
     ordering = "AFTER"
     side = "BOTH"

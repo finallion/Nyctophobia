@@ -30,7 +30,7 @@ public class NBiomes {
     public static final RegistryKey<Biome> BURNT_FOREST_KEY = registerBiomeKeys("burnt_forest");
 
     private static RegistryKey<Biome> registerBiomeKeys(String name) {
-        RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, new Identifier(Nyctophobia.MOD_ID, name));
+        RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(Nyctophobia.MOD_ID, name));
         BY_PATH.put(name, key);
         return key;
     }

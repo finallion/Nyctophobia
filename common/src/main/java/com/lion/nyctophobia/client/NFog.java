@@ -4,7 +4,7 @@ import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.config.BiomeFogConfigEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.CameraSubmersionType;
+import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
@@ -172,7 +172,7 @@ public final class NFog {
             }
 
             String biome = key.substring(0, key.length() - FOG_SUFFIX.length());
-            byBiome.put(RegistryKey.of(RegistryKeys.BIOME, new Identifier(Nyctophobia.MOD_ID, biome)), entry);
+            byBiome.put(RegistryKey.of(RegistryKeys.BIOME, Identifier.of(Nyctophobia.MOD_ID, biome)), entry);
         });
 
         return byBiome;

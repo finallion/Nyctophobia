@@ -32,15 +32,14 @@
     ]
   },
   "mixins": [
-    "nyctophobia-common.mixins.json",
     "nyctophobia-fabric.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.21",
+    "fabricloader": ">=0.16.0",
     "fabric-api": "*",
-    "minecraft": "~1.20",
-    "java": ">=17",
-    "terrablender": ">=3.0.1.10"
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "terrablender": ">=4.1.0.8"
   }
 }

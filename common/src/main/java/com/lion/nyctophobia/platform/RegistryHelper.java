@@ -1,6 +1,7 @@
 package com.lion.nyctophobia.platform;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
@@ -21,12 +22,12 @@ public class RegistryHelper {
     }
 
     @ExpectPlatform
-    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, Codec<P> codec) {
+    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, MapCodec<P> codec) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(String name, Codec<S> codec) {
+    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(String name, MapCodec<S> codec) {
         throw new AssertionError();
     }
 }

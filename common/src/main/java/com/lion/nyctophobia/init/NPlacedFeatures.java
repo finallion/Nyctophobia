@@ -17,7 +17,7 @@ public class NPlacedFeatures {
     public static void init() {}
 
     public static RegistryKey<PlacedFeature> of(String id) {
-        return RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(Nyctophobia.MOD_ID, id));
+        return RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(Nyctophobia.MOD_ID, id));
     }
 
     public static final RegistryKey<PlacedFeature> MOSS_CARPET_FEATURE = of("moss_carpet_feature");

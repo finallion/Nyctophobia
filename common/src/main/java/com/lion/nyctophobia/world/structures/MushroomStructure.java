@@ -2,10 +2,14 @@ package com.lion.nyctophobia.world.structures;
 
 import com.lion.nyctophobia.init.NStructures;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.structure.pool.StructurePool;
+import net.minecraft.structure.StructureLiquidSettings;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
+import net.minecraft.structure.pool.alias.StructurePoolAliasLookup;
+import net.minecraft.world.gen.structure.DimensionPadding;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -19,7 +23,7 @@ import java.util.Optional;
 
 public class MushroomStructure extends Structure {
 
-    public static final Codec<MushroomStructure> CODEC = RecordCodecBuilder.<MushroomStructure>mapCodec(instance ->
+    public static final MapCodec<MushroomStructure> CODEC = RecordCodecBuilder.<MushroomStructure>mapCodec(instance ->
             instance.group(MushroomStructure.configCodecBuilder(instance),
                     StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
@@ -27,7 +31,7 @@ public class MushroomStructure extends Structure {
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Type.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
                     Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
-            ).apply(instance, MushroomStructure::new)).codec();
+            ).apply(instance, MushroomStructure::new));
 
     private final RegistryEntry<StructurePool> startPool;
     private final Optional<Identifier> startJigsawName;
@@ -83,7 +87,13 @@ public class MushroomStructure extends Structure {
                         blockPos,
                         false,
                         this.projectStartToHeightmap,
-                        this.maxDistanceFromCenter);
+                        this.maxDistanceFromCenter,
+                        // Three arguments the jigsaw generator gained. All three are the neutral
+                        // values: no pool aliases, no vertical padding, and waterlogging applied,
+                        // which is what the generator did unconditionally before they existed.
+                        StructurePoolAliasLookup.EMPTY,
+                        DimensionPadding.NONE,
+                        StructureLiquidSettings.APPLY_WATERLOGGING);
 
         return structurePiecesGenerator;
     }
