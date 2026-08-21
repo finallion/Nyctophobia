@@ -53,7 +53,8 @@ public class NyctophobiaNeoForgeClient {
         // The view distance, not the plane the event carries: by this point vanilla has already
         // turned that into a fog end, and NFog derives the planes from the raw distance the same way
         // vanilla does.
-        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getRenderer().getViewDistance());
+        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getRenderer().getViewDistance(),
+                event.getNearPlaneDistance(), event.getFarPlaneDistance());
         if (planes == null) {
             return;
         }
