@@ -1,7 +1,7 @@
 package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.init.NPlacedFeatures;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -19,7 +19,7 @@ import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 
 public class DeepDarkForest {
 
-    public static Biome createDeepDarkForest(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createDeepDarkForest(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.FOX, 8, 2, 3));
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.SHEEP, 10, 3, 5));

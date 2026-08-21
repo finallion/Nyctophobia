@@ -7,7 +7,7 @@ import com.lion.nyctophobia.world.biomes.BurntForest;
 import com.lion.nyctophobia.world.biomes.DeepDarkForest;
 import com.lion.nyctophobia.world.biomes.HauntedForestBiomes;
 import com.lion.nyctophobia.world.biomes.Marshlands;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.registry.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -43,7 +43,7 @@ public class NBiomes {
     public static void init() {}
 
 
-    public static void populate(FabricDynamicRegistryProvider.Entries entries) {
+    public static void populate(NRegistryContext<Biome> entries) {
         entries.add(HAUNTED_FOREST_KEY, HauntedForestBiomes.createHauntedForest(entries));
         entries.add(ERODED_HAUNTED_FOREST_KEY, HauntedForestBiomes.createErodedHauntedForest(entries));
         entries.add(HAUNTED_LAKES_KEY, HauntedForestBiomes.createHauntedLakes(entries));

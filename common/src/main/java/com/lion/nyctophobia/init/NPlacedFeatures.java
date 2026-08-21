@@ -1,7 +1,7 @@
 package com.lion.nyctophobia.init;
 
 import com.lion.nyctophobia.Nyctophobia;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -79,67 +79,15 @@ public class NPlacedFeatures {
     public static final RegistryKey<PlacedFeature> LARGE_BENT_SPRUCE_TREE_02 = of("large_bent_spruce_tree_02");
 
 
-    public static PlacedFeature placeFeature(FabricDynamicRegistryProvider.Entries entries, RegistryKey<ConfiguredFeature<?, ?>> feature, PlacementModifier... list) {
+    public static PlacedFeature placeFeature(NRegistryContext<PlacedFeature> entries, RegistryKey<ConfiguredFeature<?, ?>> feature, PlacementModifier... list) {
         return new PlacedFeature(entries.ref(feature), List.of(list));
     }
 
 
-    public static void populate(FabricDynamicRegistryProvider.Entries entries) {
-        entries.add(SMALL_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_02, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_02, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_02_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_02_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_03, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_03, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_03_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_03_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_04, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_04, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_04_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_04_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_05, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_05, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_05_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_05_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_06, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_06, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_SPRUCE_TREE_06_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_06_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_BENT_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.SMALL_BENT_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(SMALL_BENT_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_BENT_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_BENT_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_BENT_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_BENT_SPRUCE_TREE_02, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_02, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_BENT_SPRUCE_TREE_02_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_02_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(FALLEN_SPRUCE_TREE, placeFeature(entries, NConfiguredFeatures.FALLEN_SPRUCE_TREE, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(FALLEN_SPRUCE_TREE_STRIPPED, placeFeature(entries, NConfiguredFeatures.FALLEN_SPRUCE_TREE_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_SPRUCE_TREE_02, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_02, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_SPRUCE_TREE_02_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_02_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_SPRUCE_TREE_03, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_03, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-        entries.add(LARGE_SPRUCE_TREE_03_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_03_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
-
-        entries.add(MOSS_CARPET_FEATURE, placeFeature(entries, NConfiguredFeatures.MOSS_CARPET_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(100)));
-        entries.add(COBWEB_FEATURE, placeFeature(entries, NConfiguredFeatures.COBWEB_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(40)));
-        entries.add(BUSH_FEATURE, placeFeature(entries, NConfiguredFeatures.BUSH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
-        entries.add(DEEP_DARK_FOREST_BUSH_FEATURE, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_FOREST_BUSH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
-        entries.add(SOUL_LIGHT_FEATURE, placeFeature(entries, NConfiguredFeatures.SOUL_LIGHT_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(100)));
-        entries.add(FALLEN_TREE_FEATURE, placeFeature(entries, NConfiguredFeatures.FALLEN_TREE_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(20)));
-        entries.add(DEAD_CORAL_PATCH_FEATURE, placeFeature(entries, NConfiguredFeatures.DEAD_CORAL_PATCH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
-        // Rare on purpose: a handful of flames across a marsh reads as something left behind, a
-        // candle in every chunk reads as decoration.
-        entries.add(MARSH_CANDLE_FEATURE, placeFeature(entries, NConfiguredFeatures.MARSH_CANDLE_FEATURE, RarityFilterPlacementModifier.of(6), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
-        // One tangle per chunk on average. Eight attempts used to bury the marsh in root stubs; a
-        // tangle is a structure now, not a stub, and wants room around it.
-        entries.add(MARSH_ROOTS_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_ROOTS_FEATURE, RarityFilterPlacementModifier.of(2), CountPlacementModifier.of(2), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
-        // Many small patches rather than a few large ones is what makes a marsh read as wet, so this
-        // count is the knob for the whole biome: each attempt covers six to eighteen columns.
-        entries.add(MARSH_POOL_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_POOL_FEATURE, CountPlacementModifier.of(8), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
-        // Roughly one tree per twelve chunks. The marsh lives off its open horizon, so a tree has to
-        // be an event; a rarity filter is the only way to get below one attempt per chunk.
-        // Five clumps of six to fourteen columns each. Together with the puddles this is what makes
-        // crossing the marsh a detour rather than a walk.
-        entries.add(MARSH_THICKET_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_THICKET_FEATURE, CountPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
-
-        entries.add(DEEP_DARK_OAK, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_OAK, PlacedFeatures.wouldSurvive(Blocks.DARK_OAK_SAPLING)));
-        entries.add(TG_PATCH_LARGE_FERN, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LARGE_FERN, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
-        entries.add(TG_PATCH_LEAVES, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LEAVES, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
-        entries.add(TG_PATCH_MEADOW_FLOWER, placeFeature(entries, NConfiguredFeatures.TG_PATCH_MEADOW_FLOWER, SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
-
-
+    /// The random selectors are configured features that pick among placed features, so they are
+    /// built in the configured feature bootstrap even though their keys live here beside the placed
+    /// features they draw from.
+    public static void populateSelectors(NRegistryContext<ConfiguredFeature<?, ?>> entries) {
         entries.add(HAUNTED_FOREST_TREES, NConfiguredFeatures.configureFeature(Feature.RANDOM_SELECTOR, new RandomFeatureConfig(List.of(
                 new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_01), new PlacementModifier[0]), 0.25F),
                 new RandomFeatureEntry(PlacedFeatures.createEntry(entries.ref(NConfiguredFeatures.SMALL_SPRUCE_TREE_02), new PlacementModifier[0]), 0.25F),
@@ -205,7 +153,62 @@ public class NPlacedFeatures {
                 new RandomFeatureEntry(entries.ref(NPlacedFeatures.DEEP_DARK_OAK), 0.45F),
                 new RandomFeatureEntry(entries.ref(TreePlacedFeatures.DARK_OAK_CHECKED), 0.4F)),
                 entries.ref(TreePlacedFeatures.DARK_OAK_CHECKED))));
+    }
 
+    public static void populate(NRegistryContext<PlacedFeature> entries) {
+        entries.add(SMALL_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_02, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_02, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_02_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_02_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_03, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_03, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_03_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_03_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_04, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_04, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_04_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_04_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_05, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_05, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_05_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_05_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_06, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_06, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_SPRUCE_TREE_06_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_SPRUCE_TREE_06_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_BENT_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.SMALL_BENT_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(SMALL_BENT_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.SMALL_BENT_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_BENT_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_BENT_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_BENT_SPRUCE_TREE_02, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_02, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_BENT_SPRUCE_TREE_02_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_BENT_SPRUCE_TREE_02_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(FALLEN_SPRUCE_TREE, placeFeature(entries, NConfiguredFeatures.FALLEN_SPRUCE_TREE, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(FALLEN_SPRUCE_TREE_STRIPPED, placeFeature(entries, NConfiguredFeatures.FALLEN_SPRUCE_TREE_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_SPRUCE_TREE_01, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_01, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_SPRUCE_TREE_01_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_01_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_SPRUCE_TREE_02, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_02, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_SPRUCE_TREE_02_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_02_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_SPRUCE_TREE_03, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_03, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+        entries.add(LARGE_SPRUCE_TREE_03_STRIPPED, placeFeature(entries, NConfiguredFeatures.LARGE_SPRUCE_TREE_03_STRIPPED, PlacedFeatures.wouldSurvive(Blocks.SPRUCE_SAPLING)));
+
+        entries.add(MOSS_CARPET_FEATURE, placeFeature(entries, NConfiguredFeatures.MOSS_CARPET_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(100)));
+        entries.add(COBWEB_FEATURE, placeFeature(entries, NConfiguredFeatures.COBWEB_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(40)));
+        entries.add(BUSH_FEATURE, placeFeature(entries, NConfiguredFeatures.BUSH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
+        entries.add(DEEP_DARK_FOREST_BUSH_FEATURE, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_FOREST_BUSH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
+        entries.add(SOUL_LIGHT_FEATURE, placeFeature(entries, NConfiguredFeatures.SOUL_LIGHT_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(100)));
+        entries.add(FALLEN_TREE_FEATURE, placeFeature(entries, NConfiguredFeatures.FALLEN_TREE_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(20)));
+        entries.add(DEAD_CORAL_PATCH_FEATURE, placeFeature(entries, NConfiguredFeatures.DEAD_CORAL_PATCH_FEATURE, RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, CountPlacementModifier.of(35)));
+        // Rare on purpose: a handful of flames across a marsh reads as something left behind, a
+        // candle in every chunk reads as decoration.
+        entries.add(MARSH_CANDLE_FEATURE, placeFeature(entries, NConfiguredFeatures.MARSH_CANDLE_FEATURE, RarityFilterPlacementModifier.of(6), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
+        // One tangle per chunk on average. Eight attempts used to bury the marsh in root stubs; a
+        // tangle is a structure now, not a stub, and wants room around it.
+        entries.add(MARSH_ROOTS_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_ROOTS_FEATURE, RarityFilterPlacementModifier.of(2), CountPlacementModifier.of(2), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Many small patches rather than a few large ones is what makes a marsh read as wet, so this
+        // count is the knob for the whole biome: each attempt covers six to eighteen columns.
+        entries.add(MARSH_POOL_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_POOL_FEATURE, CountPlacementModifier.of(8), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+        // Roughly one tree per twelve chunks. The marsh lives off its open horizon, so a tree has to
+        // be an event; a rarity filter is the only way to get below one attempt per chunk.
+        // Five clumps of six to fourteen columns each. Together with the puddles this is what makes
+        // crossing the marsh a detour rather than a walk.
+        entries.add(MARSH_THICKET_PLACED, placeFeature(entries, NConfiguredFeatures.MARSH_THICKET_FEATURE, CountPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of()));
+
+        entries.add(DEEP_DARK_OAK, placeFeature(entries, NConfiguredFeatures.DEEP_DARK_OAK, PlacedFeatures.wouldSurvive(Blocks.DARK_OAK_SAPLING)));
+        entries.add(TG_PATCH_LARGE_FERN, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LARGE_FERN, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
+        entries.add(TG_PATCH_LEAVES, placeFeature(entries, NConfiguredFeatures.TG_PATCH_LEAVES, RarityFilterPlacementModifier.of(5), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
+        entries.add(TG_PATCH_MEADOW_FLOWER, placeFeature(entries, NConfiguredFeatures.TG_PATCH_MEADOW_FLOWER, SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
 
         entries.add(ERODED_HAUNTED_FOREST_TREES_PLACED, placeFeature(entries, ERODED_HAUNTED_FOREST_TREES, PlacedFeatures.createCountExtraModifier(10, 0.1F, 1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));
         entries.add(HAUNTED_FOREST_TREES_PLACED, placeFeature(entries, HAUNTED_FOREST_TREES, PlacedFeatures.createCountExtraModifier(15, 0.1F, 1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of()));

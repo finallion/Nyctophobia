@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.world.features.trees.config.NTreeFeatureConfig;
 import com.lion.nyctophobia.world.trunk.DeepDarkOakTrunkPlacer;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.block.*;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntryList;
@@ -98,7 +98,7 @@ public class NConfiguredFeatures {
         return new ConfiguredFeature<>(feature.get(), config);
     }
 
-    public static void populate(FabricDynamicRegistryProvider.Entries entries) {
+    public static void populate(NRegistryContext<ConfiguredFeature<?, ?>> entries) {
         entries.add(MOSS_CARPET_FEATURE, configureFeature(NFeatures.MOSS_CARPET_FEATURE, FeatureConfig.DEFAULT));
         entries.add(COBWEB_FEATURE, configureFeature(NFeatures.COBWEB_FEATURE, FeatureConfig.DEFAULT));
         entries.add(BUSH_FEATURE, configureFeature(NFeatures.BUSH_FEATURE, FeatureConfig.DEFAULT));

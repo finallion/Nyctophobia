@@ -1,7 +1,7 @@
 package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.init.NPlacedFeatures;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.world.biome.Biome;
@@ -15,7 +15,7 @@ import net.minecraft.world.gen.feature.OceanPlacedFeatures;
 
 public class AncientDeadCoralReef {
 
-    public static Biome createAncientDeadCoralReef(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createAncientDeadCoralReef(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         DefaultBiomeFeatures.addOceanMobs(spawnSettings, 3, 4, 15);
         spawnSettings.spawn(SpawnGroup.WATER_AMBIENT, new SpawnSettings.SpawnEntry(EntityType.SALMON, 15, 1, 5));

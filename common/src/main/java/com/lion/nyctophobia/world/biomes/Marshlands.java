@@ -1,7 +1,7 @@
 package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.init.NPlacedFeatures;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -22,7 +22,7 @@ import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 /// carries TREES_SWAMP with it and the whole point of this biome is the open horizon.
 public class Marshlands {
 
-    public static Biome createMarshlands(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createMarshlands(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.FROG, 10, 2, 5));
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.SHEEP, 8, 2, 4));
@@ -70,7 +70,7 @@ public class Marshlands {
     /// Order matters beyond this biome: a feature's position has to agree across every biome in the
     /// world, or chunk generation dies with "Feature order cycle found". These follow vanilla swamp
     /// first, then this mod's own features in the order the haunted lakes already established.
-    private static void addWetlandFeatures(GenerationSettings.LookupBackedBuilder generationSettings, FabricDynamicRegistryProvider.Entries entries) {
+    private static void addWetlandFeatures(GenerationSettings.LookupBackedBuilder generationSettings, NRegistryContext<Biome> entries) {
         // Dug before anything grows, so the vegetation steps see the pools and the waterlilies and
         // seagrass below have water to sit on.
         generationSettings.feature(GenerationStep.Feature.LAKES, entries.ref(NPlacedFeatures.MARSH_POOL_PLACED));

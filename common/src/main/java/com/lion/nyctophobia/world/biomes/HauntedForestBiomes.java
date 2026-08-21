@@ -1,7 +1,7 @@
 package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.init.NPlacedFeatures;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -19,7 +19,7 @@ import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 
 public class HauntedForestBiomes {
 
-    public static Biome createHauntedForest(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createHauntedForest(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.FOX, 8, 2, 3));
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.WOLF, 8, 3, 5));
@@ -59,7 +59,7 @@ public class HauntedForestBiomes {
     }
 
 
-    public static Biome createHauntedLakes(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createHauntedLakes(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.FOX, 8, 2, 3));
         spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.WOLF, 8, 3, 5));
@@ -100,7 +100,7 @@ public class HauntedForestBiomes {
     }
 
 
-    public static Biome createErodedHauntedForest(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createErodedHauntedForest(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(EntityType.WITHER_SKELETON, 8, 2, 3));
         spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(EntityType.SKELETON, 8, 1, 2));

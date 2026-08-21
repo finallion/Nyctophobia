@@ -1,7 +1,7 @@
 package com.lion.nyctophobia.world.biomes;
 
 import com.lion.nyctophobia.init.NPlacedFeatures;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import com.lion.nyctophobia.data.NRegistryContext;
 import net.minecraft.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -22,7 +22,7 @@ import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 /// Every tree here is a stripped variant of the existing spruce set, so the look costs no new blocks.
 public class BurntForest {
 
-    public static Biome createBurntForest(FabricDynamicRegistryProvider.Entries entries) {
+    public static Biome createBurntForest(NRegistryContext<Biome> entries) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(EntityType.SKELETON, 10, 2, 4));
         spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(EntityType.WITHER_SKELETON, 5, 1, 2));
@@ -72,7 +72,7 @@ public class BurntForest {
     /// Order has to agree with every other biome in the world, see the note in Marshlands. Dead bush
     /// stays ahead of this mod's own features, and those keep the order the haunted forests set.
     /// Deliberately no grass, ferns or mushrooms - nothing here has grown back yet.
-    private static void addBurntFeatures(GenerationSettings.LookupBackedBuilder generationSettings, FabricDynamicRegistryProvider.Entries entries) {
+    private static void addBurntFeatures(GenerationSettings.LookupBackedBuilder generationSettings, NRegistryContext<Biome> entries) {
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_LARGE_FERN);
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_DEAD_BUSH);
 
