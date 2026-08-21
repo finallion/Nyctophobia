@@ -71,7 +71,6 @@ public class NConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_CANDLE_FEATURE = of("marsh_candle_feature");
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_ROOTS_FEATURE = of("marsh_roots_feature");
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_POOL_FEATURE = of("marsh_pool_feature");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_TREE_FEATURE = of("marsh_tree_feature");
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARSH_THICKET_FEATURE = of("marsh_thicket_feature");
 
     public static final RegistryKey<ConfiguredFeature<?, ?>> BURNT_TREE_SMALL_01 = of("burnt_tree_small_01");
@@ -156,10 +155,6 @@ public class NConfiguredFeatures {
         entries.add(MARSH_CANDLE_FEATURE, configureFeature(NFeatures.FLOATING_CANDLE_FEATURE, FeatureConfig.DEFAULT));
         entries.add(MARSH_ROOTS_FEATURE, configureFeature(NFeatures.MARSH_ROOTS_FEATURE, FeatureConfig.DEFAULT));
         entries.add(MARSH_POOL_FEATURE, configureFeature(NFeatures.MARSH_POOL_FEATURE, FeatureConfig.DEFAULT));
-        // Oak leaves, not spruce or mangrove: only oak takes the biome foliage colour, so these turn
-        // the marsh's drab olive instead of staying the green of another wood.
-        entries.add(MARSH_TREE_FEATURE, configureFeature(NFeatures.CROOKED_MARSH_TREE,
-                new NTreeFeatureConfig(Blocks.OAK_LOG.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState())));
         entries.add(MARSH_THICKET_FEATURE, configureFeature(NFeatures.MARSH_THICKET_FEATURE, FeatureConfig.DEFAULT));
 
         entries.add(TG_PATCH_LARGE_FERN, configureFeature(Feature.RANDOM_PATCH, new RandomPatchFeatureConfig(96, 7, 3, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(Blocks.LARGE_FERN))))));
