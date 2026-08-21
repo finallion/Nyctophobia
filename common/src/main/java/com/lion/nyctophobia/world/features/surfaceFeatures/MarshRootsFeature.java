@@ -3,6 +3,7 @@ package com.lion.nyctophobia.world.features.surfaceFeatures;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -30,6 +31,8 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
     private static final int CROWN_MIN = 2;
     private static final int CROWN_EXTRA = 2;
     private static final int WATER_REACH = 4;
+    private static final int SCAN_DOWN = 8;
+    private static final int NO_GROUND = Integer.MIN_VALUE;
 
     /// All eight compass directions, so a leg can leave the crown diagonally as well.
     private static final int[] STEP_X = {1, 1, 0, -1, -1, -1, 0, 1};
@@ -48,12 +51,8 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
 
         int x = origin.getX();
         int z = origin.getZ();
-        // OCEAN_FLOOR rather than OCEAN_FLOOR_WG: the WG heightmaps live only as long as a chunk is
-        // being generated, so a feature reading them answers -64 to every /place feature and cannot
-        // be checked in a running world. This one is filled in before the feature step either way.
-        int ground = world.getTopY(Heightmap.Type.OCEAN_FLOOR, x, z);
-
-        if (!waterWithinReach(world, mutable, x, ground, z)) {
+        int ground = groundAt(world, mutable, x, z);
+        if (ground == NO_GROUND || !waterWithinReach(world, mutable, x, ground, z)) {
             return false;
         }
 
@@ -98,7 +97,10 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
                 --y;
             }
 
-            int ground = world.getTopY(Heightmap.Type.OCEAN_FLOOR, x, z);
+            int ground = groundAt(world, mutable, x, z);
+            if (ground == NO_GROUND) {
+                return;
+            }
             y = Math.max(y, ground);
 
             if (!placeRoot(world, mutable.set(x, y, z), y == ground)) {
@@ -131,6 +133,41 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
 
         world.setBlockState(pos, root, 2);
         return true;
+    }
+
+    /// First free block over the marsh floor in this column, or NO_GROUND where the tangle has no
+    /// business: a tree, a bank of something other than marsh ground, or a drop too deep to scan.
+    ///
+    /// Not the OCEAN_FLOOR heightmap directly: that counts leaves as floor, and a leg reaching into a
+    /// tree at the biome edge would plant its foot on the crown. The scan starts at the heightmap and
+    /// looks down through leaves and plants; a log ends the column instead.
+    ///
+    /// The heightmap is OCEAN_FLOOR rather than OCEAN_FLOOR_WG: the WG heightmaps live only as long
+    /// as a chunk is being generated, so a feature reading them answers -64 to every /place feature
+    /// and cannot be checked in a running world.
+    private static int groundAt(StructureWorldAccess world, BlockPos.Mutable mutable, int x, int z) {
+        int top = world.getTopY(Heightmap.Type.OCEAN_FLOOR, x, z);
+        for (int y = top - 1; y >= top - SCAN_DOWN; --y) {
+            BlockState state = world.getBlockState(mutable.set(x, y, z));
+            if (state.isIn(BlockTags.LOGS)) {
+                return NO_GROUND;
+            }
+            if (state.isIn(BlockTags.LEAVES) || !state.blocksMovement()) {
+                continue;
+            }
+            return isMarshGround(state) ? y + 1 : NO_GROUND;
+        }
+        return NO_GROUND;
+    }
+
+    /// What the marsh surface rules write, plus the mud a pool leaves behind.
+    private static boolean isMarshGround(BlockState state) {
+        return state.isOf(Blocks.GRASS_BLOCK)
+                || state.isOf(Blocks.DIRT)
+                || state.isOf(Blocks.COARSE_DIRT)
+                || state.isOf(Blocks.ROOTED_DIRT)
+                || state.isOf(Blocks.MOSS_BLOCK)
+                || state.isOf(Blocks.MUD);
     }
 
     private static boolean waterWithinReach(StructureWorldAccess world, BlockPos.Mutable mutable, int x, int y, int z) {
