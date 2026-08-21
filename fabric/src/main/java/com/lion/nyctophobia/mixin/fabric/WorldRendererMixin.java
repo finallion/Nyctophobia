@@ -37,7 +37,8 @@ public class WorldRendererMixin {
     public void nyctophobia$applyBiomeFog(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline,
                                           Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
                                           Matrix4f positionMatrix, CallbackInfo ci) {
-        NFog.FogPlanes planes = NFog.compute(this.client, camera, gameRenderer.getViewDistance());
+        NFog.FogPlanes planes = NFog.compute(this.client, camera, gameRenderer.getViewDistance(),
+                RenderSystem.getShaderFogStart(), RenderSystem.getShaderFogEnd());
         if (planes == null) {
             return;
         }

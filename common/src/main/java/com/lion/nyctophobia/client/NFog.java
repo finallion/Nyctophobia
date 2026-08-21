@@ -89,9 +89,14 @@ public final class NFog {
     }
 
     /// Near and far plane distance for this frame, or null to leave vanilla fog untouched. Both
-    /// loaders pass the game renderer's view distance, and both call this once per frame, so the fog
-    /// comes out the same on either.
-    public static FogPlanes compute(MinecraftClient client, Camera camera, float viewDistance) {
+    /// loaders pass the game renderer's view distance and the planes vanilla has just set, and both
+    /// call this once per frame, so the fog comes out the same on either.
+    ///
+    /// The result never reaches past vanilla's planes. The fade starts from CLEAR, and unclamped that
+    /// first frame would push the far plane thousands of blocks out: the horizon fog drops away for
+    /// an instant and the biome fog then rolls in from the horizon instead of thickening in place.
+    public static FogPlanes compute(MinecraftClient client, Camera camera, float viewDistance,
+                                    float vanillaNear, float vanillaFar) {
         if (!enabled || client.world == null) {
             return null;
         }
@@ -125,7 +130,12 @@ public final class NFog {
         }
 
         float clamped = Math.max(viewDistance - 16.0F, CLEAR);
-        return new FogPlanes(clamped * 0.05F * fogFactor, Math.min(clamped, 192.0F) * 0.5F * fogFactor);
+        float near = Math.min(clamped * 0.05F * fogFactor, vanillaNear);
+        float far = Math.min(Math.min(clamped, 192.0F) * 0.5F * fogFactor, vanillaFar);
+        if (near >= vanillaNear && far >= vanillaFar) {
+            return null;
+        }
+        return new FogPlanes(near, far);
     }
 
     /// Reference frames of real time since the previous step. The first step after a pause counts as
