@@ -17,13 +17,13 @@ import net.minecraft.world.gen.feature.util.FeatureContext;
 /// touch itself corner to corner and read as a stack of loose blocks.
 public class CrookedMarshTree extends Feature<NTreeFeatureConfig> {
 
-    private static final int HEIGHT_MIN = 5;
-    private static final int HEIGHT_EXTRA = 5;
+    private static final int HEIGHT_MIN = 7;
+    private static final int HEIGHT_EXTRA = 7;
     private static final int TRUNK_MIN = 4;
-    private static final int BEND_CHANCE = 3;
+    private static final int BEND_CHANCE = 2;
     private static final int TURN_CHANCE = 4;
-    private static final int CLUMPS_MIN = 2;
-    private static final int CLUMPS_EXTRA = 3;
+    private static final int CLUMPS_MIN = 3;
+    private static final int CLUMPS_EXTRA = 4;
 
     private static final int[] STEP_X = {1, -1, 0, 0};
     private static final int[] STEP_Z = {0, 0, 1, -1};
@@ -85,12 +85,13 @@ public class CrookedMarshTree extends Feature<NTreeFeatureConfig> {
         return true;
     }
 
-    /// A few clumps hanging off the upper half, never a closed canopy: two to four spots, each with
-    /// three or four leaves around one log.
+    /// A few clumps hanging off the upper half, never a closed canopy: three to six spots plus one per
+    /// three logs beyond the minimum, each with three or four leaves around one log. Scaling with the
+    /// trunk keeps a tall one from standing bare at the top.
     private static void growLeaves(StructureWorldAccess world, BlockPos.Mutable mutable, Random random,
                                    BlockState leaf, int[] trunk, int placed) {
         int half = placed / 2;
-        int clumps = CLUMPS_MIN + random.nextInt(CLUMPS_EXTRA);
+        int clumps = CLUMPS_MIN + random.nextInt(CLUMPS_EXTRA) + (placed - TRUNK_MIN) / 3;
 
         for (int clump = 0; clump < clumps; ++clump) {
             int at = half + random.nextInt(placed - half);
