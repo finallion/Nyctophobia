@@ -3,6 +3,7 @@ package com.lion.nyctophobia.world.features.surfaceFeatures;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
@@ -70,7 +71,8 @@ public class MarshPoolFeature extends Feature<DefaultFeatureConfig> {
         // chunk generates and answer -64 to every /place feature.
         int base = world.getTopY(Heightmap.Type.OCEAN_FLOOR, x, z);
         ground[index(0, 0)] = groundAt(world, mutable, x, z, base + SCAN_UP, base - SCAN_DOWN);
-        if (ground[index(0, 0)] == NO_GROUND) {
+        if (ground[index(0, 0)] == NO_GROUND
+                || !isMarshSurface(world.getBlockState(mutable.set(x, ground[index(0, 0)] - 1, z)))) {
             return false;
         }
 
@@ -116,7 +118,8 @@ public class MarshPoolFeature extends Feature<DefaultFeatureConfig> {
             }
 
             int level = groundOf(world, mutable, ground, x, z, dx, dz, base);
-            if (level == NO_GROUND || Math.abs(level - base) > ROLL) {
+            if (level == NO_GROUND || Math.abs(level - base) > ROLL
+                    || !isMarshSurface(world.getBlockState(mutable.set(x + dx, level - 1, z + dz)))) {
                 continue;
             }
 
@@ -213,10 +216,21 @@ public class MarshPoolFeature extends Feature<DefaultFeatureConfig> {
     /// The test is whether a block stops you walking, not whether it is air: grass, ferns and dead
     /// bushes are neither, and counting them as ground puts the mud a block too high, standing on top
     /// of the turf. Neighbouring chunks are often already planted by the time this one digs.
+    ///
+    /// Leaves stop you walking too, but they are not ground: the scan looks through them, otherwise a
+    /// puddle at the biome edge settles on the crown of a neighbouring tree. A log ends the column
+    /// instead - water through a trunk would cut the tree in half.
     private static int groundAt(StructureWorldAccess world, BlockPos.Mutable mutable, int x, int z,
                                 int top, int bottom) {
         for (int y = top; y >= bottom; --y) {
-            if (world.getBlockState(mutable.set(x, y, z)).blocksMovement()) {
+            BlockState state = world.getBlockState(mutable.set(x, y, z));
+            if (state.isIn(BlockTags.LEAVES)) {
+                continue;
+            }
+            if (state.isIn(BlockTags.LOGS)) {
+                return NO_GROUND;
+            }
+            if (state.blocksMovement()) {
                 return y + 1;
             }
         }
