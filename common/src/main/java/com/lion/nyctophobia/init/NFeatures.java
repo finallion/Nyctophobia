@@ -37,7 +37,6 @@ public class NFeatures {
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_01 = registerFeature("large_spruce_tree_01", () -> new LargeSpruceTree01(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_02 = registerFeature("large_spruce_tree_02", () -> new LargeSpruceTree02(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_03 = registerFeature("large_spruce_tree_03", () -> new LargeSpruceTree03(NTreeFeatureConfig.CODEC));
-    public static final Supplier<Feature<NTreeFeatureConfig>> CROOKED_MARSH_TREE = registerFeature("crooked_marsh_tree", () -> new CrookedMarshTree(NTreeFeatureConfig.CODEC));
 
     // other features
     public static final Supplier<Feature<DefaultFeatureConfig>> MOSS_CARPET_FEATURE = registerFeature("moss_carpet_feature", () -> new MossCarpetFeature(DefaultFeatureConfig.CODEC));
