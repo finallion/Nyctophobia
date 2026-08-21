@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 
 /// NeoForge counterpart to the Fabric WorldRendererMixin. The event has to be cancelled, otherwise
 /// NeoForge discards the plane distances set here.
-@EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT)
 public class NyctophobiaNeoForgeClient {
 
     /// Registered as a client command for the same reason as on Fabric: the fog never leaves the
