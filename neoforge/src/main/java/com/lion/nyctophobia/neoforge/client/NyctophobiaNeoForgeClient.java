@@ -54,5 +54,9 @@ public class NyctophobiaNeoForgeClient {
 
         fogData.renderDistanceStart = planes.near();
         fogData.renderDistanceEnd = planes.far();
+        // Sky and clouds read their own planes, so without this the clouds stay visible and the sky
+        // keeps its clear colour above a fogged landscape.
+        fogData.skyEnd = Math.min(fogData.skyEnd, planes.far());
+        fogData.cloudEnd = Math.min(fogData.cloudEnd, planes.far());
     }
 }

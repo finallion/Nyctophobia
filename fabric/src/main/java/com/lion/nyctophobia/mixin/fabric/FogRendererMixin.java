@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /// overrides in NFog win. The injection point is the part that moves between MC versions; the
 /// behaviour itself lives in NFog.
 ///
-/// The render distance planes are the ones overridden: they are the cylindrical terrain fog the
-/// earlier versions hooked, and the shader lets the closer of the two plane pairs win, so the
+/// The render distance planes are the ones overridden for terrain: they are the cylindrical fog
+/// the earlier versions hooked, and the shader lets the closer of the two plane pairs win, so the
 /// environmental haze vanilla computes alongside never reaches past them.
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
@@ -42,5 +42,9 @@ public class FogRendererMixin {
 
         fogData.renderDistanceStart = planes.near();
         fogData.renderDistanceEnd = planes.far();
+        // Sky and clouds read their own planes, so without this the clouds stay visible and the sky
+        // keeps its clear colour above a fogged landscape.
+        fogData.skyEnd = Math.min(fogData.skyEnd, planes.far());
+        fogData.cloudEnd = Math.min(fogData.cloudEnd, planes.far());
     }
 }
