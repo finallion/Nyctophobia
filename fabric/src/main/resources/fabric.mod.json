@@ -38,8 +38,8 @@
   "depends": {
     "fabricloader": ">=0.16.0",
     "fabric-api": "*",
-    "minecraft": "~1.21.1",
+    "minecraft": ">=1.21.8 <1.22",
     "java": ">=21",
-    "terrablender": ">=4.1.0.8"
+    "terrablender": ">=6.0.0.3"
   }
 }

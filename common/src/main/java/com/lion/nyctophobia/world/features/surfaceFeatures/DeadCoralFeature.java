@@ -31,7 +31,7 @@ public abstract class DeadCoralFeature extends Feature<DefaultFeatureConfig> {
         StructureWorldAccess structureWorldAccess = context.getWorld();
         BlockPos blockPos = context.getOrigin();
 
-        Optional<Block> optional = Registries.BLOCK.getEntryList(NTags.DEAD_CORAL_BLOCKS).flatMap((blocks) -> {
+        Optional<Block> optional = Registries.BLOCK.getOptional(NTags.DEAD_CORAL_BLOCKS).flatMap((blocks) -> {
             return blocks.getRandom(random);
         }).map(RegistryEntry::value);
         return optional.isEmpty() ? false : this.generateCoral(structureWorldAccess, random, blockPos, ((Block)optional.get()).getDefaultState());
@@ -51,13 +51,13 @@ public abstract class DeadCoralFeature extends Feature<DefaultFeatureConfig> {
             if (random.nextFloat() < 0.25F) {
 
                 if (world.getBlockState(blockPos).isOf(Blocks.WATER)) {
-                    Registries.BLOCK.getEntryList(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
                         return blocks.getRandom(random);
                     }).map(RegistryEntry::value).ifPresent((block) -> {
                         world.setBlockState(blockPos, block.getDefaultState().with(Properties.WATERLOGGED, true), 2);
                     });
                 } else if (world.getBlockState(blockPos).isOf(Blocks.AIR)) {
-                    Registries.BLOCK.getEntryList(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
                         return blocks.getRandom(random);
                     }).map(RegistryEntry::value).ifPresent((block) -> {
                         world.setBlockState(blockPos, block.getDefaultState().with(Properties.WATERLOGGED, false), 2);
@@ -74,7 +74,7 @@ public abstract class DeadCoralFeature extends Feature<DefaultFeatureConfig> {
                 if (random.nextFloat() < 0.2F) {
                     BlockPos blockPos2 = pos.offset(direction);
                     if (world.getBlockState(blockPos2).isOf(Blocks.WATER)) {
-                        Registries.BLOCK.getEntryList(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
+                        Registries.BLOCK.getOptional(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
                             return blocks.getRandom(random);
                         }).map(RegistryEntry::value).ifPresent((block) -> {
                             BlockState blockState2 = block.getDefaultState().with(Properties.WATERLOGGED, true);
@@ -85,7 +85,7 @@ public abstract class DeadCoralFeature extends Feature<DefaultFeatureConfig> {
                             world.setBlockState(blockPos2, blockState2, 2);
                         });
                     } else if (world.getBlockState(blockPos2).isOf(Blocks.AIR)) {
-                        Registries.BLOCK.getEntryList(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
+                        Registries.BLOCK.getOptional(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
                             return blocks.getRandom(random);
                         }).map(RegistryEntry::value).ifPresent((block) -> {
                             BlockState blockState2 = block.getDefaultState().with(Properties.WATERLOGGED, false);

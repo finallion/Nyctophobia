@@ -4,7 +4,7 @@
   "package": "com.lion.nyctophobia.mixin.fabric",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "WorldRendererMixin"
+    "FogRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

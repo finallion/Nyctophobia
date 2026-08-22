@@ -15,20 +15,20 @@ Spooky, foggy, creepy and dark biomes for your Minecraft world
 [[dependencies.nyctophobia]]
     modId = "neoforge"
     type = "required"
-    versionRange = "[21.1.0,)"
+    versionRange = "[21.8.0,)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.nyctophobia]]
     modId = "minecraft"
     type = "required"
-    versionRange = "[1.21.1,1.21.2)"
+    versionRange = "[1.21.8,1.22)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.nyctophobia]]
     modId = "terrablender"
     type = "required"
-    versionRange = "[4.1.0.8,)"
+    versionRange = "[6.0.0.3,)"
     ordering = "AFTER"
     side = "BOTH"

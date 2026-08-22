@@ -35,7 +35,7 @@ public class DeadCoralPatchFeature extends Feature<DefaultFeatureConfig> {
             mutable.setY(i);
             if (world.getBlockState(mutable).isSolidBlock(world, mutable) && world.getBlockState(mutable.up()).isAir() && world.getBiome(mutable).getKey().get().getValue().getPath().contains("ancient_dead_coral_reef")) {
                 if (random.nextInt(7) == 0) {
-                    Registries.BLOCK.getEntryList(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
                         return blocks.getRandom(random);
                     }).map(RegistryEntry::value).ifPresent((block) -> {
                         world.setBlockState(mutable.up(), block.getDefaultState().with(Properties.WATERLOGGED, false), 2);
@@ -44,7 +44,7 @@ public class DeadCoralPatchFeature extends Feature<DefaultFeatureConfig> {
                 }
             } else if (world.getBlockState(mutable).isSolidBlock(world, mutable) && world.getBlockState(mutable.up()).isOf(Blocks.WATER) && world.getBiome(mutable).getKey().get().getValue().getPath().contains("ancient_dead_coral_reef")) {
                 if (random.nextBoolean()) {
-                    Registries.BLOCK.getEntryList(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
                         return blocks.getRandom(random);
                     }).map(RegistryEntry::value).ifPresent((block) -> {
                         world.setBlockState(mutable.up(), block.getDefaultState().with(Properties.WATERLOGGED, true), 2);

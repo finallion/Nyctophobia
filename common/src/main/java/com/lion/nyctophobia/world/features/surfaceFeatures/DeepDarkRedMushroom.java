@@ -334,7 +334,7 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
     }
 
     protected void setBlock(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!world.getBlockState(pos).isOpaqueFullCube(world, pos)) {
+        if (!world.getBlockState(pos).isOpaqueFullCube()) {
             this.setBlockState(world, pos, state);
         }
 

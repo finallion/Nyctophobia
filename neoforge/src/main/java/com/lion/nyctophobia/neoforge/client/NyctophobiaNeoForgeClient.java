@@ -3,7 +3,7 @@ package com.lion.nyctophobia.neoforge.client;
 import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.client.NFog;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BackgroundRenderer;
+import net.minecraft.client.render.fog.FogData;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.neoforged.api.distmarker.Dist;
@@ -12,8 +12,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 
-/// NeoForge counterpart to the Fabric WorldRendererMixin. The event has to be cancelled, otherwise
-/// NeoForge discards the plane distances set here.
+/// NeoForge counterpart to the Fabric FogRendererMixin.
 @EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT)
 public class NyctophobiaNeoForgeClient {
 
@@ -43,24 +42,17 @@ public class NyctophobiaNeoForgeClient {
 
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {
-        // The hook sits inside applyFog itself, so it fires for every fog pass of a frame, sky
-        // included. The terrain pass is the one the Fabric mixin sits on, and taking the sky passes
-        // as well would repaint the horizon on this loader alone.
-        if (event.getMode() != BackgroundRenderer.FogType.FOG_TERRAIN) {
-            return;
-        }
-
-        // The view distance, not the plane the event carries: by this point vanilla has already
-        // turned that into a fog end, and NFog derives the planes from the raw distance the same way
-        // vanilla does.
-        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getRenderer().getViewDistance(),
-                event.getNearPlaneDistance(), event.getFarPlaneDistance());
+        // The event's own plane accessors address the environmental pair. The Fabric mixin overrides
+        // the render distance pair, and the fog has to come out the same on both loaders, so this
+        // goes through the FogData directly.
+        FogData fogData = event.getFogData();
+        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(),
+                event.getRenderer().getViewDistanceBlocks(), fogData.renderDistanceStart, fogData.renderDistanceEnd);
         if (planes == null) {
             return;
         }
 
-        event.setNearPlaneDistance(planes.near());
-        event.setFarPlaneDistance(planes.far());
-        event.setCanceled(true);
+        fogData.renderDistanceStart = planes.near();
+        fogData.renderDistanceEnd = planes.far();
     }
 }
