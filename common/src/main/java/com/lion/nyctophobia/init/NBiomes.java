@@ -17,8 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class NBiomes {
-    /// Keyed by path so config entries, surface rules and the biome provider can all look a biome up
-    /// by the same string the config file uses. Insertion ordered to keep generated output stable.
+    /// Keep insertion order, so generated output stays stable.
     private static final Map<String, RegistryKey<Biome>> BY_PATH = new LinkedHashMap<>();
 
     public static final RegistryKey<Biome> ERODED_HAUNTED_FOREST_KEY = registerBiomeKeys("eroded_haunted_forest");
@@ -35,7 +34,6 @@ public class NBiomes {
         return key;
     }
 
-    /// Every biome this mod adds, by the path its config entry uses.
     public static Map<String, RegistryKey<Biome>> byPath() {
         return Collections.unmodifiableMap(BY_PATH);
     }

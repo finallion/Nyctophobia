@@ -12,22 +12,30 @@ import net.minecraft.world.gen.trunk.TrunkPlacerType;
 
 import java.util.function.Supplier;
 
-/// Every method returns a Supplier because Forge fills its DeferredRegisters after this class is
-/// touched; reading the registry object eagerly there yields null.
+/// The loader fills its registers late, so every method returns a Supplier.
 public class RegistryHelper {
 
     @ExpectPlatform
-    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(String name, Supplier<F> feature) {
+    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(
+            String name,
+            Supplier<F> feature
+    ) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, MapCodec<P> codec) {
+    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(
+            String name,
+            MapCodec<P> codec
+    ) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(String name, MapCodec<S> codec) {
+    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(
+            String name,
+            MapCodec<S> codec
+    ) {
         throw new AssertionError();
     }
 }

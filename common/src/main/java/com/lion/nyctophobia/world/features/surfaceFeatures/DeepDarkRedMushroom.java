@@ -18,12 +18,26 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
     }
 
     @Override
-    protected void generateCap(WorldAccess world, Random random, BlockPos start, int y, BlockPos.Mutable mutable, HugeMushroomFeatureConfig config) {
+    protected void generateCap(
+            WorldAccess world,
+            Random random,
+            BlockPos start,
+            int y,
+            BlockPos.Mutable mutable,
+            HugeMushroomFeatureConfig config
+    ) {
 
     }
 
     @Override
-    protected void generateStem(WorldAccess world, Random random, BlockPos pos, HugeMushroomFeatureConfig config, int height, BlockPos.Mutable mutablePos) {
+    protected void generateStem(
+            WorldAccess world,
+            Random random,
+            BlockPos pos,
+            HugeMushroomFeatureConfig config,
+            int height,
+            BlockPos.Mutable mutablePos
+    ) {
         mutablePos.move(Direction.DOWN, 5);
 
         for (int i = -2; i < 3; i++) {
@@ -36,7 +50,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
             }
         }
 
-        // first layer
         this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
         for (int i = 1; i <= 3; i++) {
             this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
@@ -60,7 +73,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
 
         mutablePos.move(Direction.UP);
 
-        // second layer
         this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
         for (int i = 1; i <= 3; i++) {
             this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
@@ -86,7 +98,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         this.setBlock(world, mutablePos.offset(Direction.EAST, 3).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 2), config.stemProvider.get(random, pos));
 
-        // third layer
         mutablePos.move(Direction.UP);
         this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
         for (int i = 1; i <= 2; i++) {
@@ -106,7 +117,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         }
         this.setBlock(world, mutablePos.offset(Direction.EAST, 3), config.stemProvider.get(random, pos));
 
-        // forth layer
         mutablePos.move(Direction.UP);
         this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
         for (int i = 1; i <= 2; i++) {
@@ -125,7 +135,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
 
-        // fifth layer
         mutablePos.move(Direction.UP);
         this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
@@ -141,7 +150,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         this.setBlock(world, mutablePos.offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
 
-        //sixth layer
         mutablePos.move(Direction.UP);
         this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
@@ -168,6 +176,7 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         int bound = random.nextInt(6) + 1;
         for (int i = 0; i <= bound; i++) {
             mutablePos.move(Direction.UP);
+
             if (i == 0) {
                 this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
                 this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
@@ -235,8 +244,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
 
 
-        // cap
-        // layer 1
         for (int i = -3; i <= 3; i++) {
             if (Math.abs(i) == 3) {
                 this.setBlock(world, mutablePos.offset(Direction.EAST, 4).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
@@ -251,7 +258,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
             }
         }
 
-        // layer 2
         mutablePos.move(Direction.UP);
         for (int i = -2; i <= 3; i++) {
             if (Math.abs(i) == 2) {
@@ -272,7 +278,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
             }
         }
 
-        // connector stem to cap
         this.setBlock(world, mutablePos.offset(Direction.EAST, 4), config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.WEST, 4), config.stemProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.NORTH, 4), config.stemProvider.get(random, pos));
@@ -283,7 +288,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
 
 
-        // layer 3
         mutablePos.move(Direction.UP);
         for (int i = -2; i <= 2; i++) {
             if (Math.abs(i) == 2) {
@@ -308,7 +312,6 @@ public class DeepDarkRedMushroom extends HugeMushroomFeature {
         this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.WEST, 2), config.capProvider.get(random, pos));
         this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.EAST, 2), config.capProvider.get(random, pos));
 
-        // layer 4
         mutablePos.move(Direction.UP);
         this.setBlock(world, mutablePos, config.capProvider.get(random, pos));
         for (int i = 1; i <= 3; i++) {

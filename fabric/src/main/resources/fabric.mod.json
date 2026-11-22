@@ -6,14 +6,15 @@
   "name": "Nyctophobia",
   "description": "Spooky, foggy, creepy and dark biomes for your Minecraft world",
   "authors": [
-    "Finallion"
+    "LithiumPlus"
   ],
   "contact": {
-    "homepage": "",
-    "sources": ""
+    "homepage": "https://modrinth.com/mod/nyctophobia",
+    "sources": "https://github.com/finallion/Nyctophobia",
+    "issues": "https://github.com/finallion/Nyctophobia/issues"
   },
 
-  "license": "CC0-1.0",
+  "license": "GPL-3.0-only",
   "icon": "assets/nyctophobia/nyctophobia.png",
 
   "environment": "*",
@@ -38,8 +39,15 @@
   "depends": {
     "fabricloader": ">=0.16.0",
     "fabric-api": "*",
-    "minecraft": ">=1.21.8 <1.22",
+    "minecraft": "1.21.8",
     "java": ">=21",
     "terrablender": ">=6.0.0.3"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.donate": "https://www.patreon.com/cw/LithiumPlus"
+      }
+    }
   }
 }

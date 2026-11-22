@@ -16,6 +16,7 @@ sourceSets {
 	main {
 		resources {
 			srcDirs += ["src/generated/resources"]
+			exclude ".cache/**"
 		}
 	}
 }

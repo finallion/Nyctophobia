@@ -22,7 +22,6 @@ public class NFeatures {
 
     }
 
-    // tree features
     public static final Supplier<Feature<NTreeFeatureConfig>> SMALL_SPRUCE_TREE_01 = registerFeature("small_spruce_tree_01", () -> new SmallSpruceTree01(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> SMALL_SPRUCE_TREE_02 = registerFeature("small_spruce_tree_02", () -> new SmallSpruceTree02(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> SMALL_SPRUCE_TREE_03 = registerFeature("small_spruce_tree_03", () -> new SmallSpruceTree03(NTreeFeatureConfig.CODEC));
@@ -38,7 +37,6 @@ public class NFeatures {
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_02 = registerFeature("large_spruce_tree_02", () -> new LargeSpruceTree02(NTreeFeatureConfig.CODEC));
     public static final Supplier<Feature<NTreeFeatureConfig>> LARGE_SPRUCE_TREE_03 = registerFeature("large_spruce_tree_03", () -> new LargeSpruceTree03(NTreeFeatureConfig.CODEC));
 
-    // other features
     public static final Supplier<Feature<DefaultFeatureConfig>> MOSS_CARPET_FEATURE = registerFeature("moss_carpet_feature", () -> new MossCarpetFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> COBWEB_FEATURE = registerFeature("cobweb_feature", () -> new CobwebFeature(DefaultFeatureConfig.CODEC));
     public static final Supplier<Feature<DefaultFeatureConfig>> BUSH_FEATURE = registerFeature("bush_feature", () -> new BushFeature(DefaultFeatureConfig.CODEC, (LeavesBlock) Blocks.SPRUCE_LEAVES));
@@ -55,7 +53,10 @@ public class NFeatures {
     public static final Supplier<Feature<DefaultFeatureConfig>> DEAD_CORAL_PATCH_FEATURE = registerFeature("dead_coral_patch_feature", () -> new DeadCoralPatchFeature(DefaultFeatureConfig.CODEC));
 
 
-    private static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(String id, Supplier<F> feature) {
+    private static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(
+            String id,
+            Supplier<F> feature
+    ) {
         return RegistryHelper.registerFeature(id, feature);
     }
 }

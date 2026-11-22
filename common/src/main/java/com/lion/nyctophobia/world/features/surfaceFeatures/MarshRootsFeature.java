@@ -13,15 +13,6 @@ import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 
-/// A mangrove style root tangle: a knot of roots in the middle, with prop legs that arch away from it
-/// and plant a foot where they come down.
-///
-/// The legs are what make this a root system rather than a stack of blocks. Each one leaves the crown
-/// in its own direction and at its own length, loses height as it reaches out, and ends on the ground
-/// it happens to find, so no two tangles share an outline.
-///
-/// A tangle needs open water in reach. That keeps it at the edge of a pool, where a mangrove would
-/// stand, instead of scattered over dry marsh.
 public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
 
     private static final int LEGS_MIN = 3;
@@ -34,7 +25,6 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
     private static final int SCAN_DOWN = 8;
     private static final int NO_GROUND = Integer.MIN_VALUE;
 
-    /// All eight compass directions, so a leg can leave the crown diagonally as well.
     private static final int[] STEP_X = {1, 1, 0, -1, -1, -1, 0, 1};
     private static final int[] STEP_Z = {0, 1, 1, 1, 0, -1, -1, -1};
 
@@ -52,12 +42,11 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
         int x = origin.getX();
         int z = origin.getZ();
         int ground = groundAt(world, mutable, x, z);
+
         if (ground == NO_GROUND || !waterWithinReach(world, mutable, x, ground, z)) {
             return false;
         }
 
-        // The crown carries the legs, so a blocked column has to lower them with it rather than leave
-        // them hanging at the height that was asked for.
         int crownY = ground + CROWN_MIN + random.nextInt(CROWN_EXTRA);
         for (int y = ground; y <= crownY; ++y) {
             if (!placeRoot(world, mutable.set(x, y, z), y == ground)) {
@@ -73,8 +62,6 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
         int legs = LEGS_MIN + random.nextInt(LEGS_EXTRA);
         int direction = random.nextInt(STEP_X.length);
         for (int leg = 0; leg < legs; ++leg) {
-            // Step around the compass instead of drawing freely, so two legs never take the same way
-            // out and the tangle keeps its spread.
             direction = (direction + 1 + random.nextInt(3)) % STEP_X.length;
             growLeg(world, mutable, random, x, z, crownY, direction);
         }
@@ -82,25 +69,32 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
         return true;
     }
 
-    /// One prop leg: full height at the crown, a block lower every second step outwards, and a foot
-    /// run down to the ground where it ends. Without that foot a leg reaching over a pool would hang
-    /// in the air.
-    private static void growLeg(StructureWorldAccess world, BlockPos.Mutable mutable, Random random,
-                                int x, int z, int crownY, int direction) {
+    private static void growLeg(
+            StructureWorldAccess world,
+            BlockPos.Mutable mutable,
+            Random random,
+            int x,
+            int z,
+            int crownY,
+            int direction
+    ) {
         int length = LEG_LENGTH_MIN + random.nextInt(LEG_LENGTH_EXTRA);
         int y = crownY;
 
         for (int step = 1; step <= length; ++step) {
             x += STEP_X[direction];
             z += STEP_Z[direction];
+
             if (step % 2 == 0) {
                 --y;
             }
 
             int ground = groundAt(world, mutable, x, z);
+
             if (ground == NO_GROUND) {
                 return;
             }
+
             y = Math.max(y, ground);
 
             if (!placeRoot(world, mutable.set(x, y, z), y == ground)) {
@@ -117,8 +111,7 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    /// Muddy roots only where the tangle rests on dry ground: that block carries no waterlogged state
-    /// and would leave a dry pocket anywhere inside the water.
+    /// Muddy roots only on dry ground. That block has no waterlogged state.
     private static boolean placeRoot(StructureWorldAccess world, BlockPos.Mutable pos, boolean onGround) {
         BlockState existing = world.getBlockState(pos);
         boolean inWater = existing.isOf(Blocks.WATER);
@@ -135,32 +128,24 @@ public class MarshRootsFeature extends Feature<DefaultFeatureConfig> {
         return true;
     }
 
-    /// First free block over the marsh floor in this column, or NO_GROUND where the tangle has no
-    /// business: a tree, a bank of something other than marsh ground, or a drop too deep to scan.
-    ///
-    /// Not the OCEAN_FLOOR heightmap directly: that counts leaves as floor, and a leg reaching into a
-    /// tree at the biome edge would plant its foot on the crown. The scan starts at the heightmap and
-    /// looks down through leaves and plants; a log ends the column instead.
-    ///
-    /// The heightmap is OCEAN_FLOOR rather than OCEAN_FLOOR_WG: the WG heightmaps live only as long
-    /// as a chunk is being generated, so a feature reading them answers -64 to every /place feature
-    /// and cannot be checked in a running world.
     private static int groundAt(StructureWorldAccess world, BlockPos.Mutable mutable, int x, int z) {
         int top = world.getTopY(Heightmap.Type.OCEAN_FLOOR, x, z);
         for (int y = top - 1; y >= top - SCAN_DOWN; --y) {
             BlockState state = world.getBlockState(mutable.set(x, y, z));
+
             if (state.isIn(BlockTags.LOGS)) {
                 return NO_GROUND;
             }
+
             if (state.isIn(BlockTags.LEAVES) || !state.blocksMovement()) {
                 continue;
             }
+
             return isMarshGround(state) ? y + 1 : NO_GROUND;
         }
         return NO_GROUND;
     }
 
-    /// What the marsh surface rules write, plus the mud a pool leaves behind.
     private static boolean isMarshGround(BlockState state) {
         return state.isOf(Blocks.GRASS_BLOCK)
                 || state.isOf(Blocks.DIRT)

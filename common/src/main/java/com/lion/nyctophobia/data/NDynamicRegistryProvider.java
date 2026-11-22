@@ -7,11 +7,13 @@ import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
 
-/// Writes what the bootstraps in NDataGen built. addAll keeps only this mod's namespace, so the
-/// vanilla entries the lookups also hold never reach the output.
+/// addAll keeps only this mod's namespace.
 public class NDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 
-    protected NDynamicRegistryProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    protected NDynamicRegistryProvider(
+            FabricDataOutput output,
+            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture
+    ) {
         super(output, registriesFuture);
     }
 

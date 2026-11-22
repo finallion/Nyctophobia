@@ -39,30 +39,22 @@ public class LargeBentSpruceTree02 extends BaseSpruceTree {
         }
 
 
-        // straight half of the trunk
-        // trunkHeight - top bent - middle bent + offset
         for (int i = 0; i <= trunkHeight - 10 - 8 + offsetTrunk; i++) {
             world.setBlockState(blockPos.up(i), wood, 2);
         }
 
-        // bent first part of the trunk
-        // trunkHeight - top bent + offset
         for (int i = 10 + offsetTrunk; i < trunkHeight - 7 + offsetTrunk; i++) {
             world.setBlockState(blockPos.up(i).offset(direction), wood, 2);
         }
 
 
-        // bent second part of the trunk
         for (int i = 18 + offsetTrunk; i <= trunkHeight + offsetTrunk; i++) {
             world.setBlockState(blockPos.up(i).offset(direction, 2), wood, 2);
         }
 
-        // start generating leaves from the top
-        // shift leaf layer in bending direction
         mutable.move(0, trunkHeight + offsetTrunk, 0);
         mutable.move(direction, 2);
 
-        // bent tree top leaf layer
         setLeaves(context, mutable.add(0, 6, 0).offset(direction, 2), leaf);
         setLeaves(context, mutable.add(0, 5, 0).offset(direction, 2), leaf);
         setLeaves(context, mutable.add(0, 5, 0).offset(direction), leaf);
@@ -84,7 +76,6 @@ public class LargeBentSpruceTree02 extends BaseSpruceTree {
         generateTwoStar(context, mutable.add(0, -6, 0), false);
         generateThreeStar(context, mutable.add(0, -7, 0), true);
 
-        // middle bent
         mutable.move(direction.getOpposite(), 1);
         randomSpreadThree(context, mutable.add(0, -7, 0), true, 2);
         generateOneStar(context, mutable.add(0, -8, 0), false);
@@ -96,7 +87,6 @@ public class LargeBentSpruceTree02 extends BaseSpruceTree {
         randomSpreadTwo(context, mutable.add(0, -12, 0), false, 4);
         generateTwoStar(context, mutable.add(0, -13, 0), false);
 
-        // lower bent
         mutable.move(direction.getOpposite(), 1);
         generateTwoStar(context, mutable.add(0, -13, 0), false);
         randomSpreadFour(context, mutable.add(0, -13, 0), false, 4);

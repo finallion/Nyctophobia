@@ -26,6 +26,7 @@ public class DeadCoralMushroomFeature extends DeadCoralFeature {
                 for(int o = 0; o <= k; ++o) {
                     mutable.set(m + pos.getX(), n + pos.getY(), o + pos.getZ());
                     mutable.move(Direction.DOWN, l);
+
                     if ((m != 0 && m != j || n != 0 && n != i) && (o != 0 && o != k || n != 0 && n != i) && (m != 0 && m != j || o != 0 && o != k) && (m == 0 || m == j || n == 0 || n == i || o == 0 || o == k) && !(random.nextFloat() < 0.1F) && !this.generateCoralPiece(world, random, mutable, state)) {
                     }
                 }

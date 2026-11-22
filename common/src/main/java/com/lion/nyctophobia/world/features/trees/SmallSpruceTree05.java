@@ -38,7 +38,6 @@ public class SmallSpruceTree05 extends BaseSpruceTree {
             mutable.move(0, 1, 0);
         }
 
-        // single tree top
         setLeaves(context, mutable.add(0, 4, 0), leaf);
         setLeaves(context, mutable.add(0, 3, 0), leaf);
         setLeaves(context, mutable.add(0, 2, 0), leaf);
