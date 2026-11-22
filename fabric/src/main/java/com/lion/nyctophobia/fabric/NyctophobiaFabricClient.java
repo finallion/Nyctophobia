@@ -3,21 +3,19 @@ package com.lion.nyctophobia.fabric;
 import com.lion.nyctophobia.Nyctophobia;
 import com.lion.nyctophobia.client.NFog;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
-/// The fog toggle is a client command, not a server one: the fog is drawn on the client and never
-/// leaves it, so a server side command could not reach it in multiplayer.
 public class NyctophobiaFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
-                dispatcher.register(ClientCommandManager.literal(Nyctophobia.MOD_ID)
-                        .then(ClientCommandManager.literal("fog")
-                                .then(ClientCommandManager.literal("on").executes(context -> set(context.getSource(), true)))
-                                .then(ClientCommandManager.literal("off").executes(context -> set(context.getSource(), false)))
+                dispatcher.register(ClientCommands.literal(Nyctophobia.MOD_ID)
+                        .then(ClientCommands.literal("fog")
+                                .then(ClientCommands.literal("on").executes(context -> set(context.getSource(), true)))
+                                .then(ClientCommands.literal("off").executes(context -> set(context.getSource(), false)))
                                 .executes(context -> {
                                     NFog.toggle();
                                     return report(context.getSource());

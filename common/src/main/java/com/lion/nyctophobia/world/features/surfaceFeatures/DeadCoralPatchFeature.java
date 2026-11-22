@@ -2,52 +2,53 @@ package com.lion.nyctophobia.world.features.surfaceFeatures;
 
 import com.lion.nyctophobia.util.NTags;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class DeadCoralPatchFeature extends Feature<DefaultFeatureConfig> {
+public class DeadCoralPatchFeature extends Feature<NoneFeatureConfiguration> {
 
 
-    public DeadCoralPatchFeature(Codec<DefaultFeatureConfig> configCodec) {
+    public DeadCoralPatchFeature(Codec<NoneFeatureConfiguration> configCodec) {
         super(configCodec);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        BlockPos blockPos = context.getOrigin();
-        Random random = context.getRandom();
-        context.getConfig();
-        BlockPos.Mutable mutable = new BlockPos.Mutable().set(blockPos);
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        BlockPos blockPos = context.origin();
+        RandomSource random = context.random();
+        context.config();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos().set(blockPos);
 
 
         for (int i = 61; i < 80; i++) {
             mutable.set(blockPos);
             mutable.move(random.nextInt(3) - random.nextInt(3), 0, random.nextInt(3) - random.nextInt(3));
             mutable.setY(i);
-            if (world.getBlockState(mutable).isSolidBlock(world, mutable) && world.getBlockState(mutable.up()).isAir() && world.getBiome(mutable).getKey().get().getValue().getPath().contains("ancient_dead_coral_reef")) {
+
+            if (world.getBlockState(mutable).isRedstoneConductor(world, mutable) && world.getBlockState(mutable.above()).isAir() && world.getBiome(mutable).unwrapKey().get().identifier().getPath().contains("ancient_dead_coral_reef")) {
                 if (random.nextInt(7) == 0) {
-                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
-                        return blocks.getRandom(random);
-                    }).map(RegistryEntry::value).ifPresent((block) -> {
-                        world.setBlockState(mutable.up(), block.getDefaultState().with(Properties.WATERLOGGED, false), 2);
+                    BuiltInRegistries.BLOCK.get(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                        return blocks.getRandomElement(random);
+                    }).map(Holder::value).ifPresent((block) -> {
+                        world.setBlock(mutable.above(), block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false), 2);
                     });
                     break;
                 }
-            } else if (world.getBlockState(mutable).isSolidBlock(world, mutable) && world.getBlockState(mutable.up()).isOf(Blocks.WATER) && world.getBiome(mutable).getKey().get().getValue().getPath().contains("ancient_dead_coral_reef")) {
+            } else if (world.getBlockState(mutable).isRedstoneConductor(world, mutable) && world.getBlockState(mutable.above()).is(Blocks.WATER) && world.getBiome(mutable).unwrapKey().get().identifier().getPath().contains("ancient_dead_coral_reef")) {
                 if (random.nextBoolean()) {
-                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
-                        return blocks.getRandom(random);
-                    }).map(RegistryEntry::value).ifPresent((block) -> {
-                        world.setBlockState(mutable.up(), block.getDefaultState().with(Properties.WATERLOGGED, true), 2);
+                    BuiltInRegistries.BLOCK.get(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                        return blocks.getRandomElement(random);
+                    }).map(Holder::value).ifPresent((block) -> {
+                        world.setBlock(mutable.above(), block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true), 2);
                     });
                     break;
                 }

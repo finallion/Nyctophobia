@@ -1,6 +1,7 @@
 plugins {
-	id "architectury-plugin" version "3.4-SNAPSHOT"
-	id "dev.architectury.loom" version "1.11-SNAPSHOT" apply false
+	id "architectury-plugin" version "${architectury_plugin_version}"
+	id "dev.architectury.loom-no-remap" version "${loom_version}" apply false
+	id "com.gradleup.shadow" version "${shadow_version}" apply false
 }
 
 architectury {
@@ -8,26 +9,15 @@ architectury {
 }
 
 subprojects {
-	apply plugin: "dev.architectury.loom"
-
-	loom {
-		silentMojangMappingsLicense()
-	}
+	apply plugin: "dev.architectury.loom-no-remap"
 
 	dependencies {
 		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-		// Plain yarn collides with NeoForge on remap ("Mapping target name conflicts"); the patch
-		// layer resolves those names. It stays even on the fabric module so both compile against the
-		// same mappings.
-		mappings loom.layered {
-			mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}"
-			mappings "dev.architectury:yarn-mappings-patch-neoforge:${rootProject.yarn_mappings_patch_neoforge_version}"
-		}
 	}
 }
 
 allprojects {
-	apply plugin: "java"
+	apply plugin: "java-library"
 	apply plugin: "architectury-plugin"
 	apply plugin: "maven-publish"
 
@@ -38,16 +28,14 @@ allprojects {
 	group = rootProject.maven_group
 
 	repositories {
-		mavenLocal()
 		// TerraBlender publishes every loader variant here under com.github.glitchfiend.
 		maven { url "https://maven.minecraftforge.net/" }
 		maven { url "https://maven.neoforged.net/releases" }
-		maven { url "https://jitpack.io" }
 	}
 
-	tasks.withType(JavaCompile) {
+	tasks.withType(JavaCompile).configureEach {
 		options.encoding = "UTF-8"
-		options.release = 21
+		options.release = 25
 	}
 
 	java {

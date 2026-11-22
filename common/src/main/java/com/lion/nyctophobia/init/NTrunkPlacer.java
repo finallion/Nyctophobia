@@ -2,9 +2,8 @@ package com.lion.nyctophobia.init;
 
 import com.lion.nyctophobia.platform.RegistryHelper;
 import com.lion.nyctophobia.world.trunk.DeepDarkOakTrunkPlacer;
-import net.minecraft.world.gen.trunk.TrunkPlacerType;
-
 import java.util.function.Supplier;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 public class NTrunkPlacer {
 

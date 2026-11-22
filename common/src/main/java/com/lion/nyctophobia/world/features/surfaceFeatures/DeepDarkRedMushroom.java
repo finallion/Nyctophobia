@@ -1,347 +1,351 @@
 package com.lion.nyctophobia.world.features.surfaceFeatures;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.gen.feature.HugeMushroomFeature;
-import net.minecraft.world.gen.feature.HugeMushroomFeatureConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.AbstractHugeMushroomFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.HugeMushroomFeatureConfiguration;
 
-public class DeepDarkRedMushroom extends HugeMushroomFeature {
+public class DeepDarkRedMushroom extends AbstractHugeMushroomFeature {
 
 
-    public DeepDarkRedMushroom(Codec<HugeMushroomFeatureConfig> codec) {
+    public DeepDarkRedMushroom(Codec<HugeMushroomFeatureConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    protected void generateCap(WorldAccess world, Random random, BlockPos start, int y, BlockPos.Mutable mutable, HugeMushroomFeatureConfig config) {
+    protected void makeCap(
+            WorldGenLevel world,
+            RandomSource random,
+            BlockPos start,
+            int y,
+            BlockPos.MutableBlockPos mutable,
+            HugeMushroomFeatureConfiguration config
+    ) {
 
     }
 
     @Override
-    protected void generateStem(WorldAccess world, Random random, BlockPos pos, HugeMushroomFeatureConfig config, int height, BlockPos.Mutable mutablePos) {
+    protected void placeTrunk(
+            WorldGenLevel world,
+            RandomSource random,
+            BlockPos pos,
+            HugeMushroomFeatureConfiguration config,
+            int height,
+            BlockPos.MutableBlockPos mutablePos
+    ) {
         mutablePos.move(Direction.DOWN, 5);
 
         for (int i = -2; i < 3; i++) {
-            if (!world.getBlockState(mutablePos.down().offset(Direction.Axis.X, i)).isOf(Blocks.GRASS_BLOCK)) {
+            if (!world.getBlockState(mutablePos.below().relative(Direction.Axis.X, i)).is(Blocks.GRASS_BLOCK)) {
                 return;
             }
 
-            if (!world.getBlockState(mutablePos.down().offset(Direction.Axis.Z, i)).isOf(Blocks.GRASS_BLOCK)) {
+            if (!world.getBlockState(mutablePos.below().relative(Direction.Axis.Z, i)).is(Blocks.GRASS_BLOCK)) {
                 return;
             }
         }
 
-        // first layer
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
         for (int i = 1; i <= 3; i++) {
-            this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
 
-            this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
         }
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.WEST, 2), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.SOUTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.EAST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 2).relative(Direction.WEST, 2), config.stemProvider().getState(world, random, pos));
 
         mutablePos.move(Direction.UP);
 
-        // second layer
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
         for (int i = 1; i <= 3; i++) {
-            this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
         }
 
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 2).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
 
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 3).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 2), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 3).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.SOUTH, 2), config.stemProvider().getState(world, random, pos));
 
-        // third layer
         mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
         for (int i = 1; i <= 2; i++) {
-            this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
 
-            this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
         }
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 3), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 3), config.stemProvider().getState(world, random, pos));
 
-        // forth layer
         mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
         for (int i = 1; i <= 2; i++) {
-            this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
         }
 
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
 
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-
-        // fifth layer
-        mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-
-        //sixth layer
-        mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
 
         mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+
+        mutablePos.move(Direction.UP);
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+
+        mutablePos.move(Direction.UP);
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
 
         int bound = random.nextInt(6) + 1;
         for (int i = 0; i <= bound; i++) {
             mutablePos.move(Direction.UP);
+
             if (i == 0) {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
             }
 
-            this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
 
             if (i == bound) {
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
             }
         }
 
         mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
 
         for (int i = 0; i < 2; i++) {
             mutablePos.move(Direction.UP);
-            this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
             for (int ii = 1; ii <= 2; ii++) {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, ii), config.stemProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, ii), config.stemProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, ii), config.stemProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, ii), config.stemProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, ii), config.stemProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, ii), config.stemProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, ii), config.stemProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, ii), config.stemProvider().getState(world, random, pos));
             }
 
-            this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
         }
 
         mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.stemProvider().getState(world, random, pos));
         for (int i = 1; i <= 3; i++) {
-            this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, i), config.stemProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, i), config.stemProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, i), config.stemProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, i), config.stemProvider().getState(world, random, pos));
         }
 
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.NORTH, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.EAST, 1), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.WEST, 1), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.SOUTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.NORTH, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.EAST, 1), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 2).relative(Direction.WEST, 1), config.stemProvider().getState(world, random, pos));
 
 
-        // cap
-        // layer 1
         for (int i = -3; i <= 3; i++) {
             if (Math.abs(i) == 3) {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 4).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 4).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 4).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 4).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 4).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 4).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 4).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 4).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             } else {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 5).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 5).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 5).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 5).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 5).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 5).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 5).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 5).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             }
         }
 
-        // layer 2
         mutablePos.move(Direction.UP);
         for (int i = -2; i <= 3; i++) {
             if (Math.abs(i) == 2) {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 4).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 4).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 4).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 4).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 4).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 4).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 4).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 4).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             } else if (i == 3) {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 3).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 3).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 3).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 3).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 3).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 3).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 3).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 3).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             } else {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 5).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 5).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 5).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 5).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 5).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 5).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 5).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 5).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             }
         }
 
-        // connector stem to cap
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 4), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 4), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 4), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 4), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.NORTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.SOUTH, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.WEST, 2), config.stemProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.EAST, 2), config.stemProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 4), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 4), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 4), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 4), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.NORTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.SOUTH, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.WEST, 2), config.stemProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 2).relative(Direction.EAST, 2), config.stemProvider().getState(world, random, pos));
 
 
-        // layer 3
         mutablePos.move(Direction.UP);
         for (int i = -2; i <= 2; i++) {
             if (Math.abs(i) == 2) {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 3).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 3).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 3).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 3).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 3).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 3).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 3).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 3).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             } else {
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 4).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 4).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 4).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 4).offset(Direction.EAST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.EAST, 3).offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.WEST, 3).offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.NORTH, 3).offset(Direction.WEST, i), config.capProvider.get(random, pos));
-                this.setBlock(world, mutablePos.offset(Direction.SOUTH, 3).offset(Direction.EAST, i), config.capProvider.get(random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 4).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 4).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 4).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 4).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.EAST, 3).relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.WEST, 3).relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.NORTH, 3).relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+                this.setBlock(world, mutablePos.relative(Direction.SOUTH, 3).relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
             }
         }
 
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.NORTH, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.SOUTH, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.WEST, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.EAST, 2), config.capProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.NORTH, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.SOUTH, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.WEST, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 2).relative(Direction.EAST, 2), config.capProvider().getState(world, random, pos));
 
-        // layer 4
         mutablePos.move(Direction.UP);
-        this.setBlock(world, mutablePos, config.capProvider.get(random, pos));
+        this.setBlock(world, mutablePos, config.capProvider().getState(world, random, pos));
         for (int i = 1; i <= 3; i++) {
-            this.setBlock(world, mutablePos.offset(Direction.EAST, i), config.capProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.WEST, i), config.capProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.NORTH, i), config.capProvider.get(random, pos));
-            this.setBlock(world, mutablePos.offset(Direction.SOUTH, i), config.capProvider.get(random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.EAST, i), config.capProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.WEST, i), config.capProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.NORTH, i), config.capProvider().getState(world, random, pos));
+            this.setBlock(world, mutablePos.relative(Direction.SOUTH, i), config.capProvider().getState(world, random, pos));
         }
 
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 1).offset(Direction.SOUTH, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 1).offset(Direction.NORTH, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 1).offset(Direction.EAST, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 1).offset(Direction.WEST, 2), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.EAST, 2).offset(Direction.SOUTH, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.WEST, 2).offset(Direction.NORTH, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.NORTH, 2).offset(Direction.EAST, 1), config.capProvider.get(random, pos));
-        this.setBlock(world, mutablePos.offset(Direction.SOUTH, 2).offset(Direction.WEST, 1), config.capProvider.get(random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 1).relative(Direction.SOUTH, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 1).relative(Direction.NORTH, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 1).relative(Direction.EAST, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 1).relative(Direction.WEST, 2), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.EAST, 2).relative(Direction.SOUTH, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.WEST, 2).relative(Direction.NORTH, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.NORTH, 2).relative(Direction.EAST, 1), config.capProvider().getState(world, random, pos));
+        this.setBlock(world, mutablePos.relative(Direction.SOUTH, 2).relative(Direction.WEST, 1), config.capProvider().getState(world, random, pos));
 
     }
 
-    protected void setBlock(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!world.getBlockState(pos).isOpaqueFullCube()) {
-            this.setBlockState(world, pos, state);
+    protected void setBlock(LevelAccessor world, BlockPos pos, BlockState state) {
+        if (!world.getBlockState(pos).isSolidRender()) {
+            this.setBlock(world, pos, state);
         }
 
     }
 
     @Override
-    protected int getCapSize(int i, int j, int capSize, int y) {
+    protected int getTreeRadiusForHeight(int i, int j, int capSize, int y) {
         return 0;
     }
 
