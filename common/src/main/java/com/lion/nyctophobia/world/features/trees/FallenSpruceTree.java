@@ -3,21 +3,19 @@ package com.lion.nyctophobia.world.features.trees;
 
 import com.lion.nyctophobia.world.features.trees.config.NTreeFeatureConfig;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PlantBlock;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 public class FallenSpruceTree extends BaseSpruceTree {
 
-    /// A trunk in a living wood grows moss where it lies; a burnt one does not. The burnt forest gets
-    /// its own registered instance rather than a check on the wood or the biome, because the same
-    /// feature serves both and only the caller knows which wood it is dressing.
+    /// Burnt trunks grow no moss.
     private final boolean mossy;
 
     public FallenSpruceTree(Codec<NTreeFeatureConfig> configCodec, boolean mossy) {
@@ -26,42 +24,46 @@ public class FallenSpruceTree extends BaseSpruceTree {
     }
 
     @Override
-    public boolean generate(FeatureContext<NTreeFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        BlockPos blockPos = context.getOrigin();
-        Random random = context.getRandom();
-        BlockState wood = context.getConfig().woodState;
+    public boolean place(FeaturePlaceContext<NTreeFeatureConfig> context) {
+        WorldGenLevel world = context.level();
+        BlockPos blockPos = context.origin();
+        RandomSource random = context.random();
+        BlockState wood = context.config().woodState;
 
         Direction.Axis axis = random.nextBoolean() ? Direction.Axis.X : Direction.Axis.Z;
-        Direction direction = Direction.from(axis, random.nextBoolean() ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE);
+        Direction direction = Direction.fromAxisAndDirection(axis, random.nextBoolean() ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE);
 
 
         int length = random.nextInt(9) + 2;
 
-        if (!world.getBlockState(blockPos).isAir()) return false;
+        if (!world.getBlockState(blockPos).isAir()) {
+            return false;
+        }
 
         for (int i = 0; i < length; i++) {
-            if ((world.getBlockState(blockPos.offset(direction, i).down()).isSolidBlock(world, blockPos.offset(direction, i).down()) || (world.getBlockState(blockPos.offset(direction, i).down()).getBlock() == Blocks.SOUL_SAND))
-                    && canBeReplaced(world.getBlockState(blockPos.offset(direction, i)))) {
-                world.setBlockState(blockPos.offset(direction, i), wood.with(Properties.AXIS, axis), 2);
-                if (mossy && random.nextBoolean() && world.getBlockState(blockPos.offset(direction, i).up()).isAir()) {
-                    world.setBlockState(blockPos.offset(direction, i).up(), Blocks.MOSS_CARPET.getDefaultState(), 2);
+            if ((world.getBlockState(blockPos.relative(direction, i).below())
+                    .isRedstoneConductor(world, blockPos.relative(direction, i).below())
+                    || (world.getBlockState(blockPos.relative(direction, i).below()).getBlock() == Blocks.SOUL_SAND))
+                    && canBeReplaced(world.getBlockState(blockPos.relative(direction, i)))) {
+                world.setBlock(blockPos.relative(direction, i), wood.setValue(BlockStateProperties.AXIS, axis), 2);
+
+                if (mossy && random.nextBoolean() && world.getBlockState(blockPos.relative(direction, i).above()).isAir()) {
+                    world.setBlock(blockPos.relative(direction, i).above(), Blocks.MOSS_CARPET.defaultBlockState(), 2);
                 }
             } else {
                 break;
             }
         }
 
-
-
         return false;
 
     }
 
     private boolean canBeReplaced(BlockState state) {
-        if (state.getBlock() instanceof PlantBlock || state.isAir()) {
+        if (state.getBlock() instanceof VegetationBlock || state.isAir()) {
             return true;
         }
+
         return false;
     }
 }

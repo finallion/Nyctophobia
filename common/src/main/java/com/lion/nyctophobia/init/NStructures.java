@@ -2,9 +2,8 @@ package com.lion.nyctophobia.init;
 
 import com.lion.nyctophobia.platform.RegistryHelper;
 import com.lion.nyctophobia.world.structures.MushroomStructure;
-import net.minecraft.world.gen.structure.StructureType;
-
 import java.util.function.Supplier;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 
 public class NStructures {
 

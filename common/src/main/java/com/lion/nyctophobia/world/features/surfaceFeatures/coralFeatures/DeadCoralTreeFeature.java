@@ -3,24 +3,23 @@ package com.lion.nyctophobia.world.features.surfaceFeatures.coralFeatures;
 import com.lion.nyctophobia.world.features.surfaceFeatures.DeadCoralFeature;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class DeadCoralTreeFeature extends DeadCoralFeature {
-    public DeadCoralTreeFeature(Codec<DefaultFeatureConfig> codec) {
+    public DeadCoralTreeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
-    protected boolean generateCoral(WorldAccess world, Random random, BlockPos pos, BlockState state) {
-        BlockPos.Mutable mutable = pos.mutableCopy();
+    protected boolean generateCoral(LevelAccessor world, RandomSource random, BlockPos pos, BlockState state) {
+        BlockPos.MutableBlockPos mutable = pos.mutable();
         int i = random.nextInt(3) + 1;
 
         for(int j = 0; j < i; ++j) {
@@ -31,9 +30,9 @@ public class DeadCoralTreeFeature extends DeadCoralFeature {
             mutable.move(Direction.UP);
         }
 
-        BlockPos j = mutable.toImmutable();
+        BlockPos j = mutable.immutable();
         int k = random.nextInt(3) + 2;
-        List<Direction> list = Lists.newArrayList(Direction.Type.HORIZONTAL);
+        List<Direction> list = Lists.newArrayList(Direction.Plane.HORIZONTAL);
         Collections.shuffle(list, new java.util.Random());
         List<Direction> list2 = list.subList(0, k);
         Iterator var11 = list2.iterator();
@@ -48,6 +47,7 @@ public class DeadCoralTreeFeature extends DeadCoralFeature {
             for(int n = 0; n < l && this.generateCoralPiece(world, random, mutable, state); ++n) {
                 ++m;
                 mutable.move(Direction.UP);
+
                 if (n == 0 || m >= 2 && random.nextFloat() < 0.25F) {
                     mutable.move(direction);
                     m = 0;
