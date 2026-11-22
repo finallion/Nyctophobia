@@ -1,42 +1,42 @@
 package com.lion.nyctophobia.world.features.surfaceFeatures;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class MossCarpetFeature extends Feature<DefaultFeatureConfig> {
+public class MossCarpetFeature extends Feature<NoneFeatureConfiguration> {
 
 
-    public MossCarpetFeature(Codec<DefaultFeatureConfig> configCodec) {
+    public MossCarpetFeature(Codec<NoneFeatureConfiguration> configCodec) {
         super(configCodec);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        BlockPos blockPos = context.getOrigin();
-        Random random = context.getRandom();
-        context.getConfig();
-        BlockPos.Mutable mutable = new BlockPos.Mutable().set(blockPos);
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        BlockPos blockPos = context.origin();
+        RandomSource random = context.random();
+        context.config();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos().set(blockPos);
 
-        // cap at height 128
         for (int i = 62; i < 128; i++) {
             mutable.set(blockPos);
             mutable.move(random.nextInt(10) - random.nextInt(10), 0, random.nextInt(10) - random.nextInt(10));
             mutable.setY(i);
-            if (world.getBlockState(mutable).getBlock() instanceof LeavesBlock && world.getBlockState(mutable.up()).isAir() && FeatureHelper.isCorrectBiome(world.getBiome(mutable).getKey().get())) {
-                world.setBlockState(mutable.up(), Blocks.MOSS_CARPET.getDefaultState(), 2);
+
+            if (world.getBlockState(mutable).getBlock() instanceof LeavesBlock && world.getBlockState(mutable.above()).isAir() && FeatureHelper.isCorrectBiome(world.getBiome(mutable).unwrapKey().get())) {
+                world.setBlock(mutable.above(), Blocks.MOSS_CARPET.defaultBlockState(), 2);
                 break;
 
-            } else if (world.getBlockState(mutable).isOf(Blocks.MOSS_BLOCK) && world.getBlockState(mutable.up()).isAir()) {
+            } else if (world.getBlockState(mutable).is(Blocks.MOSS_BLOCK) && world.getBlockState(mutable.above()).isAir()) {
                 if (random.nextInt(5) == 0) {
-                    world.setBlockState(mutable.up(), Blocks.MOSS_CARPET.getDefaultState(), 2);
+                    world.setBlock(mutable.above(), Blocks.MOSS_CARPET.defaultBlockState(), 2);
                     break;
                 }
             }

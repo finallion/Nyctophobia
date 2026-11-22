@@ -1,4 +1,37 @@
 {
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "additions": {
+        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "tick_chance": 0.0111
+      },
+      "loop": "minecraft:ambient.basalt_deltas.loop",
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "minecraft:ambient.soul_sand_valley.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 12000,
+        "sound": "minecraft:music.game"
+      }
+    },
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:ash"
+        },
+        "probability": 0.09
+      }
+    ],
+    "minecraft:visual/fog_color": "#585858",
+    "minecraft:visual/sky_color": "#585858",
+    "minecraft:visual/water_fog_color": "#4a4842"
+  },
   "carvers": [
     "minecraft:cave",
     "minecraft:cave_extra_underground",
@@ -6,41 +39,9 @@
   ],
   "downfall": 0.2,
   "effects": {
-    "additions_sound": {
-      "sound": "minecraft:ambient.soul_sand_valley.additions",
-      "tick_chance": 0.0111
-    },
-    "ambient_sound": "minecraft:ambient.basalt_deltas.loop",
-    "fog_color": 5789784,
-    "foliage_color": 6183506,
-    "grass_color": 7565416,
-    "mood_sound": {
-      "block_search_extent": 8,
-      "offset": 2.0,
-      "sound": "minecraft:ambient.soul_sand_valley.mood",
-      "tick_delay": 6000
-    },
-    "music": [
-      {
-        "data": {
-          "max_delay": 24000,
-          "min_delay": 12000,
-          "replace_current_music": false,
-          "sound": "minecraft:music.game"
-        },
-        "weight": 1
-      }
-    ],
-    "music_volume": 1.0,
-    "particle": {
-      "options": {
-        "type": "minecraft:ash"
-      },
-      "probability": 0.09
-    },
-    "sky_color": 5789784,
-    "water_color": 6512986,
-    "water_fog_color": 4868162
+    "foliage_color": "#5e5a52",
+    "grass_color": "#737068",
+    "water_color": "#63615a"
   },
   "features": [
     [],
@@ -98,9 +99,7 @@
       "minecraft:patch_large_fern",
       "minecraft:patch_dead_bush",
       "nyctophobia:burnt_forest_trees",
-      "nyctophobia:burnt_lichen_feature",
-      "nyctophobia:cobweb_feature",
-      "nyctophobia:bush_feature"
+      "nyctophobia:burnt_lichen_feature"
     ],
     [
       "minecraft:freeze_top_layer"

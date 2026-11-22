@@ -7,8 +7,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
-/// The fog toggle is a client command, not a server one: the fog is drawn on the client and never
-/// leaves it, so a server side command could not reach it in multiplayer.
 public class NyctophobiaFabricClient implements ClientModInitializer {
 
     @Override
