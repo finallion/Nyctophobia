@@ -20,7 +20,8 @@ import java.util.Optional;
 public class MushroomStructure extends Structure {
 
     public static final Codec<MushroomStructure> CODEC = RecordCodecBuilder.<MushroomStructure>mapCodec(instance ->
-            instance.group(MushroomStructure.configCodecBuilder(instance),
+            instance.group(
+                    MushroomStructure.configCodecBuilder(instance),
                     StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
@@ -36,13 +37,15 @@ public class MushroomStructure extends Structure {
     private final Optional<Heightmap.Type> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
 
-    public MushroomStructure(Structure.Config config,
-                         RegistryEntry<StructurePool> startPool,
-                         Optional<Identifier> startJigsawName,
-                         int size,
-                         HeightProvider startHeight,
-                         Optional<Heightmap.Type> projectStartToHeightmap,
-                         int maxDistanceFromCenter) {
+    public MushroomStructure(
+            Structure.Config config,
+            RegistryEntry<StructurePool> startPool,
+            Optional<Identifier> startJigsawName,
+            int size,
+            HeightProvider startHeight,
+            Optional<Heightmap.Type> projectStartToHeightmap,
+            int maxDistanceFromCenter
+    ) {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
@@ -60,7 +63,8 @@ public class MushroomStructure extends Structure {
                 chunkpos.getStartZ(),
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 context.world(),
-                context.noiseConfig()) > 64;
+                context.noiseConfig()
+        ) > 64;
     }
 
     @Override
@@ -83,7 +87,8 @@ public class MushroomStructure extends Structure {
                         blockPos,
                         false,
                         this.projectStartToHeightmap,
-                        this.maxDistanceFromCenter);
+                        this.maxDistanceFromCenter
+                );
 
         return structurePiecesGenerator;
     }

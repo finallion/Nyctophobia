@@ -33,6 +33,7 @@ public class DeadCoralPatchFeature extends Feature<DefaultFeatureConfig> {
             mutable.set(blockPos);
             mutable.move(random.nextInt(3) - random.nextInt(3), 0, random.nextInt(3) - random.nextInt(3));
             mutable.setY(i);
+
             if (world.getBlockState(mutable).isSolidBlock(world, mutable) && world.getBlockState(mutable.up()).isAir() && world.getBiome(mutable).getKey().get().getValue().getPath().contains("ancient_dead_coral_reef")) {
                 if (random.nextInt(7) == 0) {
                     Registries.BLOCK.getEntryList(NTags.DEAD_CORALS).flatMap((blocks) -> {

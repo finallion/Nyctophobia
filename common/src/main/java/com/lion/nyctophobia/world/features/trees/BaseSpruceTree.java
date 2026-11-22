@@ -30,13 +30,23 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
         }
     }
 
-    public void setLeavesRandomized(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, BlockState state, int chance) {
+    public void setLeavesRandomized(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            BlockState state,
+            int chance
+    ) {
         if (canReplace(context.getWorld(), pos) && context.getRandom().nextInt(chance) == 0) {
             context.getWorld().setBlockState(pos, state, 2);
         }
     }
 
-    public void setBranchRandomized(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, BlockState state, int chance) {
+    public void setBranchRandomized(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            BlockState state,
+            int chance
+    ) {
         if (canReplace(context.getWorld(), pos) && context.getRandom().nextInt(chance) == 0) {
             context.getWorld().setBlockState(pos, state, 2);
         }
@@ -70,7 +80,12 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
 
 
 
-    public void randomSpreadOne(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare, int chance) {
+    public void randomSpreadOne(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            boolean beSquare,
+            int chance
+    ) {
         setLeavesRandomized(context, pos.add(1, 0, 0), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(0, 0, 1), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(-1, 0, 0), context.getConfig().leafState, chance);
@@ -78,7 +93,12 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
 
     }
 
-    public void randomSpreadTwo(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare, int chance) {
+    public void randomSpreadTwo(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            boolean beSquare,
+            int chance
+    ) {
         setLeavesRandomized(context, pos.add(1, 0, 0), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(0, 0, 1), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(-1, 0, 0), context.getConfig().leafState, chance);
@@ -96,7 +116,12 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
         }
     }
 
-    public void randomSpreadThree(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare, int chance) {
+    public void randomSpreadThree(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            boolean beSquare,
+            int chance
+    ) {
         setLeavesRandomized(context, pos.add(1, 0, 0), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(0, 0, 1), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(-1, 0, 0), context.getConfig().leafState, chance);
@@ -126,7 +151,12 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
         }
     }
 
-    public void randomSpreadFour(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare, int chance) {
+    public void randomSpreadFour(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            boolean beSquare,
+            int chance
+    ) {
         setLeavesRandomized(context, pos.add(1, 0, 0), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(0, 0, 1), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(-1, 0, 0), context.getConfig().leafState, chance);
@@ -174,7 +204,12 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
         }
     }
 
-    public void randomSpreadFive(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare, int chance) {
+    public void randomSpreadFive(
+            FeatureContext<NTreeFeatureConfig> context,
+            BlockPos pos,
+            boolean beSquare,
+            int chance
+    ) {
         setLeavesRandomized(context, pos.add(1, 0, 0), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(0, 0, 1), context.getConfig().leafState, chance);
         setLeavesRandomized(context, pos.add(-1, 0, 0), context.getConfig().leafState, chance);
@@ -244,11 +279,6 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
     }
 
     public void generateOneStar(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare) {
-        /*
-                #
-              # o #
-                #
-         */
         setLeaves(context, pos.add(1, 0, 0), context.getConfig().leafState);
         setLeaves(context, pos.add(0, 0, 1), context.getConfig().leafState);
         setLeaves(context, pos.add(-1, 0, 0), context.getConfig().leafState);
@@ -258,13 +288,6 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
 
 
     public void generateTwoStar(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare) {
-        /*
-                #
-              # # #
-            # # o # #
-              # # #
-                #
-         */
 
         setLeaves(context, pos.add(1, 0, 0), context.getConfig().leafState);
         setLeaves(context, pos.add(0, 0, 1), context.getConfig().leafState);
@@ -286,15 +309,6 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
 
 
     public void generateThreeStar(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare) {
-        /*
-                #
-              # # #
-            # # # # #
-          # # # o # # #
-            # # # # #
-              # # #
-                #
-         */
 
         setLeaves(context, pos.add(1, 0, 0), context.getConfig().leafState);
         setLeaves(context, pos.add(0, 0, 1), context.getConfig().leafState);
@@ -328,17 +342,6 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
 
 
     public void generateFourStar(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare) {
-        /*
-                  #
-                # # #
-              # # # # #
-            # # # # # # #
-          # # # # o # # # #
-            # # # # # # #
-              # # # # #
-                # # #
-                  #
-         */
 
         setLeaves(context, pos.add(1, 0, 0), context.getConfig().leafState);
         setLeaves(context, pos.add(0, 0, 1), context.getConfig().leafState);
@@ -388,19 +391,6 @@ public abstract class BaseSpruceTree extends Feature<NTreeFeatureConfig> {
     }
 
     public void generateFiveStar(FeatureContext<NTreeFeatureConfig> context, BlockPos pos, boolean beSquare) {
-        /*
-                    #
-                  # # #
-                # # # # #
-              # # # # # # #
-            # # # # # # # # #
-          # # # # # o # # # # #
-            # # # # # # # # #
-              # # # # # # #
-                # # # # #
-                  # # #
-                    #
-         */
         setLeaves(context, pos.add(1, 0, 0), context.getConfig().leafState);
         setLeaves(context, pos.add(0, 0, 1), context.getConfig().leafState);
         setLeaves(context, pos.add(-1, 0, 0), context.getConfig().leafState);

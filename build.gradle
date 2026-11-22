@@ -30,10 +30,8 @@ allprojects {
 	group = rootProject.maven_group
 
 	repositories {
-		mavenLocal()
 		// TerraBlender publishes both loader variants here under com.github.glitchfiend.
 		maven { url "https://maven.minecraftforge.net/" }
-		maven { url "https://jitpack.io" }
 	}
 
 	tasks.withType(JavaCompile) {

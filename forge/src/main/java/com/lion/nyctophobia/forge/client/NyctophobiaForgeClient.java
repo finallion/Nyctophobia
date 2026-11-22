@@ -12,13 +12,10 @@ import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/// Forge counterpart to the Fabric WorldRendererMixin. The event has to be cancelled, otherwise
-/// Forge discards the plane distances set here.
+/// Cancel the event, or the loader drops the planes.
 @Mod.EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NyctophobiaForgeClient {
 
-    /// Registered as a client command for the same reason as on Fabric: the fog never leaves the
-    /// client, so a server side command could not reach it in multiplayer.
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(CommandManager.literal(Nyctophobia.MOD_ID)
@@ -43,18 +40,20 @@ public class NyctophobiaForgeClient {
 
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {
-        // The hook sits inside applyFog itself, so it fires for every fog pass of a frame: the sky
-        // twice and the terrain once. The terrain pass is the one the Fabric mixin sits on, and
-        // taking the sky passes as well would repaint the horizon on this loader alone.
+        // The hook fires per fog pass. Handle the terrain pass only.
         if (event.getMode() != BackgroundRenderer.FogType.FOG_TERRAIN) {
             return;
         }
 
-        // The view distance, not the plane the event carries: by this point vanilla has already
-        // turned that into a fog end, and NFog derives the planes from the raw distance the same way
-        // vanilla does.
-        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getRenderer().getViewDistance(),
-                event.getNearPlaneDistance(), event.getFarPlaneDistance());
+        // Pass the raw view distance. NFog derives the planes from it like vanilla.
+        NFog.FogPlanes planes = NFog.compute(
+                MinecraftClient.getInstance(),
+                event.getCamera(),
+                event.getRenderer().getViewDistance(),
+                event.getNearPlaneDistance(),
+                event.getFarPlaneDistance()
+        );
+
         if (planes == null) {
             return;
         }

@@ -39,22 +39,17 @@ public class SmallBentSpruceTree01 extends BaseSpruceTree {
         }
 
 
-        // straight half of the trunk
         for (int i = 0; i < trunkHeight - 6 + offsetTrunk; i++) {
             world.setBlockState(blockPos.up(i), wood, 2);
         }
 
-        // bent half of the trunk
         for (int i = 6 + offsetTrunk; i < trunkHeight  + offsetTrunk; i++) {
             world.setBlockState(blockPos.up(i).offset(direction), wood, 2);
         }
 
-        // start generating leaves from the top
-        // shift leaf layer in bending direction
         mutable.move(0, trunkHeight + offsetTrunk, 0);
         mutable.move(direction);
 
-        // single tree top
         setLeaves(context, mutable.add(0, 3, 0), leaf);
         setLeaves(context, mutable.add(0, 2, 0), leaf);
         setLeaves(context, mutable.add(0, 1, 0), leaf);
@@ -63,21 +58,17 @@ public class SmallBentSpruceTree01 extends BaseSpruceTree {
         generateOneStar(context, mutable.add(0, 0, 0), false);
         randomSpreadTwo(context, mutable.add(0, -1, 0), true, 2);
 
-        // second layer
         generateOneStar(context, mutable.add(0, -3, 0), false);
         generateTwoStar(context, mutable.add(0, -4, 0), false);
 
         randomSpreadTwo(context, mutable.add(0, -5, 0), false, 2);
 
-        // third layer
         generateTwoStar(context, mutable.add(0, -6, 0), false);
         generateThreeStar(context, mutable.add(0, -7, 0), true);
 
-        // revert bending direction
         mutable.move(direction.getOpposite());
         randomSpreadOne(context, mutable.add(0, -8, 0), false, 4);
 
-        // forth layer
         generateTwoStar(context, mutable.add(0, -9, 0), false);
         generateThreeStar(context, mutable.add(0, -10, 0), false);
 

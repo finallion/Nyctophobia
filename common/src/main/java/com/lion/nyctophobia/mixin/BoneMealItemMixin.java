@@ -24,7 +24,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BoneMealItemMixin {
 
     @Inject(method = "useOnGround", at = @At("HEAD"), cancellable = true)
-    private static void coralReefBoneMeal(ItemStack stack, World world, BlockPos blockPos, @Nullable Direction facing, CallbackInfoReturnable<Boolean> cir) {
+    private static void coralReefBoneMeal(
+            ItemStack stack,
+            World world,
+            BlockPos blockPos,
+            @Nullable Direction facing,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (!(world instanceof ServerWorld)) {
                 cir.setReturnValue(true);
@@ -38,12 +44,14 @@ public class BoneMealItemMixin {
 
                     for(int j = 0; j < i / 16; ++j) {
                         blockPos2 = blockPos2.add(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
+
                         if (world.getBlockState(blockPos2).isFullCube(world, blockPos2)) {
                             continue label78;
                         }
                     }
 
                     RegistryEntry<Biome> registryEntry = world.getBiome(blockPos2);
+
                     if (registryEntry.matchesKey(NBiomes.ANCIENT_DEAD_CORAL_REEF_KEY) || registryEntry.matchesKey(BiomeKeys.WARM_OCEAN)) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
                             blockState = (BlockState) Registries.BLOCK.getEntryList(BlockTags.WALL_CORALS).flatMap((blocks) -> {
@@ -51,6 +59,7 @@ public class BoneMealItemMixin {
                             }).map((blockEntry) -> {
                                 return ((Block)blockEntry.value()).getDefaultState();
                             }).orElse(blockState);
+
                             if (blockState.contains(DeadCoralWallFanBlock.FACING)) {
                                 blockState = (BlockState)blockState.with(DeadCoralWallFanBlock.FACING, facing);
                             }
@@ -73,6 +82,7 @@ public class BoneMealItemMixin {
 
                     if (blockState.canPlaceAt(world, blockPos2)) {
                         BlockState blockState2 = world.getBlockState(blockPos2);
+
                         if (blockState2.isOf(Blocks.WATER) && world.getFluidState(blockPos2).getLevel() == 8) {
                             world.setBlockState(blockPos2, blockState, 3);
                         } else if (blockState2.isOf(Blocks.SEAGRASS) && random.nextInt(10) == 0) {

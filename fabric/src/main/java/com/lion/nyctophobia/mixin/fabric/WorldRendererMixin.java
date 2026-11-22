@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/// Runs right after vanilla has set the terrain fog so the overrides in NFog win. The injection
-/// point is the part that moves between MC versions; the behaviour itself lives in NFog.
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
 
@@ -34,11 +32,25 @@ public class WorldRendererMixin {
                     shift = At.Shift.AFTER
             )
     )
-    public void nyctophobia$applyBiomeFog(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline,
-                                          Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
-                                          Matrix4f positionMatrix, CallbackInfo ci) {
-        NFog.FogPlanes planes = NFog.compute(this.client, camera, gameRenderer.getViewDistance(),
-                RenderSystem.getShaderFogStart(), RenderSystem.getShaderFogEnd());
+    public void nyctophobia$applyBiomeFog(
+            MatrixStack matrices,
+            float tickDelta,
+            long limitTime,
+            boolean renderBlockOutline,
+            Camera camera,
+            GameRenderer gameRenderer,
+            LightmapTextureManager lightmapTextureManager,
+            Matrix4f positionMatrix,
+            CallbackInfo ci
+    ) {
+        NFog.FogPlanes planes = NFog.compute(
+                this.client,
+                camera,
+                gameRenderer.getViewDistance(),
+                RenderSystem.getShaderFogStart(),
+                RenderSystem.getShaderFogEnd()
+        );
+
         if (planes == null) {
             return;
         }

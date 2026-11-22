@@ -23,11 +23,17 @@ public class RegistryHelperImpl {
             DeferredRegister.create(RegistryKeys.STRUCTURE_TYPE, Nyctophobia.MOD_ID);
 
     @SuppressWarnings("unchecked")
-    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(String name, Supplier<F> feature) {
+    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(
+            String name,
+            Supplier<F> feature
+    ) {
         return (Supplier<F>) FEATURES.register(name, feature::get);
     }
 
-    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, Codec<P> codec) {
+    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(
+            String name,
+            Codec<P> codec
+    ) {
         Supplier<TrunkPlacerType<P>> registered = TRUNK_PLACER_TYPES.register(name, () -> new TrunkPlacerType<>(codec));
         return registered;
     }

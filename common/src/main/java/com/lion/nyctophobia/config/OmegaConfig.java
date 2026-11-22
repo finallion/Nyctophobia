@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,9 +42,8 @@ public class OmegaConfig {
                     Nyctophobia.LOGGER.info(String.format("Encountered an error while reading %s config, falling back to default values.", config.getName()));
                     Nyctophobia.LOGGER.info(String.format("If this problem persists, delete the config file %s and try again.", config.getName() + "." + config.getExtension()));
 
-                    // The fresh instance carries empty maps until save() fills them. Returning it as
-                    // is makes every later getBiome/getFog throw and takes the mod down long after
-                    // the actual fault, so rewrite the unreadable file with the defaults.
+                    // An empty instance makes later lookups throw. Save the defaults.
+                    backUpUnreadableFile(config);
                     config.save();
                 }
             }
@@ -53,6 +53,16 @@ public class OmegaConfig {
                 InvocationTargetException exception) {
             exception.printStackTrace();
             throw new RuntimeException("No valid constructor found for: " + configClass.getName());
+        }
+    }
+
+    private static void backUpUnreadableFile(Config config) {
+        Path path = getConfigPath(config);
+
+        try {
+            Files.copy(path, path.resolveSibling(path.getFileName() + ".bak"), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Nyctophobia.LOGGER.error("Could not back up the unreadable config file: " + e);
         }
     }
 
@@ -106,9 +116,7 @@ public class OmegaConfig {
         }
     }
 
-    /// Every line needs its own `//`. The reader drops comment lines by that prefix, so a multi-line
-    /// description behind a single marker leaves bare prose in the file and the next start fails to
-    /// parse its own config.
+    /// Every line needs its own `//`. The reader drops comment lines by that prefix.
     private static String commentBlock(String comment, String indent) {
         return Arrays.stream(comment.split("\n"))
                 .map(line -> String.format("%s//%s", indent, line))
@@ -119,7 +127,6 @@ public class OmegaConfig {
         String fieldName = field.getName();
         Annotation[] annotations = field.getDeclaredAnnotations();
 
-        // Find comment
         for (Annotation annotation : annotations) {
             if (annotation instanceof Description) {
                 keyToComments.put(fieldName, ((Description) annotation).value());

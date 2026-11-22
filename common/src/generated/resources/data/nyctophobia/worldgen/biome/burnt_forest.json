@@ -93,9 +93,7 @@
       "minecraft:patch_large_fern",
       "minecraft:patch_dead_bush",
       "nyctophobia:burnt_forest_trees",
-      "nyctophobia:burnt_lichen_feature",
-      "nyctophobia:cobweb_feature",
-      "nyctophobia:bush_feature"
+      "nyctophobia:burnt_lichen_feature"
     ],
     [
       "minecraft:freeze_top_layer"

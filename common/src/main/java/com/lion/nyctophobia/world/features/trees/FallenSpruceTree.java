@@ -15,9 +15,7 @@ import net.minecraft.world.gen.feature.util.FeatureContext;
 
 public class FallenSpruceTree extends BaseSpruceTree {
 
-    /// A trunk in a living wood grows moss where it lies; a burnt one does not. The burnt forest gets
-    /// its own registered instance rather than a check on the wood or the biome, because the same
-    /// feature serves both and only the caller knows which wood it is dressing.
+    /// Burnt trunks grow no moss.
     private final boolean mossy;
 
     public FallenSpruceTree(Codec<NTreeFeatureConfig> configCodec, boolean mossy) {
@@ -38,12 +36,17 @@ public class FallenSpruceTree extends BaseSpruceTree {
 
         int length = random.nextInt(9) + 2;
 
-        if (!world.getBlockState(blockPos).isAir()) return false;
+        if (!world.getBlockState(blockPos).isAir()) {
+            return false;
+        }
 
         for (int i = 0; i < length; i++) {
-            if ((world.getBlockState(blockPos.offset(direction, i).down()).isSolidBlock(world, blockPos.offset(direction, i).down()) || (world.getBlockState(blockPos.offset(direction, i).down()).getBlock() == Blocks.SOUL_SAND))
+            if ((world.getBlockState(blockPos.offset(direction, i).down())
+                    .isSolidBlock(world, blockPos.offset(direction, i).down())
+                    || (world.getBlockState(blockPos.offset(direction, i).down()).getBlock() == Blocks.SOUL_SAND))
                     && canBeReplaced(world.getBlockState(blockPos.offset(direction, i)))) {
                 world.setBlockState(blockPos.offset(direction, i), wood.with(Properties.AXIS, axis), 2);
+
                 if (mossy && random.nextBoolean() && world.getBlockState(blockPos.offset(direction, i).up()).isAir()) {
                     world.setBlockState(blockPos.offset(direction, i).up(), Blocks.MOSS_CARPET.getDefaultState(), 2);
                 }
@@ -62,6 +65,7 @@ public class FallenSpruceTree extends BaseSpruceTree {
         if (state.getBlock() instanceof PlantBlock || state.isAir()) {
             return true;
         }
+
         return false;
     }
 }

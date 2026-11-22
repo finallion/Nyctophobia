@@ -11,7 +11,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class NDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 
-    protected NDynamicRegistryProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    protected NDynamicRegistryProvider(
+            FabricDataOutput output,
+            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture
+    ) {
         super(output, registriesFuture);
     }
 

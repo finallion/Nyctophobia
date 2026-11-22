@@ -38,6 +38,7 @@ public class DeadCoralClawFeature extends DeadCoralFeature {
                 mutable.move(direction2);
                 int k;
                 Direction direction3;
+
                 if (direction2 == direction) {
                     direction3 = direction;
                     k = random.nextInt(3) + 2;
@@ -58,6 +59,7 @@ public class DeadCoralClawFeature extends DeadCoralFeature {
 
                 for(directions = 0; directions < k; ++directions) {
                     mutable.move(direction);
+
                     if (!this.generateCoralPiece(world, random, mutable, state)) {
                         break;
                     }

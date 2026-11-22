@@ -44,8 +44,8 @@ public class AncientDeadCoralReef {
                 .effects((new BiomeEffects.Builder())
                         .waterColor(0xFFFFFF)
                         .waterFogColor(0xFFFFFF)
-                        .fogColor(12638463) // default
-                        .skyColor(12638463) // default
+                        .fogColor(12638463)
+                        .skyColor(12638463)
                         .build())
                 .spawnSettings(spawnSettings.build())
                 .generationSettings(generationSettings.build())

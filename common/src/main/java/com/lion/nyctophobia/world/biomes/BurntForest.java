@@ -18,8 +18,6 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 
-/// What is left after a fire went through a spruce forest: bare trunks, fallen logs and open ground.
-/// Every tree here is a stripped variant of the existing spruce set, so the look costs no new blocks.
 public class BurntForest {
 
     public static Biome createBurntForest(FabricDynamicRegistryProvider.Entries entries) {
@@ -39,8 +37,6 @@ public class BurntForest {
                 .temperature(0.5F)
                 .downfall(0.2F)
                 .effects((new BiomeEffects.Builder())
-                        // Oak leaves take this colour, which is what makes the canopy read as dead
-                        // rather than green - see the note on the burnt tree features.
                         .grassColor(0x737068)
                         .foliageColor(0x5E5A52)
                         .waterColor(0x63615A)
@@ -69,16 +65,15 @@ public class BurntForest {
         DefaultBiomeFeatures.addDefaultDisks(generationSettings);
     }
 
-    /// Order has to agree with every other biome in the world, see the note in Marshlands. Dead bush
-    /// stays ahead of this mod's own features, and those keep the order the haunted forests set.
-    /// Deliberately no grass, ferns or mushrooms - nothing here has grown back yet.
-    private static void addBurntFeatures(GenerationSettings.LookupBackedBuilder generationSettings, FabricDynamicRegistryProvider.Entries entries) {
+    /// Feature order must agree across all biomes, or chunk generation fails.
+    private static void addBurntFeatures(
+            GenerationSettings.LookupBackedBuilder generationSettings,
+            FabricDynamicRegistryProvider.Entries entries
+    ) {
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_LARGE_FERN);
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_DEAD_BUSH);
 
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BURNT_FOREST_TREES_PLACED));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BURNT_LICHEN_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
     }
 }

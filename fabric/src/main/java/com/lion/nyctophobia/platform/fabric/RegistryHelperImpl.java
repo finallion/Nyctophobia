@@ -16,20 +16,32 @@ import java.util.function.Supplier;
 
 public class RegistryHelperImpl {
 
-    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(String name, Supplier<F> feature) {
+    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(
+            String name,
+            Supplier<F> feature
+    ) {
         F registered = Registry.register(Registries.FEATURE, new Identifier(Nyctophobia.MOD_ID, name), feature.get());
         return () -> registered;
     }
 
-    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, Codec<P> codec) {
-        TrunkPlacerType<P> registered = Registry.register(Registries.TRUNK_PLACER_TYPE,
-                new Identifier(Nyctophobia.MOD_ID, name), new TrunkPlacerType<>(codec));
+    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(
+            String name,
+            Codec<P> codec
+    ) {
+        TrunkPlacerType<P> registered = Registry.register(
+                Registries.TRUNK_PLACER_TYPE,
+                new Identifier(Nyctophobia.MOD_ID, name),
+                new TrunkPlacerType<>(codec)
+        );
         return () -> registered;
     }
 
     public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(String name, Codec<S> codec) {
-        StructureType<S> registered = Registry.register(Registries.STRUCTURE_TYPE,
-                new Identifier(Nyctophobia.MOD_ID, name), () -> codec);
+        StructureType<S> registered = Registry.register(
+                Registries.STRUCTURE_TYPE,
+                new Identifier(Nyctophobia.MOD_ID, name),
+                () -> codec
+        );
         return () -> registered;
     }
 }

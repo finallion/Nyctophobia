@@ -23,14 +23,10 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         return fillTrunkPlacerFields(instance).apply(instance, DeepDarkOakTrunkPlacer::new);
     });
 
-    /// The trunk fills (0,0) to (1,1). Roots ring it without the diagonals, which keeps the base
-    /// square instead of octagonal.
     private static final int[][] ROOT_OFFSETS = {
             {-1, 0}, {-1, 1}, {0, -1}, {1, -1}, {2, 0}, {2, 1}, {0, 2}, {1, 2}
     };
 
-    /// Trunk corner a branch leaves from, paired with the two directions it may drift in. Index order
-    /// matters only in that each corner drifts away from the trunk rather than back across it.
     private static final int[][] BRANCH_CORNERS = {{1, 0}, {0, 1}, {1, 1}, {0, 0}};
     private static final Direction[][] BRANCH_DRIFTS = {
             {Direction.NORTH, Direction.EAST},
@@ -39,7 +35,6 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
             {Direction.WEST, Direction.NORTH}
     };
 
-    /// How far below the trunk base a root keeps looking for ground before it settles.
     private static final int MAX_ROOT_DROP = 4;
 
     private static final int LOWER_BRANCHES = 8;
@@ -58,7 +53,14 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         return NTrunkPlacer.DEEP_DARK_OAK_TRUNK_PLACER.get();
     }
 
-    public List<FoliagePlacer.TreeNode> generate(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, int height, BlockPos startPos, TreeFeatureConfig config) {
+    public List<FoliagePlacer.TreeNode> generate(
+            TestableWorld world,
+            BiConsumer<BlockPos, BlockState> replacer,
+            Random random,
+            int height,
+            BlockPos startPos,
+            TreeFeatureConfig config
+    ) {
         List<FoliagePlacer.TreeNode> nodes = Lists.newArrayList();
         int x = startPos.getX();
         int y = startPos.getY();
@@ -72,12 +74,11 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         placeRoots(world, replacer, random, config, x, y, z);
 
         int reached = placeTrunk(world, replacer, random, config, height, x, y, z);
+
         if (reached == 0) {
             return nodes;
         }
 
-        // Branches hang off the height the trunk actually reached rather than the height it was asked
-        // for, so an obstructed trunk does not leave its crown floating over the gap.
         int crownY = y + reached - 1;
         for (int i = 0; i < LOWER_BRANCHES; ++i) {
             growBranch(world, replacer, random, config, nodes, x, crownY, z, i / 2, LOWER_BRANCH_LENGTH, true, i % 2 == 1);
@@ -89,10 +90,15 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         return nodes;
     }
 
-    /// Roots start at the ground under their own column instead of at the trunk base, so a tree on a
-    /// slope neither floats on the downhill side nor sinks into the hill on the uphill side.
-    private void placeRoots(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random,
-                            TreeFeatureConfig config, int x, int y, int z) {
+    private void placeRoots(
+            TestableWorld world,
+            BiConsumer<BlockPos, BlockState> replacer,
+            Random random,
+            TreeFeatureConfig config,
+            int x,
+            int y,
+            int z
+    ) {
         for (int[] offset : ROOT_OFFSETS) {
             int rootX = x + offset[0];
             int rootZ = z + offset[1];
@@ -115,13 +121,20 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         return baseY - MAX_ROOT_DROP;
     }
 
-    /// Returns how many trunk layers were placed. Stops at the first blocked layer instead of skipping
-    /// it, so the trunk never resumes above an obstruction with a gap underneath.
-    private int placeTrunk(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random,
-                           TreeFeatureConfig config, int height, int x, int y, int z) {
+    private int placeTrunk(
+            TestableWorld world,
+            BiConsumer<BlockPos, BlockState> replacer,
+            Random random,
+            TreeFeatureConfig config,
+            int height,
+            int x,
+            int y,
+            int z
+    ) {
         int placed = 0;
         for (int dy = 0; dy < height; ++dy) {
             BlockPos pos = new BlockPos(x, y + dy, z);
+
             if (!TreeFeature.isAirOrLeaves(world, pos)) {
                 break;
             }
@@ -135,23 +148,28 @@ public class DeepDarkOakTrunkPlacer extends TrunkPlacer {
         return placed;
     }
 
-    /// One branch of the crown: it climbs a block per step and drifts sideways, and its tip becomes a
-    /// foliage node. The lower ring drifts on every step so it reaches outwards; the upper ring drifts
-    /// only sometimes and so stays tight around the trunk.
-    ///
-    /// The corner offset has to be applied when the position is built. BlockPos.Mutable inherits
-    /// east()/south() from BlockPos, which return a new instance rather than moving in place - only
-    /// move() mutates.
-    private void growBranch(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random,
-                            TreeFeatureConfig config, List<FoliagePlacer.TreeNode> nodes,
-                            int x, int crownY, int z, int corner, int length,
-                            boolean driftEveryStep, boolean driftFixed) {
+    /// east() returns a new position. Only move() mutates it.
+    private void growBranch(
+            TestableWorld world,
+            BiConsumer<BlockPos, BlockState> replacer,
+            Random random,
+            TreeFeatureConfig config,
+            List<FoliagePlacer.TreeNode> nodes,
+            int x,
+            int crownY,
+            int z,
+            int corner,
+            int length,
+            boolean driftEveryStep,
+            boolean driftFixed
+    ) {
         int[] start = BRANCH_CORNERS[corner];
         Direction[] drifts = BRANCH_DRIFTS[corner];
         BlockPos.Mutable pos = new BlockPos.Mutable(x + start[0], crownY, z + start[1]);
 
         for (int step = 0; step < length; ++step) {
             pos.move(Direction.UP);
+
             if (driftEveryStep) {
                 pos.move(driftFixed ? drifts[0] : drifts[random.nextInt(2)]);
             } else if (random.nextInt(2) == 0) {

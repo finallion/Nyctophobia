@@ -13,8 +13,7 @@ public class NyctophobiaForge {
     public NyctophobiaForge() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Must run before the DeferredRegisters are attached: it triggers the static initialisers in
-        // the init classes, and those are what fill the registers.
+        // Run this first. It triggers the static initialisers that fill the registers.
         Nyctophobia.init();
 
         RegistryHelperImpl.FEATURES.register(modBus);
