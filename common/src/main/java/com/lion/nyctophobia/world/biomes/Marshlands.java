@@ -17,9 +17,7 @@ import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 import net.minecraft.world.gen.feature.OceanPlacedFeatures;
 import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 
-/// Open wetland: standing water, low scrub and candle flames, and no trees at all. The vegetation is
-/// listed out rather than taken from DefaultBiomeFeatures.addSwampVegetation, because that bundle
-/// carries TREES_SWAMP with it and the whole point of this biome is the open horizon.
+/// Do not use addSwampVegetation. It adds swamp trees.
 public class Marshlands {
 
     public static Biome createMarshlands(NRegistryContext<Biome> entries) {
@@ -67,16 +65,13 @@ public class Marshlands {
         DefaultBiomeFeatures.addClayDisk(generationSettings);
     }
 
-    /// Order matters beyond this biome: a feature's position has to agree across every biome in the
-    /// world, or chunk generation dies with "Feature order cycle found". These follow vanilla swamp
-    /// first, then this mod's own features in the order the haunted lakes already established.
-    private static void addWetlandFeatures(GenerationSettings.LookupBackedBuilder generationSettings, NRegistryContext<Biome> entries) {
-        // Dug before anything grows, so the vegetation steps see the pools and the waterlilies and
-        // seagrass below have water to sit on.
+    /// Feature order must agree across all biomes, or chunk generation fails.
+    private static void addWetlandFeatures(
+            GenerationSettings.LookupBackedBuilder generationSettings,
+            NRegistryContext<Biome> entries
+    ) {
         generationSettings.feature(GenerationStep.Feature.LAKES, entries.ref(NPlacedFeatures.MARSH_POOL_PLACED));
 
-        // Vanilla puts large ferns and tall grass ahead of flowers and grass; keeping that order here
-        // is what stops a cycle once another biome uses the same features.
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_LARGE_FERN);
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_TALL_GRASS_2);
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FLOWER_SWAMP);
@@ -89,9 +84,6 @@ public class Marshlands {
 
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MARSH_THICKET_PLACED));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MARSH_ROOTS_PLACED));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MOSS_CARPET_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.SOUL_LIGHT_FEATURE));
         generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MARSH_CANDLE_FEATURE));
     }
 }

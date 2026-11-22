@@ -9,8 +9,6 @@ import java.util.*;
 
 public class NyctophobiaConfig implements Config {
 
-    /// Raise this together with a new step in migrate() whenever a changed default has to reach a
-    /// file that already exists on disk.
     private static final int CONFIG_VERSION = 2;
 
     @Description("""
@@ -48,13 +46,11 @@ public class NyctophobiaConfig implements Config {
         return "json5";
     }
 
-    // generation booleans
     public boolean biomeFogSpawn(Identifier id) {
         return getFog(id).enabled;
     }
 
 
-    // biome spawn config
     public BiomeConfigEntry getBiome(Identifier id) {
         for (Map.Entry<String, BiomeConfigEntry> entry : biomeConfigEntries.entrySet()) {
             if (entry.getKey().equals(id.getPath())) {
@@ -65,7 +61,6 @@ public class NyctophobiaConfig implements Config {
     }
 
 
-    // fog spawn config
     public BiomeFogConfigEntry getFog(Identifier id) {
         for (Map.Entry<String, BiomeFogConfigEntry> entry : biomeFogConfigEntries.entrySet()) {
             if (entry.getKey().equals(id.getPath())) {
@@ -80,25 +75,12 @@ public class NyctophobiaConfig implements Config {
         biomeGeneration.putIfAbsent("nyctophobiaBiomeWeight", 1);
         miscConfigEntries.putIfAbsent("useSoulLanternsInHauntedLakes", false);
 
-        // A biome is only as common as the vanilla biomes it replaces. windswept_forest alone is rare
-        // enough that the haunted forest could sit outside /locate range; taiga hosts it just as well,
-        // since the biome is built entirely from spruce.
-        // Two biomes must not claim the same host: replaceBiome maps one vanilla biome to one
-        // replacement, so the second call would simply overwrite the first.
         biomeConfigEntries.putIfAbsent("haunted_forest", BiomeConfigEntry.of(Arrays.asList("windswept_forest", "taiga")));
         biomeConfigEntries.putIfAbsent("haunted_lakes", BiomeConfigEntry.of(Arrays.asList("swamp")));
         biomeConfigEntries.putIfAbsent("eroded_haunted_forest", BiomeConfigEntry.of(Arrays.asList("meadow")));
         biomeConfigEntries.putIfAbsent("ancient_dead_coral_reef", BiomeConfigEntry.of(Arrays.asList("beach")));
         biomeConfigEntries.putIfAbsent("deep_dark_forest", BiomeConfigEntry.of(Arrays.asList("dark_forest")));
-        // mangrove_swamp alone is rare enough that the marsh is hard to come across at all, and swamp
-        // is not available: haunted_lakes holds it, and a host maps to exactly one replacement.
-        // birch_forest is temperate, damp and far more common, and birch is the wood that actually
-        // stands in a bog. Its terrain sits higher than a swamp, so the open water of the surface rule
-        // gives way there to the pools MarshPoolFeature raises for itself.
         biomeConfigEntries.putIfAbsent("marshlands", BiomeConfigEntry.of(Arrays.asList("mangrove_swamp", "birch_forest")));
-        // The two old growth taigas alone are too rare to be found; windswept_hills carries the biome
-        // often enough, and a fire on an exposed hillside is no stretch. old_growth_spruce_taiga moves
-        // here from the haunted forest, which keeps taiga and stays common enough on its own.
         biomeConfigEntries.putIfAbsent("burnt_forest", BiomeConfigEntry.of(Arrays.asList("old_growth_pine_taiga", "old_growth_spruce_taiga", "windswept_hills")));
 
         biomeFogConfigEntries.putIfAbsent("haunted_forest_fog", BiomeFogConfigEntry.of(0.35F, 63, 148));
@@ -111,13 +93,12 @@ public class NyctophobiaConfig implements Config {
         Config.super.save();
     }
 
-    /// putIfAbsent only ever fills a gap, so an entry the file already carries keeps whatever it
-    /// holds and a changed default never arrives. Each step below closes one such gap once. They add
-    /// rather than replace, so the rest of a list someone has edited survives.
+    /// putIfAbsent never changes an entry, so each step adds a missing default once.
     private void migrate() {
         if (configVersion < 1) {
             addHost("haunted_forest", "taiga");
         }
+
         if (configVersion < 2) {
             addHost("marshlands", "birch_forest");
         }
@@ -127,11 +108,12 @@ public class NyctophobiaConfig implements Config {
 
     private void addHost(String biome, String host) {
         BiomeConfigEntry entry = biomeConfigEntries.get(biome);
+
         if (entry == null || entry.replaceableBiomes.contains(host)) {
             return;
         }
 
-        // A fresh default is a fixed size list, so it is rebuilt instead of appended to.
+        // A default list has a fixed size. Copy it before the add.
         List<String> hosts = new ArrayList<>(entry.replaceableBiomes);
         hosts.add(host);
         biomeConfigEntries.put(biome, BiomeConfigEntry.of(entry.canGenerate, hosts));

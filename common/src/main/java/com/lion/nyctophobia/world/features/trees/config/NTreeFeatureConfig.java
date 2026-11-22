@@ -7,18 +7,18 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.world.gen.feature.FeatureConfig;
 
 public class NTreeFeatureConfig implements FeatureConfig {
-    public static final Codec<NTreeFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            BlockState.CODEC.fieldOf("wood_state").forGetter((config) -> config.woodState),
-            BlockState.CODEC.fieldOf("leaf_state").forGetter((config) -> config.leafState))
+    public static final Codec<NTreeFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance
+            .group(
+                    BlockState.CODEC.fieldOf("wood_state").forGetter((config) -> config.woodState),
+                    BlockState.CODEC.fieldOf("leaf_state").forGetter((config) -> config.leafState)
+            )
             .apply(instance, NTreeFeatureConfig::new));
 
     public final BlockState woodState;
     public final BlockState leafState;
 
     public NTreeFeatureConfig(BlockState woodState, BlockState leafState) {
-        // The fallen tree lays its logs on their side and needs the axis property to do it. Catching a
-        // wood block without one here fails datagen with a readable message; left alone it surfaces as
-        // an IllegalArgumentException inside feature placement, once per chunk, in a finished world.
+        // Fallen trees need the axis property.
         if (!woodState.getProperties().contains(Properties.AXIS)) {
             throw new IllegalArgumentException("Tree wood state " + woodState + " has no axis property");
         }

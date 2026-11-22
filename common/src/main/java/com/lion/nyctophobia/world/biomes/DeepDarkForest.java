@@ -69,10 +69,8 @@ public class DeepDarkForest {
     private static void addTaigaFeatures(GenerationSettings.LookupBackedBuilder generationSettings) {
         DefaultBiomeFeatures.addMossyRocks(generationSettings);
         DefaultBiomeFeatures.addLargeFerns(generationSettings);
-        //DefaultBiomeFeatures.addPlainsTallGrass(generationSettings);
         DefaultBiomeFeatures.addDefaultOres(generationSettings);
         DefaultBiomeFeatures.addDefaultDisks(generationSettings);
-        //DefaultBiomeFeatures.addMeadowFlowers(generationSettings);
         DefaultBiomeFeatures.addGiantTaigaGrass(generationSettings);
         DefaultBiomeFeatures.addDefaultMushrooms(generationSettings);
         DefaultBiomeFeatures.addDefaultVegetation(generationSettings);

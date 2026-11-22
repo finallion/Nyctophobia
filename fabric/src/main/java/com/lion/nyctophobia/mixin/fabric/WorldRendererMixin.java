@@ -16,11 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/// Runs right after vanilla has set the terrain fog so the overrides in NFog win. The injection
-/// point is the part that moves between MC versions; the behaviour itself lives in NFog.
-///
-/// Ordinal 0 is the terrain pass: vanilla calls applyFog once inside render, and the sky pass lives
-/// in the lambda handed to renderSky, which is a method of its own and not counted here.
+/// Ordinal 0 is the terrain pass. The sky pass runs in a separate lambda.
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
 
@@ -37,11 +33,24 @@ public class WorldRendererMixin {
                     shift = At.Shift.AFTER
             )
     )
-    public void nyctophobia$applyBiomeFog(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera,
-                                          GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
-                                          Matrix4f positionMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
-        NFog.FogPlanes planes = NFog.compute(this.client, camera, gameRenderer.getViewDistance(),
-                RenderSystem.getShaderFogStart(), RenderSystem.getShaderFogEnd());
+    public void nyctophobia$applyBiomeFog(
+            RenderTickCounter tickCounter,
+            boolean renderBlockOutline,
+            Camera camera,
+            GameRenderer gameRenderer,
+            LightmapTextureManager lightmapTextureManager,
+            Matrix4f positionMatrix,
+            Matrix4f projectionMatrix,
+            CallbackInfo ci
+    ) {
+        NFog.FogPlanes planes = NFog.compute(
+                this.client,
+                camera,
+                gameRenderer.getViewDistance(),
+                RenderSystem.getShaderFogStart(),
+                RenderSystem.getShaderFogEnd()
+        );
+
         if (planes == null) {
             return;
         }

@@ -12,13 +12,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 
-/// NeoForge counterpart to the Fabric WorldRendererMixin. The event has to be cancelled, otherwise
-/// NeoForge discards the plane distances set here.
+/// Cancel the event, or the loader drops the planes.
 @EventBusSubscriber(modid = Nyctophobia.MOD_ID, value = Dist.CLIENT)
 public class NyctophobiaNeoForgeClient {
 
-    /// Registered as a client command for the same reason as on Fabric: the fog never leaves the
-    /// client, so a server side command could not reach it in multiplayer.
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(CommandManager.literal(Nyctophobia.MOD_ID)
@@ -43,18 +40,19 @@ public class NyctophobiaNeoForgeClient {
 
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {
-        // The hook sits inside applyFog itself, so it fires for every fog pass of a frame, sky
-        // included. The terrain pass is the one the Fabric mixin sits on, and taking the sky passes
-        // as well would repaint the horizon on this loader alone.
+        // The hook fires per fog pass. Handle the terrain pass only.
         if (event.getMode() != BackgroundRenderer.FogType.FOG_TERRAIN) {
             return;
         }
 
-        // The view distance, not the plane the event carries: by this point vanilla has already
-        // turned that into a fog end, and NFog derives the planes from the raw distance the same way
-        // vanilla does.
-        NFog.FogPlanes planes = NFog.compute(MinecraftClient.getInstance(), event.getCamera(), event.getRenderer().getViewDistance(),
-                event.getNearPlaneDistance(), event.getFarPlaneDistance());
+        NFog.FogPlanes planes = NFog.compute(
+                MinecraftClient.getInstance(),
+                event.getCamera(),
+                event.getRenderer().getViewDistance(),
+                event.getNearPlaneDistance(),
+                event.getFarPlaneDistance()
+        );
+
         if (planes == null) {
             return;
         }

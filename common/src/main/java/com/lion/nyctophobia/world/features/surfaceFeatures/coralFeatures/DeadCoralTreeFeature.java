@@ -48,6 +48,7 @@ public class DeadCoralTreeFeature extends DeadCoralFeature {
             for(int n = 0; n < l && this.generateCoralPiece(world, random, mutable, state); ++n) {
                 ++m;
                 mutable.move(Direction.UP);
+
                 if (n == 0 || m >= 2 && random.nextFloat() < 0.25F) {
                     mutable.move(direction);
                     m = 0;

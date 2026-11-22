@@ -17,20 +17,35 @@ import java.util.function.Supplier;
 
 public class RegistryHelperImpl {
 
-    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(String name, Supplier<F> feature) {
+    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(
+            String name,
+            Supplier<F> feature
+    ) {
         F registered = Registry.register(Registries.FEATURE, Identifier.of(Nyctophobia.MOD_ID, name), feature.get());
         return () -> registered;
     }
 
-    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, MapCodec<P> codec) {
-        TrunkPlacerType<P> registered = Registry.register(Registries.TRUNK_PLACER_TYPE,
-                Identifier.of(Nyctophobia.MOD_ID, name), new TrunkPlacerType<>(codec));
+    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(
+            String name,
+            MapCodec<P> codec
+    ) {
+        TrunkPlacerType<P> registered = Registry.register(
+                Registries.TRUNK_PLACER_TYPE,
+                Identifier.of(Nyctophobia.MOD_ID, name),
+                new TrunkPlacerType<>(codec)
+        );
         return () -> registered;
     }
 
-    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(String name, MapCodec<S> codec) {
-        StructureType<S> registered = Registry.register(Registries.STRUCTURE_TYPE,
-                Identifier.of(Nyctophobia.MOD_ID, name), () -> codec);
+    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(
+            String name,
+            MapCodec<S> codec
+    ) {
+        StructureType<S> registered = Registry.register(
+                Registries.STRUCTURE_TYPE,
+                Identifier.of(Nyctophobia.MOD_ID, name),
+                () -> codec
+        );
         return () -> registered;
     }
 }

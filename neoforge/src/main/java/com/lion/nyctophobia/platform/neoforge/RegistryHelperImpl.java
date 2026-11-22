@@ -21,22 +21,27 @@ public class RegistryHelperImpl {
     public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES =
             DeferredRegister.create(RegistryKeys.STRUCTURE_TYPE, Nyctophobia.MOD_ID);
 
-    /// The registers hold wildcard element types, so a DeferredHolder cannot carry the caller's type
-    /// parameter through. The cast is safe because the supplier it wraps builds exactly that type.
     @SuppressWarnings("unchecked")
-    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(String name, Supplier<F> feature) {
+    public static <C extends FeatureConfig, F extends Feature<C>> Supplier<F> registerFeature(
+            String name,
+            Supplier<F> feature
+    ) {
         return (Supplier<F>) (Supplier<?>) FEATURES.register(name, feature::get);
     }
 
     @SuppressWarnings("unchecked")
-    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(String name, MapCodec<P> codec) {
+    public static <P extends TrunkPlacer> Supplier<TrunkPlacerType<P>> registerTrunkPlacerType(
+            String name,
+            MapCodec<P> codec
+    ) {
         return (Supplier<TrunkPlacerType<P>>) (Supplier<?>) TRUNK_PLACER_TYPES.register(name, () -> new TrunkPlacerType<>(codec));
     }
 
     @SuppressWarnings("unchecked")
-    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(String name, MapCodec<S> codec) {
-        // StructureType is a functional interface, but nested in the register call the compiler has
-        // nothing to pin S to, so the factory is typed here.
+    public static <S extends Structure> Supplier<StructureType<S>> registerStructureType(
+            String name,
+            MapCodec<S> codec
+    ) {
         Supplier<StructureType<S>> factory = () -> () -> codec;
         return (Supplier<StructureType<S>>) (Supplier<?>) STRUCTURE_TYPES.register(name, factory);
     }

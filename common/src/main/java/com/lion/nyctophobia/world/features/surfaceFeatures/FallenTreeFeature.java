@@ -32,14 +32,17 @@ public class FallenTreeFeature extends Feature<DefaultFeatureConfig> {
         Direction.Axis axis = random.nextBoolean() ? Direction.Axis.X : Direction.Axis.Z;
         Direction direction = Direction.from(axis, random.nextBoolean() ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE);
 
-        if (!world.getBlockState(blockPos).isAir()) return false;
+        if (!world.getBlockState(blockPos).isAir()) {
+            return false;
+        }
 
         int length = random.nextInt(9) + 2;
 
         for (int i = 93; i < world.getHeight(); i++) {
             for (int ii = 0; ii < length; ii++) {
                 if (ii == 0) {
-                    if (world.getBlockState(blockPos.offset(direction, ii + 1).down()).getBlock() != Blocks.SOUL_SAND || world.getBlockState(blockPos.offset(direction, ii + 2).down()).getBlock() != Blocks.SOUL_SAND) {
+                    if (world.getBlockState(blockPos.offset(direction, ii + 1).down()).getBlock() != Blocks.SOUL_SAND
+                            || world.getBlockState(blockPos.offset(direction, ii + 2).down()).getBlock() != Blocks.SOUL_SAND) {
                         break;
                     }
                 }
@@ -47,7 +50,6 @@ public class FallenTreeFeature extends Feature<DefaultFeatureConfig> {
                 if (world.getBlockState(blockPos.offset(direction, ii).down()).getBlock() == Blocks.SOUL_SAND && canBeReplaced(world.getBlockState(blockPos.offset(direction, ii)))) {
                     world.setBlockState(blockPos.offset(direction, ii), wood.with(Properties.AXIS, axis), 2);
 
-                    // moss carpet on top of the trunk
                     if (random.nextBoolean() && world.getBlockState(blockPos.offset(direction, ii).up()).isAir()) {
                         world.setBlockState(blockPos.offset(direction, ii).up(), Blocks.MOSS_CARPET.getDefaultState(), 2);
                     }
@@ -65,6 +67,7 @@ public class FallenTreeFeature extends Feature<DefaultFeatureConfig> {
         if (state.getBlock() instanceof PlantBlock || state.isAir()) {
             return true;
         }
+
         return false;
     }
 

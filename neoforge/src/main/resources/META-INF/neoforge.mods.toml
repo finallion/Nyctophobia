@@ -1,15 +1,19 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-license = "CC0-1.0"
+license = "GPL-3.0-only"
 
 [[mods]]
 modId = "nyctophobia"
 version = "${version}"
 displayName = "Nyctophobia"
-authors = "Finallion"
-logoFile = "nyctophobia.png"
+authors = "LithiumPlus"
+displayURL = "https://modrinth.com/mod/nyctophobia"
+issueTrackerURL = "https://github.com/finallion/Nyctophobia/issues"
+logoFile = "assets/nyctophobia/nyctophobia.png"
 description = '''
 Spooky, foggy, creepy and dark biomes for your Minecraft world
+
+Support: https://www.patreon.com/cw/LithiumPlus
 '''
 
 [[dependencies.nyctophobia]]
