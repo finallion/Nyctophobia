@@ -1,4 +1,147 @@
 {
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "additions": {
+        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "tick_chance": 0.0111
+      },
+      "loop": "minecraft:ambient.basalt_deltas.loop",
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "minecraft:ambient.soul_sand_valley.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 12000,
+        "sound": "minecraft:music.game"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "ambient": [
+            {
+              "type": "minecraft:bat",
+              "count": 8,
+              "weight": 10
+            }
+          ],
+          "creature": [
+            {
+              "type": "minecraft:bat",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 2,
+                "min_inclusive": 1
+              },
+              "weight": 10
+            }
+          ],
+          "monster": [
+            {
+              "type": "minecraft:skeleton",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 4,
+                "min_inclusive": 2
+              },
+              "weight": 10
+            },
+            {
+              "type": "minecraft:wither_skeleton",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 2,
+                "min_inclusive": 1
+              },
+              "weight": 5
+            },
+            {
+              "type": "minecraft:silverfish",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 2,
+                "min_inclusive": 1
+              },
+              "weight": 4
+            },
+            {
+              "type": "minecraft:spider",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:zombie",
+              "count": 4,
+              "weight": 95
+            },
+            {
+              "type": "minecraft:zombie_villager",
+              "count": 1,
+              "weight": 5
+            },
+            {
+              "type": "minecraft:skeleton",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:creeper",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:slime",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:enderman",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 4,
+                "min_inclusive": 1
+              },
+              "weight": 10
+            },
+            {
+              "type": "minecraft:witch",
+              "count": 1,
+              "weight": 5
+            }
+          ],
+          "underground_water_creature": [
+            {
+              "type": "minecraft:glow_squid",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 6,
+                "min_inclusive": 4
+              },
+              "weight": 10
+            }
+          ]
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:ash"
+        },
+        "probability": 0.09
+      }
+    ],
+    "minecraft:visual/fog_color": "#585858",
+    "minecraft:visual/sky_color": "#585858",
+    "minecraft:visual/water_fog_color": "#4a4842"
+  },
   "carvers": [
     "minecraft:cave",
     "minecraft:cave_extra_underground",
@@ -6,41 +149,9 @@
   ],
   "downfall": 0.2,
   "effects": {
-    "additions_sound": {
-      "sound": "minecraft:ambient.soul_sand_valley.additions",
-      "tick_chance": 0.0111
-    },
-    "ambient_sound": "minecraft:ambient.basalt_deltas.loop",
-    "fog_color": 5789784,
-    "foliage_color": 6183506,
-    "grass_color": 7565416,
-    "mood_sound": {
-      "block_search_extent": 8,
-      "offset": 2.0,
-      "sound": "minecraft:ambient.soul_sand_valley.mood",
-      "tick_delay": 6000
-    },
-    "music": [
-      {
-        "data": {
-          "max_delay": 24000,
-          "min_delay": 12000,
-          "replace_current_music": false,
-          "sound": "minecraft:music.game"
-        },
-        "weight": 1
-      }
-    ],
-    "music_volume": 1.0,
-    "particle": {
-      "options": {
-        "type": "minecraft:ash"
-      },
-      "probability": 0.09
-    },
-    "sky_color": 5789784,
-    "water_color": 6512986,
-    "water_fog_color": 4868162
+    "foliage_color": "#5e5a52",
+    "grass_color": "#737068",
+    "water_color": "#63615a"
   },
   "features": [
     [],
@@ -98,113 +209,12 @@
       "minecraft:patch_large_fern",
       "minecraft:patch_dead_bush",
       "nyctophobia:burnt_forest_trees",
-      "nyctophobia:burnt_lichen_feature",
-      "nyctophobia:cobweb_feature",
-      "nyctophobia:bush_feature"
+      "nyctophobia:burnt_lichen_feature"
     ],
     [
       "minecraft:freeze_top_layer"
     ]
   ],
   "has_precipitation": true,
-  "spawn_costs": {},
-  "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "maxCount": 8,
-        "minCount": 8,
-        "weight": 10
-      }
-    ],
-    "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:bat",
-        "maxCount": 2,
-        "minCount": 1,
-        "weight": 10
-      }
-    ],
-    "misc": [],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "maxCount": 4,
-        "minCount": 2,
-        "weight": 10
-      },
-      {
-        "type": "minecraft:wither_skeleton",
-        "maxCount": 2,
-        "minCount": 1,
-        "weight": 5
-      },
-      {
-        "type": "minecraft:silverfish",
-        "maxCount": 2,
-        "minCount": 1,
-        "weight": 4
-      },
-      {
-        "type": "minecraft:spider",
-        "maxCount": 4,
-        "minCount": 4,
-        "weight": 100
-      },
-      {
-        "type": "minecraft:zombie",
-        "maxCount": 4,
-        "minCount": 4,
-        "weight": 95
-      },
-      {
-        "type": "minecraft:zombie_villager",
-        "maxCount": 1,
-        "minCount": 1,
-        "weight": 5
-      },
-      {
-        "type": "minecraft:skeleton",
-        "maxCount": 4,
-        "minCount": 4,
-        "weight": 100
-      },
-      {
-        "type": "minecraft:creeper",
-        "maxCount": 4,
-        "minCount": 4,
-        "weight": 100
-      },
-      {
-        "type": "minecraft:slime",
-        "maxCount": 4,
-        "minCount": 4,
-        "weight": 100
-      },
-      {
-        "type": "minecraft:enderman",
-        "maxCount": 4,
-        "minCount": 1,
-        "weight": 10
-      },
-      {
-        "type": "minecraft:witch",
-        "maxCount": 1,
-        "minCount": 1,
-        "weight": 5
-      }
-    ],
-    "underground_water_creature": [
-      {
-        "type": "minecraft:glow_squid",
-        "maxCount": 6,
-        "minCount": 4,
-        "weight": 10
-      }
-    ],
-    "water_ambient": [],
-    "water_creature": []
-  },
   "temperature": 0.5
 }

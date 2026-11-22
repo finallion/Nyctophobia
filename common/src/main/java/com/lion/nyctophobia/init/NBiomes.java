@@ -8,35 +8,32 @@ import com.lion.nyctophobia.world.biomes.DeepDarkForest;
 import com.lion.nyctophobia.world.biomes.HauntedForestBiomes;
 import com.lion.nyctophobia.world.biomes.Marshlands;
 import com.lion.nyctophobia.data.NRegistryContext;
-import net.minecraft.registry.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.biome.Biome;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class NBiomes {
-    /// Keyed by path so config entries, surface rules and the biome provider can all look a biome up
-    /// by the same string the config file uses. Insertion ordered to keep generated output stable.
-    private static final Map<String, RegistryKey<Biome>> BY_PATH = new LinkedHashMap<>();
+    private static final Map<String, ResourceKey<Biome>> BY_PATH = new LinkedHashMap<>();
 
-    public static final RegistryKey<Biome> ERODED_HAUNTED_FOREST_KEY = registerBiomeKeys("eroded_haunted_forest");
-    public static final RegistryKey<Biome> HAUNTED_LAKES_KEY = registerBiomeKeys("haunted_lakes");
-    public static final RegistryKey<Biome> HAUNTED_FOREST_KEY = registerBiomeKeys("haunted_forest");
-    public static final RegistryKey<Biome> ANCIENT_DEAD_CORAL_REEF_KEY = registerBiomeKeys("ancient_dead_coral_reef");
-    public static final RegistryKey<Biome> DEEP_DARK_FOREST = registerBiomeKeys("deep_dark_forest");
-    public static final RegistryKey<Biome> MARSHLANDS_KEY = registerBiomeKeys("marshlands");
-    public static final RegistryKey<Biome> BURNT_FOREST_KEY = registerBiomeKeys("burnt_forest");
+    public static final ResourceKey<Biome> ERODED_HAUNTED_FOREST_KEY = registerBiomeKeys("eroded_haunted_forest");
+    public static final ResourceKey<Biome> HAUNTED_LAKES_KEY = registerBiomeKeys("haunted_lakes");
+    public static final ResourceKey<Biome> HAUNTED_FOREST_KEY = registerBiomeKeys("haunted_forest");
+    public static final ResourceKey<Biome> ANCIENT_DEAD_CORAL_REEF_KEY = registerBiomeKeys("ancient_dead_coral_reef");
+    public static final ResourceKey<Biome> DEEP_DARK_FOREST = registerBiomeKeys("deep_dark_forest");
+    public static final ResourceKey<Biome> MARSHLANDS_KEY = registerBiomeKeys("marshlands");
+    public static final ResourceKey<Biome> BURNT_FOREST_KEY = registerBiomeKeys("burnt_forest");
 
-    private static RegistryKey<Biome> registerBiomeKeys(String name) {
-        RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(Nyctophobia.MOD_ID, name));
+    private static ResourceKey<Biome> registerBiomeKeys(String name) {
+        ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(Nyctophobia.MOD_ID, name));
         BY_PATH.put(name, key);
         return key;
     }
 
-    /// Every biome this mod adds, by the path its config entry uses.
-    public static Map<String, RegistryKey<Biome>> byPath() {
+    public static Map<String, ResourceKey<Biome>> byPath() {
         return Collections.unmodifiableMap(BY_PATH);
     }
 

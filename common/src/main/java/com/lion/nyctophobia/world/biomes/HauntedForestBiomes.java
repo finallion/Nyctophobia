@@ -1,99 +1,104 @@
 package com.lion.nyctophobia.world.biomes;
 
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.util.ARGB;
 import com.lion.nyctophobia.init.NPlacedFeatures;
+import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.placement.AquaticPlacements;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
+import net.minecraft.sounds.Musics;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.attribute.AmbientMoodSettings;
+import net.minecraft.world.attribute.AmbientAdditionsSettings;
+import net.minecraft.world.attribute.AmbientSounds;
+import java.util.List;
+import java.util.Optional;
+import net.minecraft.world.attribute.BackgroundMusic;
 import com.lion.nyctophobia.data.NRegistryContext;
-import net.minecraft.sound.MusicType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.sound.BiomeAdditionsSound;
-import net.minecraft.sound.BiomeMoodSound;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEffects;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
-import net.minecraft.world.gen.feature.OceanPlacedFeatures;
-import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 
 public class HauntedForestBiomes {
 
     public static Biome createHauntedForest(NRegistryContext<Biome> entries) {
-        SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
-        spawnSettings.spawn(SpawnGroup.CREATURE, 8, new SpawnSettings.SpawnEntry(EntityType.FOX, 2, 3));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 8, new SpawnSettings.SpawnEntry(EntityType.WOLF, 3, 5));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 10, new SpawnSettings.SpawnEntry(EntityType.SHEEP, 3, 5));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 10, new SpawnSettings.SpawnEntry(EntityType.PIG, 3, 5));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 1, new SpawnSettings.SpawnEntry(EntityType.CAT, 1, 1));
-        DefaultBiomeFeatures.addBatsAndMonsters(spawnSettings);
+        MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
+        spawnSettings.addSpawn(EntityTypes.FOX, MobCategory.CREATURE, 8, UniformInt.of(2, 3));
+        spawnSettings.addSpawn(EntityTypes.WOLF, MobCategory.CREATURE, 8, UniformInt.of(3, 5));
+        spawnSettings.addSpawn(EntityTypes.SHEEP, MobCategory.CREATURE, 10, UniformInt.of(3, 5));
+        spawnSettings.addSpawn(EntityTypes.PIG, MobCategory.CREATURE, 10, UniformInt.of(3, 5));
+        spawnSettings.addSpawn(EntityTypes.CAT, MobCategory.CREATURE, 1, ConstantInt.of(1));
+        BiomeDefaultFeatures.commonSpawns(spawnSettings);
 
-        GenerationSettings.LookupBackedBuilder generationSettings = new GenerationSettings.LookupBackedBuilder(entries.placedFeatures(), entries.configuredCarvers());
+        BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(entries.placedFeatures(), entries.configuredCarvers());
 
         addBasicFeatures(generationSettings);
         addTaigaFeatures(generationSettings);
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.HAUNTED_FOREST_TREES_PLACED));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MOSS_CARPET_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.HAUNTED_FOREST_TREES_PLACED));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MOSS_CARPET_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
 
-        return (new Biome.Builder())
-                .precipitation(true)
+        return (new Biome.BiomeBuilder())
+                .hasPrecipitation(true)
                 .temperature(0.6F)
                 .downfall(0.9F)
-                .effects((new BiomeEffects.Builder())
-                        .grassColor(0x6F932A)
-                        .foliageColor(0x6F932A)
+                .specialEffects(new BiomeSpecialEffects.Builder()
+                        .grassColorOverride(0x6F932A)
+                        .foliageColorOverride(0x6F932A)
                         .waterColor(0xAEC1BE)
-                        .waterFogColor(0xC9DDDA)
-                        .fogColor(0x878787)
-                        .skyColor(0x878787)
-                        .music(MusicType.GAME)
-                        .loopSound(SoundEvents.AMBIENT_WARPED_FOREST_LOOP)
-                        .moodSound(new BiomeMoodSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D))
-                        .additionsSound(new BiomeAdditionsSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_ADDITIONS, 0.0111D))
                         .build())
-                .spawnSettings(spawnSettings.build())
+                .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, ARGB.vector3fFromRGB24(0xC9DDDA))
+                .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x878787))
+                .setAttribute(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0x878787))
+                .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, new BackgroundMusic(Musics.GAME))
+                .setAttribute(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(Optional.of(SoundEvents.AMBIENT_WARPED_FOREST_LOOP), Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D)), List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_ADDITIONS, 0.0111D))))
+                .mobSpawnSettings(spawnSettings.build())
                 .generationSettings(generationSettings.build())
                 .build();
     }
 
 
     public static Biome createHauntedLakes(NRegistryContext<Biome> entries) {
-        SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
-        spawnSettings.spawn(SpawnGroup.CREATURE, 8, new SpawnSettings.SpawnEntry(EntityType.FOX, 2, 3));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 8, new SpawnSettings.SpawnEntry(EntityType.WOLF, 3, 5));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 10, new SpawnSettings.SpawnEntry(EntityType.SHEEP, 3, 5));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 10, new SpawnSettings.SpawnEntry(EntityType.PIG, 3, 5));
-        DefaultBiomeFeatures.addBatsAndMonsters(spawnSettings);
+        MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
+        spawnSettings.addSpawn(EntityTypes.FOX, MobCategory.CREATURE, 8, UniformInt.of(2, 3));
+        spawnSettings.addSpawn(EntityTypes.WOLF, MobCategory.CREATURE, 8, UniformInt.of(3, 5));
+        spawnSettings.addSpawn(EntityTypes.SHEEP, MobCategory.CREATURE, 10, UniformInt.of(3, 5));
+        spawnSettings.addSpawn(EntityTypes.PIG, MobCategory.CREATURE, 10, UniformInt.of(3, 5));
+        BiomeDefaultFeatures.commonSpawns(spawnSettings);
 
-        GenerationSettings.LookupBackedBuilder generationSettings = new GenerationSettings.LookupBackedBuilder(entries.placedFeatures(), entries.configuredCarvers());
+        BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(entries.placedFeatures(), entries.configuredCarvers());
         addBasicFeatures(generationSettings);
         addHauntedLakesFeatures(generationSettings);
 
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.HAUNTED_FOREST_TREES_PLACED));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MOSS_CARPET_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.SOUL_LIGHT_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.HAUNTED_FOREST_TREES_PLACED));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.MOSS_CARPET_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.SOUL_LIGHT_FEATURE));
 
-        return (new Biome.Builder())
-                .precipitation(true)
+        return (new Biome.BiomeBuilder())
+                .hasPrecipitation(true)
                 .temperature(0.6F)
                 .downfall(0.9F)
-                .effects((new BiomeEffects.Builder())
-                        .grassColor(0x7EA530)
-                        .foliageColor(0x7EA530)
+                .specialEffects(new BiomeSpecialEffects.Builder()
+                        .grassColorOverride(0x7EA530)
+                        .foliageColorOverride(0x7EA530)
                         .waterColor(0x9B091C)
-                        .waterFogColor(0xD80D28)
-                        .fogColor(0xB2B2B2)
-                        .skyColor(0xB2B2B2)
-                        .music(MusicType.GAME)
-                        .loopSound(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP)
-                        .moodSound(new BiomeMoodSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D))
-                        .additionsSound(new BiomeAdditionsSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_ADDITIONS, 0.0111D))
                         .build())
-                .spawnSettings(spawnSettings.build())
+                .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, ARGB.vector3fFromRGB24(0xD80D28))
+                .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0xB2B2B2))
+                .setAttribute(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0xB2B2B2))
+                .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, new BackgroundMusic(Musics.GAME))
+                .setAttribute(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(Optional.of(SoundEvents.AMBIENT_CRIMSON_FOREST_LOOP), Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D)), List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_ADDITIONS, 0.0111D))))
+                .mobSpawnSettings(spawnSettings.build())
                 .generationSettings(generationSettings.build())
                 .build();
 
@@ -101,77 +106,75 @@ public class HauntedForestBiomes {
 
 
     public static Biome createErodedHauntedForest(NRegistryContext<Biome> entries) {
-        SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
-        spawnSettings.spawn(SpawnGroup.MONSTER, 8, new SpawnSettings.SpawnEntry(EntityType.WITHER_SKELETON, 2, 3));
-        spawnSettings.spawn(SpawnGroup.MONSTER, 8, new SpawnSettings.SpawnEntry(EntityType.SKELETON, 1, 2));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 10, new SpawnSettings.SpawnEntry(EntityType.BAT, 1, 1));
-        spawnSettings.spawn(SpawnGroup.CREATURE, 1, new SpawnSettings.SpawnEntry(EntityType.CAT, 1, 1));
+        MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
+        spawnSettings.addSpawn(EntityTypes.WITHER_SKELETON, MobCategory.MONSTER, 8, UniformInt.of(2, 3));
+        spawnSettings.addSpawn(EntityTypes.SKELETON, MobCategory.MONSTER, 8, UniformInt.of(1, 2));
+        spawnSettings.addSpawn(EntityTypes.BAT, MobCategory.CREATURE, 10, ConstantInt.of(1));
+        spawnSettings.addSpawn(EntityTypes.CAT, MobCategory.CREATURE, 1, ConstantInt.of(1));
 
-        GenerationSettings.LookupBackedBuilder generationSettings = new GenerationSettings.LookupBackedBuilder(entries.placedFeatures(), entries.configuredCarvers());
+        BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(entries.placedFeatures(), entries.configuredCarvers());
 
         addBasicFeatures(generationSettings);
         addTaigaFeatures(generationSettings);
 
 
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.ERODED_HAUNTED_FOREST_TREES_PLACED));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.FALLEN_TREE_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.ERODED_HAUNTED_FOREST_TREES_PLACED));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.FALLEN_TREE_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.COBWEB_FEATURE));
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, entries.ref(NPlacedFeatures.BUSH_FEATURE));
          
 
-        return (new Biome.Builder())
-                .precipitation(true)
+        return (new Biome.BiomeBuilder())
+                .hasPrecipitation(true)
                 .temperature(0.4F)
                 .downfall(0.4F)
-                .effects((new BiomeEffects.Builder())
-                        .grassColor(0x77AB2F)
-                        .foliageColor(0x77AB2F)
+                .specialEffects(new BiomeSpecialEffects.Builder()
+                        .grassColorOverride(0x77AB2F)
+                        .foliageColorOverride(0x77AB2F)
                         .waterColor(0xAEC1BE)
-                        .waterFogColor(0xC9DDDA)
-                        .fogColor(0x6B6B6B)
-                        .skyColor(0x6B6B6B)
-                        .music(MusicType.GAME)
-                        .loopSound(SoundEvents.AMBIENT_BASALT_DELTAS_LOOP)
-                        .moodSound(new BiomeMoodSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D))
-                        .additionsSound(new BiomeAdditionsSound(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_ADDITIONS, 0.0111D))
                         .build())
-                .spawnSettings(spawnSettings.build())
+                .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, ARGB.vector3fFromRGB24(0xC9DDDA))
+                .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x6B6B6B))
+                .setAttribute(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0x6B6B6B))
+                .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, new BackgroundMusic(Musics.GAME))
+                .setAttribute(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(Optional.of(SoundEvents.AMBIENT_BASALT_DELTAS_LOOP), Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD, 6000, 8, 2.0D)), List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_SOUL_SAND_VALLEY_ADDITIONS, 0.0111D))))
+                .mobSpawnSettings(spawnSettings.build())
                 .generationSettings(generationSettings.build())
                 .build();
 
     }
 
-    private static void addBasicFeatures(GenerationSettings.LookupBackedBuilder generationSettings) {
-        DefaultBiomeFeatures.addLandCarvers(generationSettings);
-        DefaultBiomeFeatures.addAmethystGeodes(generationSettings);
-        DefaultBiomeFeatures.addDungeons(generationSettings);
-        DefaultBiomeFeatures.addMineables(generationSettings);
-        DefaultBiomeFeatures.addSprings(generationSettings);
-        DefaultBiomeFeatures.addFrozenTopLayer(generationSettings);
+    private static void addBasicFeatures(BiomeGenerationSettings.Builder generationSettings) {
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(generationSettings);
+        BiomeDefaultFeatures.addDefaultCrystalFormations(generationSettings);
+        BiomeDefaultFeatures.addDefaultMonsterRoom(generationSettings);
+        BiomeDefaultFeatures.addDefaultUndergroundVariety(generationSettings);
+        BiomeDefaultFeatures.addDefaultSprings(generationSettings);
+        BiomeDefaultFeatures.addSurfaceFreezing(generationSettings);
     }
 
-    private static void addTaigaFeatures(GenerationSettings.LookupBackedBuilder generationSettings) {
-        DefaultBiomeFeatures.addMossyRocks(generationSettings);
-        DefaultBiomeFeatures.addLargeFerns(generationSettings);
-        DefaultBiomeFeatures.addDefaultOres(generationSettings);
-        DefaultBiomeFeatures.addDefaultDisks(generationSettings);
-        DefaultBiomeFeatures.addGiantTaigaGrass(generationSettings);
-        DefaultBiomeFeatures.addDefaultMushrooms(generationSettings);
-        DefaultBiomeFeatures.addDefaultVegetation(generationSettings, true);
+    private static void addTaigaFeatures(BiomeGenerationSettings.Builder generationSettings) {
+        BiomeDefaultFeatures.addMossyStoneBlock(generationSettings);
+        BiomeDefaultFeatures.addFerns(generationSettings);
+        BiomeDefaultFeatures.addDefaultOres(generationSettings);
+        BiomeDefaultFeatures.addDefaultSoftDisks(generationSettings);
+        BiomeDefaultFeatures.addGiantTaigaVegetation(generationSettings);
+        BiomeDefaultFeatures.addDefaultMushrooms(generationSettings);
+        BiomeDefaultFeatures.addDefaultExtraVegetation(generationSettings, true);
 
     }
 
 
-    private static void addHauntedLakesFeatures(GenerationSettings.LookupBackedBuilder generationSettings) {
-        DefaultBiomeFeatures.addDefaultOres(generationSettings);
-        DefaultBiomeFeatures.addClayDisk(generationSettings);
-        DefaultBiomeFeatures.addMossyRocks(generationSettings);
-        DefaultBiomeFeatures.addLargeFerns(generationSettings);
-        DefaultBiomeFeatures.addGiantTaigaGrass(generationSettings);
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_WATERLILY);
-        DefaultBiomeFeatures.addDefaultMushrooms(generationSettings);
-        DefaultBiomeFeatures.addSwampVegetation(generationSettings);
-        generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_SWAMP);
+    private static void addHauntedLakesFeatures(BiomeGenerationSettings.Builder generationSettings) {
+        BiomeDefaultFeatures.addDefaultOres(generationSettings);
+        BiomeDefaultFeatures.addSwampClayDisk(generationSettings);
+        BiomeDefaultFeatures.addMossyStoneBlock(generationSettings);
+        BiomeDefaultFeatures.addFerns(generationSettings);
+        BiomeDefaultFeatures.addGiantTaigaVegetation(generationSettings);
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_WATERLILY);
+        BiomeDefaultFeatures.addDefaultMushrooms(generationSettings);
+        BiomeDefaultFeatures.addSwampExtraVegetation(generationSettings);
+        generationSettings.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
     }
 
 

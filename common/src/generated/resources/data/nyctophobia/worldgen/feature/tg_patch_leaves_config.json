@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "id": "minecraft:oak_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "true",
+      "waterlogged": "false"
+    }
+  }
+}

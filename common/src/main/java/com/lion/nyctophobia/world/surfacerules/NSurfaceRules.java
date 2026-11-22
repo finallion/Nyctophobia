@@ -3,226 +3,314 @@ package com.lion.nyctophobia.world.surfacerules;
 
 import com.lion.nyctophobia.init.NBiomes;
 import com.lion.nyctophobia.world.noise.NNoiseParameters;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.noise.NoiseParametersKeys;
-import net.minecraft.world.gen.surfacebuilder.MaterialRules;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.levelgen.Noises;
+import net.minecraft.world.level.levelgen.material.MaterialRules;
+import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import com.lion.nyctophobia.Nyctophobia;
+import com.lion.nyctophobia.data.NRegistryContext;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 
 public class NSurfaceRules {
-    //private static final MaterialRules.MaterialRule TG_MOSS_BLOCK = block(TGBlocks.TG_MOSS_BLOCK);
-    private static final MaterialRules.MaterialRule MOSS_BLOCK = block(Blocks.MOSS_BLOCK);
-    private static final MaterialRules.MaterialRule ROOTED_DIRT = block(Blocks.ROOTED_DIRT);
-    private static final MaterialRules.MaterialRule COARSE_DIRT = block(Blocks.COARSE_DIRT);
-    private static final MaterialRules.MaterialRule MUD = block(Blocks.MUD);
-    private static final MaterialRules.MaterialRule GRAVEL = block(Blocks.GRAVEL);
-    private static final MaterialRules.MaterialRule BASALT = block(Blocks.BASALT);
-    private static final MaterialRules.MaterialRule BLACKSTONE = block(Blocks.BLACKSTONE);
-    private static final MaterialRules.MaterialRule SOUL_SAND = block(Blocks.SOUL_SAND);
-    private static final MaterialRules.MaterialRule SOUL_SOIL = block(Blocks.SOUL_SOIL);
-    private static final MaterialRules.MaterialRule GRASS_BLOCK = block(Blocks.GRASS_BLOCK);
-    private static final MaterialRules.MaterialRule WATER = block(Blocks.WATER);
-    private static final MaterialRules.MaterialRule CALCITE = block(Blocks.CALCITE);
-    private static final MaterialRules.MaterialRule TUFF = block(Blocks.TUFF);
-    private static final MaterialRules.MaterialRule SAND = block(Blocks.SAND);
-    private static final MaterialRules.MaterialRule SANDSTONE = block(Blocks.SANDSTONE);
-    private static final MaterialRules.MaterialRule BONE_BLOCK = block(Blocks.BONE_BLOCK.getDefaultState().with(PillarBlock.AXIS, Direction.Axis.Y).getBlock());
-    private static final MaterialRules.MaterialRule NETHER_WART = block(Blocks.NETHER_WART_BLOCK);
-    private static final MaterialRules.MaterialRule MOSSY_COBBLESTONE = block(Blocks.MOSSY_COBBLESTONE);
-    private static final MaterialRules.MaterialRule GREEN_TERRACOTTA = block(Blocks.GREEN_TERRACOTTA);
-    private static final MaterialRules.MaterialRule DIRT = block(Blocks.DIRT);
-    private static final MaterialRules.MaterialRule AIR = block(Blocks.AIR);
-    private static final MaterialRules.MaterialRule STONE = block(Blocks.STONE);
-    private static final MaterialRules.MaterialRule DEEPSLATE = block(Blocks.DEEPSLATE);
+    public static final ResourceKey<MaterialRule> OVERWORLD = ResourceKey.create(Registries.MATERIAL_RULE, Identifier.fromNamespaceAndPath(Nyctophobia.MOD_ID, "overworld"));
 
-    public static MaterialRules.MaterialRule makeRules() {
-        // TODO: take material rules together for example STONE_DEPTH_FLOOR
-        // TODO: remove redundant boxing
+    private static final MaterialCondition ON_FLOOR = MaterialRules.stoneDepthCheck(0, false, CaveSurface.FLOOR);
+    private static final MaterialCondition UNDER_FLOOR = MaterialRules.stoneDepthCheck(0, true, CaveSurface.FLOOR);
 
-        MaterialRules.MaterialRule noiseGrass = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(62), 0),
-                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, -0.2, 0.0), GRASS_BLOCK)))));
+    private static final MaterialRule MOSS_BLOCK = block(Blocks.MOSS_BLOCK);
+    private static final MaterialRule ROOTED_DIRT = block(Blocks.ROOTED_DIRT);
+    private static final MaterialRule COARSE_DIRT = block(Blocks.COARSE_DIRT);
+    private static final MaterialRule MUD = block(Blocks.MUD);
+    private static final MaterialRule GRAVEL = block(Blocks.GRAVEL);
+    private static final MaterialRule BASALT = block(Blocks.BASALT);
+    private static final MaterialRule BLACKSTONE = block(Blocks.BLACKSTONE);
+    private static final MaterialRule SOUL_SAND = block(Blocks.SOUL_SAND);
+    private static final MaterialRule SOUL_SOIL = block(Blocks.SOUL_SOIL);
+    private static final MaterialRule GRASS_BLOCK = block(Blocks.GRASS_BLOCK);
+    private static final MaterialRule WATER = block(Blocks.WATER);
+    private static final MaterialRule CALCITE = block(Blocks.CALCITE);
+    private static final MaterialRule TUFF = block(Blocks.TUFF);
+    private static final MaterialRule SAND = block(Blocks.SAND);
+    private static final MaterialRule SANDSTONE = block(Blocks.SANDSTONE);
+    private static final MaterialRule BONE_BLOCK = block(Blocks.BONE_BLOCK.defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y).getBlock());
+    private static final MaterialRule NETHER_WART = block(Blocks.NETHER_WART_BLOCK);
+    private static final MaterialRule MOSSY_COBBLESTONE = block(Blocks.MOSSY_COBBLESTONE);
+    private static final MaterialRule GREEN_TERRACOTTA = block(Blocks.DYED_TERRACOTTA.green());
+    private static final MaterialRule DIRT = block(Blocks.DIRT);
+    private static final MaterialRule AIR = block(Blocks.AIR);
+    private static final MaterialRule STONE = block(Blocks.STONE);
+    private static final MaterialRule DEEPSLATE = block(Blocks.DEEPSLATE);
 
-        MaterialRules.MaterialRule noiseGrass93 = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(93), 3),
-                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, -0.2, 0.0), GRASS_BLOCK)))));
+    private static final ResourceKey<MaterialRule> COPPER_ORE_VEIN = vanillaRule("overworld/copper_ore_vein");
+    private static final ResourceKey<MaterialRule> IRON_ORE_VEIN = vanillaRule("overworld/iron_ore_vein");
 
-        MaterialRules.MaterialRule noiseCoarseDirt = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(62), 0),
-                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.2, 0.4), COARSE_DIRT)))));
+    private static ResourceKey<MaterialRule> vanillaRule(String path) {
+        return ResourceKey.create(Registries.MATERIAL_RULE, Identifier.withDefaultNamespace(path));
+    }
 
-        MaterialRules.MaterialRule noiseMossCobble =
-                MaterialRules.sequence(
-                        MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                                MaterialRules.sequence(
-                                        MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(62), 0),
+    private static MaterialRule veinRule(NRegistryContext<MaterialRule> entries, ResourceKey<MaterialRule> key) {
+        return new MaterialRule.HolderHolder(entries.ref(key));
+    }
+
+    public static void populate(NRegistryContext<MaterialRule> entries) {
+        entries.add(OVERWORLD, makeRules(entries.biomes(), veinRule(entries, COPPER_ORE_VEIN), veinRule(entries, IRON_ORE_VEIN)));
+    }
+
+    public static MaterialRule makeRules(HolderGetter<Biome> biomes, MaterialRule copperVein, MaterialRule ironVein) {
+        MaterialRule noiseGrass = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(62), 0),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, -0.2, 0.0), GRASS_BLOCK)
+                                )
+                        )
+                )
+        );
+
+        MaterialRule noiseGrass93 = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(93), 3),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, -0.2, 0.0), GRASS_BLOCK)
+                                )
+                        )
+                )
+        );
+
+        MaterialRule noiseCoarseDirt = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(62), 0),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.2, 0.4), COARSE_DIRT)
+                                )
+                        )
+                )
+        );
+
+        MaterialRule noiseMossCobble = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(62), 0),
+                                        MaterialRules.sequence(
                                                 MaterialRules.sequence(
-                                                        MaterialRules.sequence(
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.4D, 0.2D), MOSS_BLOCK),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.5D, 0.6D), MOSSY_COBBLESTONE)),
-                                                        MaterialRules.sequence(
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.4D, 0.3D), GRASS_BLOCK),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.5D, 0.5D), COARSE_DIRT),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.NETHER_WART, -1.0D, 1.0D), ROOTED_DIRT),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.CLAY_BANDS_OFFSET, -0.3D, 0.4D), MOSSY_COBBLESTONE),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, -0.3D, 0.3D), MOSSY_COBBLESTONE)),
-                                                        MaterialRules.sequence(
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.2D, 0.5D), GRASS_BLOCK),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, -0.8D, 0.8D), ROOTED_DIRT)))),
-                                        MaterialRules.sequence(
-                                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(61), 0), DIRT),
-                                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), STONE),
-                                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(-64), 0), DEEPSLATE)
-                                        ))
-                                        //MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, -2.0, 2.0), AIR))
-                                        ));
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.4D, 0.2D), MOSS_BLOCK),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.PATCH, 0.5D, 0.6D), MOSSY_COBBLESTONE)
+                                                ),
+                                                MaterialRules.sequence(
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.4D, 0.3D), GRASS_BLOCK),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.5D, 0.5D), COARSE_DIRT),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.NETHER_WART, -1.0D, 1.0D), ROOTED_DIRT),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.CLAY_BANDS_OFFSET, -0.3D, 0.4D), MOSSY_COBBLESTONE),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.PATCH, -0.3D, 0.3D), MOSSY_COBBLESTONE)
+                                                ),
+                                                MaterialRules.sequence(
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.2D, 0.5D), GRASS_BLOCK),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.PATCH, -0.8D, 0.8D), ROOTED_DIRT)
+                                                )
+                                        )
+                                ),
+                                MaterialRules.sequence(
+                                        MaterialRules.ifTrue(MaterialRules.yBlockCheck(VerticalAnchor.absolute(61), 0), DIRT),
+                                        MaterialRules.ifTrue(MaterialRules.yBlockCheck(VerticalAnchor.absolute(0), 0), STONE),
+                                        MaterialRules.ifTrue(MaterialRules.yBlockCheck(VerticalAnchor.absolute(-64), 0), DEEPSLATE)
+                                )
+                        )
+                )
+        );
 
-        MaterialRules.MaterialRule noiseErosion = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR, // YOffset.fixed(62)
-                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(93), 0),
-                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, -0.1, 1.15),
-                                        MaterialRules.sequence(
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, -0.1, 0.15), COARSE_DIRT),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.15, 0.5), SOUL_SAND),
-                                                //MaterialRules.sequence(MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.ICE, -0.2, 0.2), SOUL_SOIL), SOUL_SAND)),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.5, 0.75), SOUL_SOIL),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.75, 0.9), SOUL_SAND),
-                                                //MaterialRules.sequence(MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.ICE, -0.2, 0.2), SOUL_SOIL), SOUL_SAND)),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.9, 1.15), COARSE_DIRT)
-                                        ))))));
-
-        MaterialRules.MaterialRule noiseMoss = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(62), 0),
-                                MaterialRules.condition(MaterialRules.noiseThreshold(NNoiseParameters.HAUNTED_FOREST_NOISE, -0.2, 2.0), MOSS_BLOCK)))));
-
-        MaterialRules.MaterialRule noiseMoss93 = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(93), 2),
-                                MaterialRules.condition(MaterialRules.noiseThreshold(NNoiseParameters.HAUNTED_FOREST_NOISE, -0.2, 2.0), MOSS_BLOCK)))));
-
-
-        /* ACTUAL BIOME SURFACE */
-        MaterialRules.MaterialCondition above62 = MaterialRules.aboveY(YOffset.fixed(62), 0);
-        MaterialRules.MaterialCondition above63_0 = MaterialRules.aboveY(YOffset.fixed(63), 0);
-        MaterialRules.MaterialRule waterErosionRule = MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(MaterialRules.condition(
-                                        MaterialRules.biome(NBiomes.HAUNTED_LAKES_KEY), MaterialRules.condition(above62,
-                                                MaterialRules.condition(MaterialRules.not(above63_0),
-                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, 1.0D), WATER
-                                                        )
+        MaterialRule noiseErosion = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(93), 0),
+                                        MaterialRules.ifTrue(
+                                                MaterialRules.noiseCondition2d(Noises.SURFACE, -0.1, 1.15),
+                                                MaterialRules.sequence(
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, -0.1, 0.15), COARSE_DIRT),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.15, 0.5), SOUL_SAND),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.5, 0.75), SOUL_SOIL),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.75, 0.9), SOUL_SAND),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.9, 1.15), COARSE_DIRT)
                                                 )
                                         )
                                 )
                         )
-                ));
+                )
+        );
 
-        MaterialRules.MaterialCondition above68_0 = MaterialRules.aboveY(YOffset.fixed(68), 0);
-
-        MaterialRules.MaterialRule erodedHauntedForestRule =
-                MaterialRules.condition(MaterialRules.biome(NBiomes.ERODED_HAUNTED_FOREST_KEY),
+        MaterialRule noiseMoss = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
                         MaterialRules.sequence(
-                                noiseGrass93,
-                                noiseErosion,
-                                noiseMoss93));
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(62), 0),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(NNoiseParameters.HAUNTED_FOREST_NOISE, -0.2, 2.0), MOSS_BLOCK)
+                                )
+                        )
+                )
+        );
 
-        MaterialRules.MaterialRule deepDarkForestRule =
-                MaterialRules.condition(MaterialRules.biome(NBiomes.DEEP_DARK_FOREST), noiseMossCobble);
+        MaterialRule noiseMoss93 = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(93), 2),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(NNoiseParameters.HAUNTED_FOREST_NOISE, -0.2, 2.0), MOSS_BLOCK)
+                                )
+                        )
+                )
+        );
 
-        MaterialRules.MaterialRule hauntedForestRule =
-                MaterialRules.sequence(
-                        MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_FOREST_KEY, NBiomes.HAUNTED_LAKES_KEY),
-                                MaterialRules.sequence(
-                                        noiseGrass,
-                                        noiseCoarseDirt,
-                                        noiseMoss)),
-                        MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_LAKES_KEY), waterErosionRule));
-
-
-        MaterialRules.MaterialRule ancientReefRule =
-                MaterialRules.sequence(
-                        MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH,
-                                MaterialRules.sequence(
-                                        MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(53), 2),
-                                                MaterialRules.sequence(
-                                                        MaterialRules.condition(above63_0, MaterialRules.condition(
-                                                                MaterialRules.not(above68_0), MaterialRules.condition(
-                                                                        MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -1.0D, -0.55), WATER))),
-                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, -0.1D, 0.2D), CALCITE),
-                                                        MaterialRules.condition(MaterialRules.steepSlope(), TUFF),
-                                                        MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.2D, 0.5D), SANDSTONE),
-                                                        SAND
+        MaterialCondition above62 = MaterialRules.yBlockCheck(VerticalAnchor.absolute(62), 0);
+        MaterialCondition above63_0 = MaterialRules.yBlockCheck(VerticalAnchor.absolute(63), 0);
+        MaterialRule waterErosionRule = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        ON_FLOOR,
+                        MaterialRules.sequence(
+                                MaterialRules.ifTrue(
+                                        MaterialRules.isBiome(biomes, NBiomes.HAUNTED_LAKES_KEY),
+                                        MaterialRules.ifTrue(
+                                                above62,
+                                                MaterialRules.ifTrue(
+                                                        MaterialRules.not(above63_0),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, 1.0D), WATER)
                                                 )
-                                        ))));
+                                        )
+                                )
+                        )
+                )
+        );
 
+        MaterialCondition above68_0 = MaterialRules.yBlockCheck(VerticalAnchor.absolute(68), 0);
 
-        // Standing water uses the trick the haunted lakes use, but across a three block band instead
-        // of one: at a single height only terrain that happens to end exactly there turns to water.
-        // It reaches no further than that either way - a rule can only exchange the block that is
-        // already the top of the terrain, never open water over ground that lies higher, which is
-        // what MarshPoolFeature is for. Wet ground rings the pools where the noise falls short.
-        // The band has to stop below 63: sea level is 63, so the topmost water block sits at 62 and
-        // anything written at 63 stands a block proud of every other water surface in the world.
-        MaterialRules.MaterialCondition above60 = MaterialRules.aboveY(YOffset.fixed(60), 0);
-        MaterialRules.MaterialCondition dryAbove = MaterialRules.water(-1, 0);
+        MaterialRule erodedHauntedForestRule = MaterialRules.ifTrue(
+                MaterialRules.isBiome(biomes, NBiomes.ERODED_HAUNTED_FOREST_KEY),
+                MaterialRules.sequence(noiseGrass93, noiseErosion, noiseMoss93)
+        );
 
-        MaterialRules.MaterialRule marshlandsRule =
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
+        MaterialRule deepDarkForestRule =
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.DEEP_DARK_FOREST), noiseMossCobble);
+
+        MaterialRule hauntedForestRule = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        MaterialRules.isBiome(biomes, NBiomes.HAUNTED_FOREST_KEY, NBiomes.HAUNTED_LAKES_KEY),
+                        MaterialRules.sequence(noiseGrass, noiseCoarseDirt, noiseMoss)
+                ),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.HAUNTED_LAKES_KEY), waterErosionRule)
+        );
+
+        MaterialRule ancientReefRule = MaterialRules.sequence(
+                MaterialRules.ifTrue(
+                        UNDER_FLOOR,
                         MaterialRules.sequence(
-                                // Only where nothing stands over the column: under water this would
-                                // swallow the floor and leave the bare stone beneath it exposed.
-                                MaterialRules.condition(dryAbove,
-                                        MaterialRules.condition(above60,
-                                                MaterialRules.condition(MaterialRules.not(above63_0),
-                                                        MaterialRules.sequence(
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.45D), WATER),
-                                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.7D, -0.45D), MUD))))),
-                                // Anything still submerged is a pool floor and gets mud, not the
-                                // grass of the banks.
-                                MaterialRules.condition(MaterialRules.not(dryAbove), MUD),
-                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(61), 0),
+                                MaterialRules.ifTrue(
+                                        MaterialRules.yBlockCheck(VerticalAnchor.absolute(53), 2),
                                         MaterialRules.sequence(
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.6D, -0.2D), MUD),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.3D, 0.7D), MOSS_BLOCK),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.4D, 0.8D), COARSE_DIRT),
-                                                GRASS_BLOCK)),
-                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), DIRT)));
+                                                MaterialRules.ifTrue(
+                                                        above63_0,
+                                                        MaterialRules.ifTrue(
+                                                                MaterialRules.not(above68_0),
+                                                                MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -1.0D, -0.55), WATER)
+                                                        )
+                                                ),
+                                                MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, -0.1D, 0.2D), CALCITE),
+                                                MaterialRules.ifTrue(MaterialRules.steep(), TUFF),
+                                                MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.2D, 0.5D), SANDSTONE),
+                                                SAND
+                                        )
+                                )
+                        )
+                )
+        );
 
-        // Burnt ground: coarse dirt with ash-coloured patches, and bare basalt where the slope is too
-        // steep for anything to have settled.
-        MaterialRules.MaterialRule burntForestRule =
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR,
-                        MaterialRules.sequence(
-                                MaterialRules.condition(above62,
-                                        MaterialRules.sequence(
-                                                MaterialRules.condition(MaterialRules.steepSlope(), BASALT),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.1D, 0.6D), BLACKSTONE),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE, 0.6D, 1.0D), SOUL_SOIL),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, 0.2D, 0.6D), BASALT),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.PATCH, -0.6D, -0.2D), GRAVEL),
-                                                MaterialRules.condition(MaterialRules.noiseThreshold(NoiseParametersKeys.SURFACE_SWAMP, -0.8D, -0.3D), SOUL_SAND),
-                                                COARSE_DIRT)),
-                                MaterialRules.condition(MaterialRules.aboveY(YOffset.fixed(0), 0), DIRT)));
+        // The water band stops below sea level 63.
+        MaterialCondition above60 = MaterialRules.yBlockCheck(VerticalAnchor.absolute(60), 0);
+        MaterialCondition dryAbove = MaterialRules.waterBlockCheck(-1, 0);
+
+        MaterialRule marshlandsRule = MaterialRules.ifTrue(
+                ON_FLOOR,
+                MaterialRules.sequence(
+                        MaterialRules.ifTrue(
+                                dryAbove,
+                                MaterialRules.ifTrue(
+                                        above60,
+                                        MaterialRules.ifTrue(
+                                                MaterialRules.not(above63_0),
+                                                MaterialRules.sequence(
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.45D), WATER),
+                                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.7D, -0.45D), MUD)
+                                                )
+                                        )
+                                )
+                        ),
+                        MaterialRules.ifTrue(MaterialRules.not(dryAbove), MUD),
+                        MaterialRules.ifTrue(
+                                MaterialRules.yBlockCheck(VerticalAnchor.absolute(61), 0),
+                                MaterialRules.sequence(
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.6D, -0.2D), MUD),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.3D, 0.7D), MOSS_BLOCK),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.PATCH, 0.4D, 0.8D), COARSE_DIRT),
+                                        GRASS_BLOCK
+                                )
+                        ),
+                        MaterialRules.ifTrue(MaterialRules.yBlockCheck(VerticalAnchor.absolute(0), 0), DIRT)
+                )
+        );
+
+        MaterialRule burntForestRule = MaterialRules.ifTrue(
+                ON_FLOOR,
+                MaterialRules.sequence(
+                        MaterialRules.ifTrue(
+                                above62,
+                                MaterialRules.sequence(
+                                        MaterialRules.ifTrue(MaterialRules.steep(), BASALT),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.1D, 0.6D), BLACKSTONE),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SURFACE, 0.6D, 1.0D), SOUL_SOIL),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.PATCH, 0.2D, 0.6D), BASALT),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.PATCH, -0.6D, -0.2D), GRAVEL),
+                                        MaterialRules.ifTrue(MaterialRules.noiseCondition2d(Noises.SWAMP, -0.8D, -0.3D), SOUL_SAND),
+                                        COARSE_DIRT
+                                )
+                        ),
+                        MaterialRules.ifTrue(MaterialRules.yBlockCheck(VerticalAnchor.absolute(0), 0), DIRT)
+                )
+        );
 
         return MaterialRules.sequence(
-                MaterialRules.condition(MaterialRules.biome(NBiomes.BURNT_FOREST_KEY), burntForestRule),
-                MaterialRules.condition(MaterialRules.biome(NBiomes.MARSHLANDS_KEY), marshlandsRule),
-                MaterialRules.condition(MaterialRules.biome(NBiomes.ERODED_HAUNTED_FOREST_KEY), erodedHauntedForestRule),
-                MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_LAKES_KEY), hauntedForestRule),
-                MaterialRules.condition(MaterialRules.biome(NBiomes.HAUNTED_FOREST_KEY), hauntedForestRule),
-                MaterialRules.condition(MaterialRules.biome(NBiomes.ANCIENT_DEAD_CORAL_REEF_KEY), ancientReefRule),
-                MaterialRules.condition(MaterialRules.biome(NBiomes.DEEP_DARK_FOREST), deepDarkForestRule)
+                copperVein,
+                ironVein,
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.BURNT_FOREST_KEY), burntForestRule),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.MARSHLANDS_KEY), marshlandsRule),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.ERODED_HAUNTED_FOREST_KEY), erodedHauntedForestRule),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.HAUNTED_LAKES_KEY), hauntedForestRule),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.HAUNTED_FOREST_KEY), hauntedForestRule),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.ANCIENT_DEAD_CORAL_REEF_KEY), ancientReefRule),
+                MaterialRules.ifTrue(MaterialRules.isBiome(biomes, NBiomes.DEEP_DARK_FOREST), deepDarkForestRule)
         );
     }
 
-    private static MaterialRules.MaterialRule block(Block block) {
-        return MaterialRules.block(block.getDefaultState());
+    private static MaterialRule block(Block block) {
+        return MaterialRules.state(block.defaultBlockState());
     }
 
 }

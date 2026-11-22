@@ -1,99 +1,106 @@
 package com.lion.nyctophobia.world.features.surfaceFeatures;
 
-import com.lion.nyctophobia.util.NTags;
-import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DeadCoralWallFanBlock;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import com.lion.nyctophobia.world.features.NPlaceContext;
+import com.lion.nyctophobia.world.features.NSimpleFeature;
+import com.mojang.datafixers.util.Unit;
 
+import com.lion.nyctophobia.util.NTags;
 import java.util.Iterator;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.BaseCoralWallFanBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public abstract class DeadCoralFeature extends Feature<DefaultFeatureConfig> {
-    public DeadCoralFeature(Codec<DefaultFeatureConfig> codec) {
-        super(codec);
+public abstract class DeadCoralFeature extends NSimpleFeature {
+    public DeadCoralFeature() {
+        super();
     }
 
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        net.minecraft.util.math.random.Random random = context.getRandom();
-        StructureWorldAccess structureWorldAccess = context.getWorld();
-        BlockPos blockPos = context.getOrigin();
+    public boolean place(NPlaceContext<Unit> context) {
+        net.minecraft.util.RandomSource random = context.random();
+        WorldGenLevel structureWorldAccess = context.level();
+        BlockPos blockPos = context.origin();
 
-        Optional<Block> optional = Registries.BLOCK.getOptional(NTags.DEAD_CORAL_BLOCKS).flatMap((blocks) -> {
-            return blocks.getRandom(random);
-        }).map(RegistryEntry::value);
-        return optional.isEmpty() ? false : this.generateCoral(structureWorldAccess, random, blockPos, ((Block)optional.get()).getDefaultState());
+        Optional<Block> optional = BuiltInRegistries.BLOCK.get(NTags.DEAD_CORAL_BLOCKS).flatMap((blocks) -> {
+            return blocks.getRandomElement(random);
+        }).map(Holder::value);
+        return optional.isEmpty() ? false : this.generateCoral(structureWorldAccess, random, blockPos, ((Block)optional.get()).defaultBlockState());
     }
 
-    protected abstract boolean generateCoral(WorldAccess world, net.minecraft.util.math.random.Random random, BlockPos pos, BlockState state);
+    protected abstract boolean generateCoral(
+            LevelAccessor world,
+            net.minecraft.util.RandomSource random,
+            BlockPos pos,
+            BlockState state
+    );
 
-    protected boolean generateCoralPiece(WorldAccess world, Random random, BlockPos pos, BlockState state) {
-        BlockPos blockPos = pos.up();
+    protected boolean generateCoralPiece(LevelAccessor world, RandomSource random, BlockPos pos, BlockState state) {
+        BlockPos blockPos = pos.above();
         BlockState blockState = world.getBlockState(pos);
-        if (world.getBlockState(pos.down()).isOf(Blocks.WATER) || world.getBlockState(pos.down()).isOf(Blocks.AIR) || !world.getBlockState(pos.down()).isSolidBlock(world, pos.down())) {
+
+        if (world.getBlockState(pos.below()).is(Blocks.WATER) || world.getBlockState(pos.below()).is(Blocks.AIR) || !world.getBlockState(pos.below()).isRedstoneConductor(world, pos.below())) {
             return false;
         }
 
-        if (((blockState.isOf(Blocks.AIR) || blockState.isOf(Blocks.WATER)) || blockState.isIn(NTags.DEAD_CORALS)) && (world.getBlockState(blockPos).isOf(Blocks.AIR) || world.getBlockState(blockPos).isOf(Blocks.WATER))) {
-            world.setBlockState(pos, state, 3);
-            if (random.nextFloat() < 0.25F) {
+        if (((blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER)) || blockState.is(NTags.DEAD_CORALS)) && (world.getBlockState(blockPos).is(Blocks.AIR) || world.getBlockState(blockPos).is(Blocks.WATER))) {
+            world.setBlock(pos, state, 3);
 
-                if (world.getBlockState(blockPos).isOf(Blocks.WATER)) {
-                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
-                        return blocks.getRandom(random);
-                    }).map(RegistryEntry::value).ifPresent((block) -> {
-                        world.setBlockState(blockPos, block.getDefaultState().with(Properties.WATERLOGGED, true), 2);
+            if (random.nextFloat() < 0.25F) {
+                if (world.getBlockState(blockPos).is(Blocks.WATER)) {
+                    BuiltInRegistries.BLOCK.get(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                        return blocks.getRandomElement(random);
+                    }).map(Holder::value).ifPresent((block) -> {
+                        world.setBlock(blockPos, block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true), 2);
                     });
-                } else if (world.getBlockState(blockPos).isOf(Blocks.AIR)) {
-                    Registries.BLOCK.getOptional(NTags.DEAD_CORALS).flatMap((blocks) -> {
-                        return blocks.getRandom(random);
-                    }).map(RegistryEntry::value).ifPresent((block) -> {
-                        world.setBlockState(blockPos, block.getDefaultState().with(Properties.WATERLOGGED, false), 2);
+                } else if (world.getBlockState(blockPos).is(Blocks.AIR)) {
+                    BuiltInRegistries.BLOCK.get(NTags.DEAD_CORALS).flatMap((blocks) -> {
+                        return blocks.getRandomElement(random);
+                    }).map(Holder::value).ifPresent((block) -> {
+                        world.setBlock(blockPos, block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false), 2);
                     });
                 }
-            } //else if (random.nextFloat() < 0.05F) {
-            //    world.setBlockState(blockPos, (BlockState)Blocks.SEA_PICKLE.getDefaultState().with(SeaPickleBlock.PICKLES, random.nextInt(4) + 1), 2);
-            //}
+            }
 
-            Iterator var7 = Direction.Type.HORIZONTAL.iterator();
+            Iterator var7 = Direction.Plane.HORIZONTAL.iterator();
 
             while(var7.hasNext()) {
                 Direction direction = (Direction)var7.next();
+
                 if (random.nextFloat() < 0.2F) {
-                    BlockPos blockPos2 = pos.offset(direction);
-                    if (world.getBlockState(blockPos2).isOf(Blocks.WATER)) {
-                        Registries.BLOCK.getOptional(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
-                            return blocks.getRandom(random);
-                        }).map(RegistryEntry::value).ifPresent((block) -> {
-                            BlockState blockState2 = block.getDefaultState().with(Properties.WATERLOGGED, true);
-                            if (blockState2.contains(DeadCoralWallFanBlock.FACING)) {
-                                blockState2 = (BlockState)blockState2.with(DeadCoralWallFanBlock.FACING, direction);
+                    BlockPos blockPos2 = pos.relative(direction);
+
+                    if (world.getBlockState(blockPos2).is(Blocks.WATER)) {
+                        BuiltInRegistries.BLOCK.get(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
+                            return blocks.getRandomElement(random);
+                        }).map(Holder::value).ifPresent((block) -> {
+                            BlockState blockState2 = block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true);
+
+                            if (blockState2.hasProperty(BaseCoralWallFanBlock.FACING)) {
+                                blockState2 = (BlockState)blockState2.setValue(BaseCoralWallFanBlock.FACING, direction);
                             }
 
-                            world.setBlockState(blockPos2, blockState2, 2);
+                            world.setBlock(blockPos2, blockState2, 2);
                         });
-                    } else if (world.getBlockState(blockPos2).isOf(Blocks.AIR)) {
-                        Registries.BLOCK.getOptional(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
-                            return blocks.getRandom(random);
-                        }).map(RegistryEntry::value).ifPresent((block) -> {
-                            BlockState blockState2 = block.getDefaultState().with(Properties.WATERLOGGED, false);
-                            if (blockState2.contains(DeadCoralWallFanBlock.FACING)) {
-                                blockState2 = (BlockState)blockState2.with(DeadCoralWallFanBlock.FACING, direction);
+                    } else if (world.getBlockState(blockPos2).is(Blocks.AIR)) {
+                        BuiltInRegistries.BLOCK.get(NTags.DEAD_WALL_CORALS).flatMap((blocks) -> {
+                            return blocks.getRandomElement(random);
+                        }).map(Holder::value).ifPresent((block) -> {
+                            BlockState blockState2 = block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false);
+
+                            if (blockState2.hasProperty(BaseCoralWallFanBlock.FACING)) {
+                                blockState2 = (BlockState)blockState2.setValue(BaseCoralWallFanBlock.FACING, direction);
                             }
 
-                            world.setBlockState(blockPos2, blockState2, 2);
+                            world.setBlock(blockPos2, blockState2, 2);
                         });
                     }
                 }

@@ -1,0 +1,12 @@
+{
+  "type": "nyctophobia:large_spruce_tree_01",
+  "leaf_state": {
+    "id": "minecraft:oak_leaves",
+    "properties": {
+      "distance": "1",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "wood_state": "minecraft:polished_basalt"
+}

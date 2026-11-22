@@ -10,11 +10,10 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 public class NyctophobiaNeoForge {
 
     public NyctophobiaNeoForge(IEventBus modBus) {
-        // Must run before the DeferredRegisters are attached: it triggers the static initialisers in
-        // the init classes, and those are what fill the registers.
+        // Run this first. It triggers the static initialisers that fill the registers.
         Nyctophobia.init();
 
-        RegistryHelperImpl.FEATURES.register(modBus);
+        RegistryHelperImpl.FEATURE_TYPES.register(modBus);
         RegistryHelperImpl.TRUNK_PLACER_TYPES.register(modBus);
         RegistryHelperImpl.STRUCTURE_TYPES.register(modBus);
 

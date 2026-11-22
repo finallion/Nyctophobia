@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:random_selector",
+  "default": {
+    "feature": "nyctophobia:burnt_tree_small_01",
+    "placement": []
+  },
+  "features": [
+    {
+      "chance": 0.2,
+      "feature": {
+        "feature": "nyctophobia:burnt_tree_small_02",
+        "placement": []
+      }
+    },
+    {
+      "chance": 0.2,
+      "feature": {
+        "feature": "nyctophobia:burnt_tree_bent",
+        "placement": []
+      }
+    },
+    {
+      "chance": 0.2,
+      "feature": {
+        "feature": "nyctophobia:burnt_tree_fallen",
+        "placement": []
+      }
+    },
+    {
+      "chance": 0.2,
+      "feature": {
+        "feature": "nyctophobia:burnt_tree_large_bent",
+        "placement": []
+      }
+    },
+    {
+      "chance": 0.3,
+      "feature": {
+        "feature": "nyctophobia:burnt_tree_large",
+        "placement": []
+      }
+    }
+  ]
+}

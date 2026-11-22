@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:multiface_growth",
+  "block": "minecraft:glow_lichen",
+  "can_be_placed_on": [
+    "minecraft:polished_basalt",
+    "minecraft:blackstone",
+    "minecraft:basalt"
+  ],
+  "can_place_on_ceiling": true,
+  "can_place_on_wall": true,
+  "search_range": 20
+}
